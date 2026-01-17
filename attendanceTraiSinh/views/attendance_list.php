@@ -8,9 +8,9 @@ if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin','club_lea
     die('Không có quyền');
 }
 
-if (!isset($_SESSION['attendance_session_id'])) {
-    die('Chưa mở phiên điểm danh');
-}
+//if (!isset($_SESSION['attendance_session_id'])) {
+//    die('Chưa mở phiên điểm danh');
+//}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -234,7 +234,11 @@ function loadAttendance(){
 
             /* ===== MOBILE ===== */
             const card = document.createElement('div');
-            card.className = 'card-att';
+            card.className = 'card-att att-card';
+            card.dataset.name  = row.full_name.toLowerCase();
+            card.dataset.class = row.class.toLowerCase();
+            card.dataset.code  = row.student_code.toLowerCase();
+
             card.innerHTML = `
                 <div class="name">${row.full_name}</div>
                 <div class="meta">${row.student_code} • ${row.class}</div>
@@ -256,6 +260,11 @@ function loadAttendance(){
 
             /* ===== MÁY TÍNH ===== */
             const tr = document.createElement('tr');
+            tr.className = 'att-row';
+            tr.dataset.name  = row.full_name.toLowerCase();
+            tr.dataset.class = row.class.toLowerCase();
+            tr.dataset.code  = row.student_code.toLowerCase();
+
             tr.innerHTML = `
                 <td>${row.student_code}</td>
                 <td class="fw-semibold">${row.full_name}</td>
@@ -264,7 +273,7 @@ function loadAttendance(){
                 <td>
                     <span class="badge-history">
                     <span class="badge ${currentType==='CHECK_IN'?'badge-in':'badge-out'}"
-                            onclick='openHistory(${JSON.stringify(history)})'>
+                        onclick='openHistory(${JSON.stringify(history)})'>
                         ${formatType(currentType)}
                     </span>
                     <div class="history-tooltip">${hoverText}</div>
@@ -275,9 +284,38 @@ function loadAttendance(){
                 <td>${row.scanned_by}</td>
             `;
             table.appendChild(tr);
+
         });
     });
 }
+
+//SEARCH
+document.getElementById('searchBox').addEventListener('input', function () {
+    const q = this.value.toLowerCase().trim();
+    isSearching = q !== '';
+
+    // DESKTOP
+    document.querySelectorAll('.att-row').forEach(row => {
+        const match =
+            row.dataset.name.includes(q) ||
+            row.dataset.class.includes(q) ||
+            row.dataset.code.includes(q);
+
+        row.style.display = match ? '' : 'none';
+    });
+
+    // MOBILE
+    document.querySelectorAll('.att-card').forEach(card => {
+        const match =
+            card.dataset.name.includes(q) ||
+            card.dataset.class.includes(q) ||
+            card.dataset.code.includes(q);
+
+        card.style.display = match ? '' : 'none';
+    });
+});
+
+
 
 function openHistory(history){
     const body = document.getElementById('historyBody');

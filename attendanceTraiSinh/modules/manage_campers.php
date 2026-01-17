@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_one'])) {
     $class         = $_POST['class'] ?? null;
     $phone         = $_POST['phone'] ?? null;
     $phone_parent  = $_POST['phone_parent'] ?? null;
-    $email         = $_POST['email'] ?? null;
+    $email = isset($_POST['email']) && trim($_POST['email']) !== '' ? trim($_POST['email']) : $old['email']; // giữ email cũ
     $profile_photo = $_POST['profile_photo'] ?? null;
 
     // Check dữ liệu bắt buộc
@@ -56,42 +56,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_one'])) {
         $profile_photo
     ]);
 }
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /* ===== IMPORT CSV ===== */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_csv'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_excel'])) {
 
-    if (is_uploaded_file($_FILES['csv']['tmp_name'])) {
+    if (is_uploaded_file($_FILES['excel']['tmp_name'])) {
 
-        $file = fopen($_FILES['csv']['tmp_name'], 'r');
-        $pdo->beginTransaction();
+        $filePath = $_FILES['excel']['tmp_name'];
 
-        while (($row = fgetcsv($file, 1000, ",")) !== false) {
+        try {
+            $spreadsheet = IOFactory::load($filePath);
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
 
-            if ($row[0] === 'student_code') continue;
+            $pdo->beginTransaction();
 
-            $stmt = $pdo->prepare("
-                INSERT IGNORE INTO campers
-                (student_code, full_name, class, phone, phone_parent, email, profile_photo, is_active)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-            ");
-            $stmt->execute([
-                $row[0], $row[1], $row[2],
-                $row[3], $row[4], $row[5], $row[6]
-            ]);
+            foreach ($rows as $index => $row) {
+
+                // Bỏ dòng header (dòng 1)
+                if ($index === 1) continue;
+
+                $student_code  = trim($row['A'] ?? '');
+                $full_name     = trim($row['B'] ?? '');
+                $class         = trim($row['C'] ?? '');
+                $phone         = trim($row['D'] ?? '');
+                $phone_parent  = trim($row['E'] ?? '');
+                $email         = trim($row['F'] ?? '');
+                $profile_photo = trim($row['G'] ?? '');
+
+                if ($student_code === '' || $full_name === '') continue;
+
+                $stmt = $pdo->prepare("
+                    INSERT IGNORE INTO campers
+                    (student_code, full_name, class, phone, phone_parent, email, profile_photo, is_active)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+                ");
+
+                $stmt->execute([
+                    $student_code,
+                    $full_name,
+                    $class,
+                    $phone,
+                    $phone_parent,
+                    $email,
+                    $profile_photo
+                ]);
+            }
+
+            $pdo->commit();
+
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            die('Lỗi import Excel: ' . $e->getMessage());
         }
-
-        fclose($file);
-        $pdo->commit();
     }
 }
-
 /* ===== DANH SÁCH ===== */
 $campers = $pdo->query("
-    SELECT student_code, full_name, phone, class, is_active
+    SELECT student_code, full_name, phone, phone_parent, class, email, profile_photo, is_active
     FROM campers
     ORDER BY is_active DESC, full_name
 ")->fetchAll(PDO::FETCH_ASSOC);
+
+// 1️⃣ Kiểm tra dữ liệu thiếu
+foreach ($campers as &$c) {
+
+    $missing = [];
+
+    if (!isset($c['full_name']) || trim($c['full_name']) === '')
+        $missing[] = 'Họ tên';
+
+    if (!isset($c['class']) || trim($c['class']) === '')
+        $missing[] = 'Lớp';
+
+    if (!isset($c['phone']) || trim($c['phone']) === '')
+        $missing[] = 'SĐT';
+
+    if (!isset($c['phone_parent']) || trim($c['phone_parent']) === '')
+        $missing[] = 'SĐT phụ huynh';
+
+    if (!isset($c['email']) || trim($c['email']) === '')
+        $missing[] = 'Email';
+
+    if (
+        !isset($c['profile_photo']) ||
+        !filter_var(trim($c['profile_photo']), FILTER_VALIDATE_URL)
+    ) {
+        $missing[] = 'Ảnh đại diện';
+    }
+
+    $c['data_status']    = empty($missing) ? 'DU' : 'THIEU';
+    $c['missing_fields'] = $missing;
+    $c['missing_text']   = implode(', ', $missing);
+    $c['missing_count']  = count($missing);
+}
+
+unset($c); // QUAN TRỌNG khi dùng &
+
+
+// 2️⃣ Sắp xếp danh sách
+usort($campers, function ($a, $b) {
+
+    // Ưu tiên đủ dữ liệu trước
+    if ($a['data_status'] !== $b['data_status']) {
+        return $a['data_status'] === 'DU' ? -1 : 1;
+    }
+
+    // Hàm parse lớp học
+    $parse = function ($class) {
+        if (is_string($class) && preg_match('/^(\d+)([A-Z]+)(\d+)$/i', trim($class), $m)) {
+            return [
+                'grade'  => (int)$m[1],               // Khối
+                'letter' => strtoupper($m[2]),        // A, B, C
+                'num'    => (int)$m[3]                // 1, 10
+            ];
+        }
+        // Dữ liệu lỗi đẩy xuống cuối
+        return ['grade' => 0, 'letter' => 'Z', 'num' => 999];
+    };
+
+    $ca = $parse($a['class'] ?? '');
+    $cb = $parse($b['class'] ?? '');
+
+    // 1️⃣ Khối: 12 → 11 → 10
+    if ($ca['grade'] !== $cb['grade']) {
+        return $cb['grade'] <=> $ca['grade'];
+    }
+
+    // 2️⃣ Chữ lớp: A → B → C
+    if ($ca['letter'] !== $cb['letter']) {
+        return strcmp($ca['letter'], $cb['letter']);
+    }
+
+    // 3️⃣ Số lớp: 1 → 10
+    return $ca['num'] <=> $cb['num'];
+});
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -107,14 +208,31 @@ $campers = $pdo->query("
 body { background:#f4faff; }
 .card { border-radius:14px; }
 .table td { vertical-align:middle; }
-.badge-active { background:#eafaf1; color:#2ecc71; }
-.badge-inactive { background:#fdecea; color:#e74c3c; }
+.badge-active { background:#eafaf1;opacity: 1; color:#2ecc71; }
+.badge-inactive { background:#fdecea;opacity: 1; color:#e74c3c; }
 @media(max-width:768px){
     .desktop-only { display:none; }
 }
 @media(min-width:769px){
     .mobile-only { display:none; }
 }
+.badge {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+/* CHECK IN */
+.badge-active {
+    background-color: #eafaf1 !important;
+    color: #2ecc71 !important;
+    font-weight: 700;
+}
+
+/* CHECK OUT */
+.badge-inactive {
+    background-color: #fdecea !important;
+    color: #e74c3c !important;
+    font-weight: 700;}
 </style>
 </head>
 
@@ -159,21 +277,23 @@ include __DIR__ . '/../../includes/header.php';
 </div>
 </div>
 
-<!-- ===== IMPORT CSV ===== -->
+<!-- ===== IMPORT Excel ===== -->
 <div class="card mb-4">
 <div class="card-body">
-<h5 class="mb-3">📥 Import CSV</h5>
+<h5 class="mb-3">📥 Import Excel</h5>
 <form method="post" enctype="multipart/form-data">
-<input type="hidden" name="import_csv">
-<input type="file" name="csv" accept=".csv" required>
+<input type="hidden" name="import_excel">
+<input type="file" name="excel" accept=".xls,.xlsx" required>
 <button class="btn btn-success mt-2">Import</button>
 </form>
-<small class="text-muted">
-CSV gồm: Mã số trại sinh, Họ tên, Lớp, Số điện thoại, Số điện thoại phụ huynh, Email, Ảnh đại diện
-</small>
 </div>
 </div>
 
+<a href="uploads/DanhsachTraisinhmau.xlsx"
+   class="btn btn-outline-primary btn-sm mb-2"
+   download>
+   <i class="bi bi-download"></i> Tải file Excel mẫu
+</a>
 
 
 <!-- ===== SEARCH ===== -->
@@ -204,15 +324,22 @@ CSV gồm: Mã số trại sinh, Họ tên, Lớp, Số điện thoại, Số đ
     <td><?= $c['class'] ?></td>
   <td><?= $c['phone'] ?></td>
   <td>
-    <span class="badge <?= $c['is_active'] ? 'badge-active' : 'badge-inactive' ?>">
-      <?= $c['is_active'] ? 'Đang có dữ liệu' : 'Đã xoá' ?>
-    </span>
+    <?php if ($c['data_status'] === 'DU'): ?>
+        <span class="badge bg-success">
+            Đã đủ dữ liệu
+        </span>
+    <?php else: ?>
+        <span class="badge bg-warning text-dark"
+            title="Thiếu: <?= implode(', ', $c['missing_fields']) ?>">
+            Thiếu dữ liệu
+        </span>
+    <?php endif; ?>
   </td>
   <td>
   <?php if ($c['is_active']): ?>
     <button class="btn btn-sm btn-warning me-1"
-      onclick='openEdit(<?= json_encode($c, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-      <i class="bi bi-pencil"></i>
+        onclick='openEdit(<?= json_encode($c, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+        <i class="bi bi-pencil"></i>
     </button>
 
     <a href="?disable=<?= $c['student_code'] ?>"
@@ -250,7 +377,7 @@ CSV gồm: Mã số trại sinh, Họ tên, Lớp, Số điện thoại, Số đ
 <div class="modal-content">
 
 <div class="modal-header">
-<h5 class="modal-title">Sửa trại sinh</h5>
+<h5 class="modal-title">Sửa thông tin trại sinh</h5>
 <button class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
@@ -285,13 +412,8 @@ CSV gồm: Mã số trại sinh, Họ tên, Lớp, Số điện thoại, Số đ
 </div>
 
 <div class="mb-2">
-<label>Ảnh đại diện</label>
-<input class="form-control"
-       name="profile_photo"
-       id="e_avatar"
-       placeholder="Dán link Cloudinary avatar">
-</div>
-
+  <label>Ảnh đại diện (Cloudinary)</label>
+  <input type="text" name="profile_photo" id="e_avatar" class="form-control" placeholder="Dán link Cloudinary avatar">
 </div>
 
 <div class="modal-footer">
@@ -319,9 +441,21 @@ function openEdit(data) {
     document.getElementById('e_phone').value = data.phone || '';
     document.getElementById('e_parent').value = data.phone_parent || '';
     document.getElementById('e_email').value = data.email || '';
+    document.getElementById('e_avatar').value = data.profile_photo || '';
 
     new bootstrap.Modal(document.getElementById('editModal')).show();
 }
+
+document.getElementById('search').addEventListener('input', function () {
+    const q = this.value.toLowerCase().trim();
+
+    document.querySelectorAll('.camper-row').forEach(row => {
+        const name  = row.querySelector('.camper-name')?.innerText.toLowerCase() || '';
+        const cls   = row.querySelector('.camper-class')?.innerText.toLowerCase() || '';
+
+        row.style.display = (name.includes(q) || cls.includes(q)) ? '' : 'none';
+    });
+});
 
 document.getElementById('editForm').addEventListener('submit', function(e){
     e.preventDefault();
