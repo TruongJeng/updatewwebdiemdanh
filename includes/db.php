@@ -1,10 +1,11 @@
 <?php
 // Kết nối PDO
-$host = 'localhost';
-$dbname = 'clbupdate1812026';
-$user = 'root'; // đổi thành tài khoản thật của bạn
-$pass = '';     // đổi thành mật khẩu thật của bạn
+$host = 'clbkynangdoanhoiltk.io.vn';
+$dbname = 'bmkavqtl_clbkynang';
+$user = 'bmkavqtl_truonggiang'; // đổi thành tài khoản thật của bạn
+$pass = 'Giang15052006@';     // đổi thành mật khẩu thật của bạn
 $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+
 
 /**
  * Kiểm tra đăng nhập: trả về mảng user nếu đúng, trả về false nếu sai
