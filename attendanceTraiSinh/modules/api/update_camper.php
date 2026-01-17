@@ -22,6 +22,7 @@ $profilePhoto = trim($_POST['profile_photo'] ?? '');
 $sql = "
     UPDATE campers SET
         full_name = ?,
+        class = ?,
         phone = ?,
         phone_parent = ?,
         email = ?
@@ -29,6 +30,7 @@ $sql = "
 
 $params = [
     $_POST['full_name'],
+    $_POST['class'],
     $_POST['phone'],
     $_POST['phone_parent'],
     $_POST['email']

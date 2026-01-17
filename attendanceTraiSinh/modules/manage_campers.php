@@ -16,20 +16,47 @@ if (isset($_GET['disable'])) {
 
 /* ===== THÊM 1 ===== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_one'])) {
+
+    // Lấy dữ liệu an toàn
+    $student_code  = $_POST['student_code'] ?? null;
+    $full_name     = $_POST['full_name'] ?? null;
+    $class         = $_POST['class'] ?? null;
+    $phone         = $_POST['phone'] ?? null;
+    $phone_parent  = $_POST['phone_parent'] ?? null;
+    $email         = $_POST['email'] ?? null;
+    $profile_photo = $_POST['profile_photo'] ?? null;
+
+    // Check dữ liệu bắt buộc
+    if (!$student_code || !$full_name) {
+        die("Thiếu mã học sinh hoặc họ tên");
+    }
+
+    // Check trùng student_code
+    $check = $pdo->prepare("SELECT 1 FROM campers WHERE student_code = ?");
+    $check->execute([$student_code]);
+
+    if ($check->fetch()) {
+        die("Mã học sinh đã tồn tại");
+    }
+
+    // Insert
     $stmt = $pdo->prepare("
         INSERT INTO campers
-        (student_code, full_name, phone, phone_parent, email, profile_photo, is_active)
-        VALUES (?, ?, ?, ?, ?, ?, 1)
+        (student_code, full_name, class, phone, phone_parent, email, profile_photo, is_active)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
     ");
+
     $stmt->execute([
-        $_POST['student_code'],
-        $_POST['full_name'],
-        $_POST['phone'],
-        $_POST['phone_parent'],
-        $_POST['email'],
-        $_POST['profile_photo']
+        $student_code,
+        $full_name,
+        $class,
+        $phone,
+        $phone_parent,
+        $email,
+        $profile_photo
     ]);
 }
+
 
 /* ===== IMPORT CSV ===== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_csv'])) {
@@ -45,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_csv'])) {
 
             $stmt = $pdo->prepare("
                 INSERT IGNORE INTO campers
-                (student_code, full_name, phone, phone_parent, email, profile_photo, is_active)
-                VALUES (?, ?, ?, ?, ?, ?, 1)
+                (student_code, full_name, class, phone, phone_parent, email, profile_photo, is_active)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1)
             ");
             $stmt->execute([
                 $row[0], $row[1], $row[2],
-                $row[3], $row[4], $row[5]
+                $row[3], $row[4], $row[5], $row[6]
             ]);
         }
 
@@ -111,10 +138,13 @@ include __DIR__ . '/../../includes/header.php';
 <input class="form-control" name="full_name" placeholder="Họ tên" required>
 </div>
 <div class="col-md-2">
-<input class="form-control" name="phone" placeholder="SĐT">
+<input class="form-control" name="class" placeholder="Lớp">
 </div>
 <div class="col-md-2">
-<input class="form-control" name="phone_parent" placeholder="SĐT PH">
+<input class="form-control" name="phone" placeholder="Số điện thoại">
+</div>
+<div class="col-md-2">
+<input class="form-control" name="phone_parent" placeholder="Số điện thoại phụ huynh">
 </div>
 <div class="col-md-3">
 <input class="form-control" name="email" placeholder="Email">
@@ -139,7 +169,7 @@ include __DIR__ . '/../../includes/header.php';
 <button class="btn btn-success mt-2">Import</button>
 </form>
 <small class="text-muted">
-CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
+CSV gồm: Mã số trại sinh, Họ tên, Lớp, Số điện thoại, Số điện thoại phụ huynh, Email, Ảnh đại diện
 </small>
 </div>
 </div>
@@ -159,7 +189,8 @@ CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
 <tr>
   <th>Mã</th>
   <th>Họ tên</th>
-  <th>SĐT</th>
+  <th>Lớp</th>
+  <th>Số điện thoại</th>
   <th>Trạng thái</th>
   <th>Thao tác</th>
 </tr>
@@ -170,6 +201,7 @@ CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
 <tr>
   <td><?= $c['student_code'] ?></td>
   <td><?= $c['full_name'] ?></td>
+    <td><?= $c['class'] ?></td>
   <td><?= $c['phone'] ?></td>
   <td>
     <span class="badge <?= $c['is_active'] ? 'badge-active' : 'badge-inactive' ?>">
@@ -201,7 +233,7 @@ CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
 <?php foreach ($campers as $c): ?>
 <div class="border rounded p-2 mb-2">
 <b><?= $c['full_name'] ?></b><br>
-<?= $c['student_code'] ?> • <?= $c['phone'] ?><br>
+<?= $c['student_code'] ?> • <?= $c['class'] ?> • <?= $c['phone'] ?><br>
 <span class="badge <?= $c['is_active'] ? 'badge-active' : 'badge-inactive' ?>">
 <?= $c['is_active'] ? 'Đang trại' : 'Đã xoá' ?>
 </span>
@@ -233,12 +265,17 @@ CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
 </div>
 
 <div class="mb-2">
-<label>SĐT</label>
+<label>Lớp</label>
+<input class="form-control" name="class" id="e_class">
+</div>
+
+<div class="mb-2">
+<label>Số điện thoại</label>
 <input class="form-control" name="phone" id="e_phone">
 </div>
 
 <div class="mb-2">
-<label>SĐT phụ huynh</label>
+<label>Số điện thoại phụ huynh</label>
 <input class="form-control" name="phone_parent" id="e_parent">
 </div>
 
@@ -278,6 +315,7 @@ search.addEventListener('input', () => {
 function openEdit(data) {
     document.getElementById('e_code').value = data.student_code;
     document.getElementById('e_name').value = data.full_name || '';
+    document.getElementById('e_class').value = data.class || '';
     document.getElementById('e_phone').value = data.phone || '';
     document.getElementById('e_parent').value = data.phone_parent || '';
     document.getElementById('e_email').value = data.email || '';

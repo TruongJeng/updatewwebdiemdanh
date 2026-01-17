@@ -181,7 +181,7 @@ include __DIR__ . '/../../includes/header.php';
 <div class="container mt-4 mb-4">
     <div class="bg-white p-4 rounded-4 shadow-sm mb-3">
         <h3 class="mb-3 text-primary text-center" style="font-weight:800;letter-spacing:1px;">
-            Chia đội cho hoạt động
+            Chia đội trại sinh là niềm vui bất ngờ!!
         </h3>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <a href="../../dashboard.php" class="back-link"><i class="bi bi-arrow-left-circle"></i> Về Trang chủ</a>
@@ -190,6 +190,30 @@ include __DIR__ . '/../../includes/header.php';
         <form method="post" class="text-end mb-3" onsubmit="return confirm('Bạn chắc chắn muốn xóa toàn bộ đội và thành viên của hoạt động này?');">
             <button class="btn btn-outline-danger" name="delete_all_teams" type="submit"><i class="bi bi-trash"></i> Xóa tất cả đội của hoạt động này</button>
         </form>
+            <div class="row mt-3">
+            <div class="col-md-7 mb-3">
+                <h5 class="mb-2 text-secondary" style="font-weight:600;">Danh sách trại sinh</h5>
+                <div class="table-scroll">
+                <table class="table table-bordered table-striped table-hover align-middle shadow-sm">
+                    <thead class="table-primary">
+                        <tr>
+                            <th style="width:45px;">STT</th>
+                            <th>Tên</th>
+                            <th style="width:90px;">Lớp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($students as $k=>$s): ?>
+                        <tr>
+                            <td><?= $k+1 ?></td>
+                            <td><?= htmlspecialchars($s['full_name']) ?></td>
+                            <td><?= htmlspecialchars($s['class']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                </div>
+            </div>
         <div class="row">
             <div class="col-md-5 mb-3">
                 <div class="d-flex flex-wrap gap-2 mb-3 justify-content-center">
