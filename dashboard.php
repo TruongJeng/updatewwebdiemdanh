@@ -177,6 +177,11 @@ include __DIR__ . '/includes/header.php';
             <i class="bi bi-people-fill"></i> Xóa, sửa, thêm trại sinh
           </a>
         </li>
+                <li>
+          <a href="attendanceTraiSinh/modules/chiadoi.php">
+            <i class="bi bi-people-fill"></i> Chia đội tự động
+          </a>
+        </li>
       </ul>
     </li>
     <li>
