@@ -13,8 +13,20 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background: #e8f1fb; }
-        .topbar { background: #6fa6e3; color: #fff; height: 60px; padding: 0 18px;}
+        body { background: #e8f1fb;padding-top: 60px; }
+        .topbar {
+        background: #6fa6e3;
+        color: #fff;
+        height: 60px;
+        position: fixed;      /* QUAN TRỌNG */
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1200;
+
+        padding: 0 18px;
+        }
+
         .logo-area img { height:36px; margin-right:10px; }
         .logo-area span { font-size:20px; font-weight:600; }
         .logo-area a { color: #fff; text-decoration: none; display: flex; align-items: center; }
