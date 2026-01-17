@@ -1,23 +1,25 @@
 <?php
-// sidebar.php – All in one
+// sidebar.php – All in one (FINAL)
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
-<!-- ===== SIDEBAR STYLE ===== -->
+<!-- ===== SIDEBAR + MAIN STYLE ===== -->
 <style>
-/* Sidebar */
+/* ===== SIDEBAR ===== */
 .sidebar {
   position: fixed;
-  top: 60px;
+  top: 60px;                  /* dính sát header */
   left: 0;
   width: 230px;
-  height: calc(100vh - 60px); /* QUAN TRỌNG */
+  height: calc(100vh - 60px); /* không che footer */
   background: #f4faff;
   border-right: 1.5px solid #a8c8f0;
   padding-top: 16px;
   overflow-y: auto;
   z-index: 1090;
+  transition: left .25s ease;
 }
+
 .sidebar ul { list-style: none; padding: 0; margin: 0; }
 .sidebar li { margin-bottom: 6px; }
 
@@ -36,7 +38,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 }
 .sidebar i { margin-right: 9px; }
 
-/* Toggle button */
+/* ===== TOGGLE BUTTON ===== */
 #sidebarToggle {
   display: none;
   background: none;
@@ -46,7 +48,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   z-index: 2000;
 }
 
-/* Backdrop */
+/* ===== BACKDROP ===== */
 .sidebar-backdrop {
   display: none;
   position: fixed;
@@ -55,13 +57,23 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   z-index: 1080;
 }
 
-/* Mobile */
+/* ===== MAIN CONTENT ===== */
+.main {
+  margin-left: 230px;
+  margin-top: 60px; /* né header */
+  padding: 40px 32px 24px 32px;
+  min-height: calc(100vh - 60px);
+  transition: margin-left .25s ease;
+}
+
+/* ===== MOBILE ===== */
 @media (max-width: 900px) {
   .sidebar {
-    top: 0;
+    top: 60px;
     left: -240px;
+    height: calc(100vh - 60px);
     border-radius: 0 18px 18px 0;
-    box-shadow: 2px 0 12px #0002;
+    box-shadow: 2px 0 12px rgba(0,0,0,.15);
   }
   .sidebar.active { left: 0; }
 
@@ -73,104 +85,105 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     color: #fff;
   }
 
+  .main {
+    margin-left: 0;
+    margin-top: 60px;
+    padding: 16px 4vw 24px 4vw;
+  }
+
   body.sidebar-open {
     overflow: hidden;
   }
 }
-/* ===== MAIN CONTENT ===== */
-.main {
-  margin-left: 230px;
-  padding: 40px 32px 24px 32px;
-  transition: margin-left .25s ease;
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  .main {
-    margin-left: 0;
-    padding: 16px 4vw 24px 4vw;
-  }
-}
-
 </style>
 
-<<!-- Sidebar Toggle Button (hiện trên mobile) -->
-<button id="sidebarToggle" aria-label="Mở menu" title="Mở menu" style="display:none;"><i class="bi bi-list"></i></button>
+<!-- ===== SIDEBAR TOGGLE (MOBILE) ===== -->
+<button id="sidebarToggle" aria-label="Mở menu" title="Mở menu">
+  <i class="bi bi-list"></i>
+</button>
+
+<!-- ===== SIDEBAR ===== -->
 <div class="sidebar" id="sidebar">
   <ul id="Chung">
-    <li><a href="dashboard.php"><i class="bi bi-house-door"></i> Trang chủ</a></li>
-    <li><a href="modules/events.php"><i class="bi bi-calendar-event"></i> Quản lý sự kiện</a></li>
-    <li><a href="modules/students.php"><i class="bi bi-people"></i> Quản lý học sinh</a></li>
-    <li><a href="modules/attendance.php"><i class="bi bi-clipboard-check"></i> Điểm danh</a></li>
-    <!-- <li><a href="modules/attendancetraisinh.php"><i class="bi bi-clipboar-check"></i> Điểm danh Trại Sinh</a></li> -->
+
     <li>
-      <a href="#" data-bs-toggle="collapse" class="d-flex align-items-center" 
-         role="button" aria-expanded="false" aria-controls="utilitiesMenu1" data-bs-target="#utilitiesMenu1" onclick="event.preventDefault()">
+      <a href="dashboard.php" class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
+        <i class="bi bi-house-door"></i> Trang chủ
+      </a>
+    </li>
+
+    <li>
+      <a href="modules/events.php">
+        <i class="bi bi-calendar-event"></i> Quản lý sự kiện
+      </a>
+    </li>
+
+    <li>
+      <a href="modules/students.php">
+        <i class="bi bi-people"></i> Quản lý học sinh
+      </a>
+    </li>
+
+    <li>
+      <a href="modules/attendance.php">
+        <i class="bi bi-clipboard-check"></i> Điểm danh
+      </a>
+    </li>
+
+    <!-- Điểm danh Trại sinh -->
+    <li>
+      <a href="#" data-bs-toggle="collapse" data-bs-target="#utilitiesMenu1"
+         class="d-flex align-items-center" onclick="event.preventDefault()">
         <i class="bi bi-grid"></i>
-        <span style="flex: 1;">Điểm danh Trại sinh</span>
+        <span style="flex:1;">Điểm danh Trại sinh</span>
         <i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul class="collapse list-unstyled ps-4" id="utilitiesMenu1" data-bs-parent="#Chung">
-        <li>
-          <a href="attendanceTraiSinh/views/create_pin.php">
-            <i class="bi bi-people-fill"></i> Tạo mã PIN (ADMIN)
-          </a>
-        </li>
-        <li>
-          <a href="attendanceTraiSinh/views/enter_pin.php">
-            <i class="bi bi-people-fill"></i> Điểm danh (BTC)
-          </a>
-        </li>
-        <li>
-          <a href="attendanceTraiSinh/views/attendance_list.php">
-            <i class="bi bi-people-fill"></i> Kiểm tra điểm danh
-          </a>
-        </li>
-        <li>
-          <a href="attendanceTraiSinh/modules/manage_campers.php">
-            <i class="bi bi-people-fill"></i> Xóa, sửa, thêm trại sinh
-          </a>
-        </li>
-                <li>
-          <a href="attendanceTraiSinh/modules/chiadoi.php">
-            <i class="bi bi-people-fill"></i> Chia đội tự động
-          </a>
-        </li>
+        <li><a href="attendanceTraiSinh/views/create_pin.php"><i class="bi bi-key"></i> Tạo mã PIN</a></li>
+        <li><a href="attendanceTraiSinh/views/enter_pin.php"><i class="bi bi-person-check"></i> Điểm danh</a></li>
+        <li><a href="attendanceTraiSinh/views/attendance_list.php"><i class="bi bi-list-check"></i> Kiểm tra</a></li>
+        <li><a href="attendanceTraiSinh/modules/manage_campers.php"><i class="bi bi-pencil"></i> Quản lý trại sinh</a></li>
+        <li><a href="attendanceTraiSinh/modules/chiadoi.php"><i class="bi bi-diagram-3"></i> Chia đội</a></li>
       </ul>
     </li>
+
+    <!-- Tiện ích -->
     <li>
-      <a href="#" data-bs-toggle="collapse" class="d-flex align-items-center" 
-         role="button" aria-expanded="false" aria-controls="utilitiesMenu2" data-bs-target="#utilitiesMenu2" onclick="event.preventDefault()">
+      <a href="#" data-bs-toggle="collapse" data-bs-target="#utilitiesMenu2"
+         class="d-flex align-items-center" onclick="event.preventDefault()">
         <i class="bi bi-grid"></i>
-        <span style="flex: 1;">Tiện ích</span>
+        <span style="flex:1;">Tiện ích</span>
         <i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul class="collapse list-unstyled ps-4" id="utilitiesMenu2" data-bs-parent="#Chung">
+        <li><a href="modules/team.php"><i class="bi bi-people-fill"></i> Đội</a></li>
         <li>
-          <a href="modules/team.php">
-            <i class="bi bi-people-fill"></i> Đội
-          </a>
-        </li>
-        <li>
-          <a href="https://www.online-stopwatch.com/">
-            <i class="bi bi-joystick"></i> Trò chơi
+          <a href="https://www.online-stopwatch.com/" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-stopwatch"></i> Trò chơi
           </a>
         </li>
       </ul>
     </li>
+
     <li><a href="modules/report.php"><i class="bi bi-bar-chart-line"></i> Thống kê</a></li>
     <li><a href="modules/users.php"><i class="bi bi-person-gear"></i> Quản lý tài khoản</a></li>
-    <li><a href="#"><i class="bi bi-bar-chart"></i> Khảo sát</a></li>
+
     <li>
-      <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#softInfoModal">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#softInfoModal">
         <i class="bi bi-info-circle"></i> Thông tin phần mềm
       </a>
     </li>
-    <li><a href="#"><i class="bi bi-question-circle"></i> Hướng dẫn</a></li>
-    <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a></li>
+
+    <li>
+      <a href="logout.php">
+        <i class="bi bi-box-arrow-right"></i> Đăng xuất
+      </a>
+    </li>
+
   </ul>
 </div>
-<div class="sidebar-backdrop" id="sidebarBackdrop" style="display:none;"></div>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
 <!-- ===== SIDEBAR SCRIPT ===== -->
 <script>
@@ -189,7 +202,6 @@ backdrop.addEventListener('click', () => {
   backdrop.style.display = 'none';
   document.body.classList.remove('sidebar-open');
 
-  // Đóng toàn bộ submenu
   document.querySelectorAll('.collapse.show').forEach(el => {
     bootstrap.Collapse.getOrCreateInstance(el).hide();
   });
