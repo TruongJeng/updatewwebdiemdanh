@@ -1,0 +1,921 @@
+[04-Oct-2025 05:26:28 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000] [1044] Access denied for user 'bmkavqtl_truonggiang'@'server205.bkhost.vn' to database 'bmkavqtl_clbkynang' in /home/bmkavqtl/public_html/UDQL/includes/db.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/UDQL/includes/db.php(7): PDO->__construct('mysql:host=clbk...', 'bmkavqtl_truong...', 'Giang15052006@')
+#1 /home/bmkavqtl/public_html/UDQL/index.php(3): require('/home/bmkavqtl/...')
+#2 {main}
+  thrown in /home/bmkavqtl/public_html/UDQL/includes/db.php on line 7
+[04-Oct-2025 05:26:30 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000] [1044] Access denied for user 'bmkavqtl_truonggiang'@'server205.bkhost.vn' to database 'bmkavqtl_clbkynang' in /home/bmkavqtl/public_html/UDQL/includes/db.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/UDQL/includes/db.php(7): PDO->__construct('mysql:host=clbk...', 'bmkavqtl_truong...', 'Giang15052006@')
+#1 /home/bmkavqtl/public_html/UDQL/index.php(3): require('/home/bmkavqtl/...')
+#2 {main}
+  thrown in /home/bmkavqtl/public_html/UDQL/includes/db.php on line 7
+[04-Oct-2025 05:26:31 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000] [1044] Access denied for user 'bmkavqtl_truonggiang'@'server205.bkhost.vn' to database 'bmkavqtl_clbkynang' in /home/bmkavqtl/public_html/UDQL/includes/db.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/UDQL/includes/db.php(7): PDO->__construct('mysql:host=clbk...', 'bmkavqtl_truong...', 'Giang15052006@')
+#1 /home/bmkavqtl/public_html/UDQL/index.php(3): require('/home/bmkavqtl/...')
+#2 {main}
+  thrown in /home/bmkavqtl/public_html/UDQL/includes/db.php on line 7
+[04-Oct-2025 05:26:36 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000] [1044] Access denied for user 'bmkavqtl_truonggiang'@'server205.bkhost.vn' to database 'bmkavqtl_clbkynang' in /home/bmkavqtl/public_html/UDQL/includes/db.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/UDQL/includes/db.php(7): PDO->__construct('mysql:host=clbk...', 'bmkavqtl_truong...', 'Giang15052006@')
+#1 /home/bmkavqtl/public_html/UDQL/index.php(3): require('/home/bmkavqtl/...')
+#2 {main}
+  thrown in /home/bmkavqtl/public_html/UDQL/includes/db.php on line 7
+[04-Oct-2025 05:26:42 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000] [1044] Access denied for user 'bmkavqtl_truonggiang'@'server205.bkhost.vn' to database 'bmkavqtl_clbkynang' in /home/bmkavqtl/public_html/UDQL/includes/db.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/UDQL/includes/db.php(7): PDO->__construct('mysql:host=clbk...', 'bmkavqtl_truong...', 'Giang15052006@')
+#1 /home/bmkavqtl/public_html/UDQL/index.php(3): require('/home/bmkavqtl/...')
+#2 {main}
+  thrown in /home/bmkavqtl/public_html/UDQL/includes/db.php on line 7
+[04-Oct-2025 05:28:55 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000] [1044] Access denied for user 'bmkavqtl_truonggiang'@'server205.bkhost.vn' to database 'bmkavqtl_clbkynang' in /home/bmkavqtl/public_html/includes/db.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/includes/db.php(7): PDO->__construct('mysql:host=clbk...', 'bmkavqtl_truong...', 'Giang15052006@')
+#1 /home/bmkavqtl/public_html/index.php(3): require('/home/bmkavqtl/...')
+#2 {main}
+  thrown in /home/bmkavqtl/public_html/includes/db.php on line 7
+[04-Oct-2025 05:32:52 UTC] PHP Notice:  Undefined index: first_login in /home/bmkavqtl/public_html/index.php on line 18
+[04-Oct-2025 05:32:52 UTC] PHP Notice:  Undefined index: first_login in /home/bmkavqtl/public_html/index.php on line 20
+[04-Oct-2025 05:38:15 UTC] PHP Notice:  Undefined index: first_login in /home/bmkavqtl/public_html/index.php on line 18
+[04-Oct-2025 05:38:15 UTC] PHP Notice:  Undefined index: first_login in /home/bmkavqtl/public_html/index.php on line 20
+[04-Oct-2025 05:41:09 UTC] PHP Notice:  Undefined index: first_login in /home/bmkavqtl/public_html/index.php on line 18
+[04-Oct-2025 05:41:09 UTC] PHP Notice:  Undefined index: first_login in /home/bmkavqtl/public_html/index.php on line 20
+[04-Oct-2025 06:47:40 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:47:40 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:49:07 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:49:07 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:14 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:14 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:51 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:51 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:51 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:51 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:52 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:52 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:52 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:52 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:53 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:50:53 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 3
+[04-Oct-2025 06:52:38 UTC] PHP Warning:  require_once(../includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 6
+[04-Oct-2025 06:52:38 UTC] PHP Fatal error:  require_once(): Failed opening required '../includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 6
+[04-Oct-2025 07:11:14 UTC] PHP Warning:  require_once(/includes/db.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/new_password.php on line 6
+[04-Oct-2025 07:11:14 UTC] PHP Fatal error:  require_once(): Failed opening required '/includes/db.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/new_password.php on line 6
+[05-Oct-2025 15:57:31 UTC] PHP Warning:  include(/includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:31 UTC] PHP Warning:  include(/includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:31 UTC] PHP Warning:  include(): Failed opening '/includes/header.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:53 UTC] PHP Warning:  include(/../includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:53 UTC] PHP Warning:  include(/../includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:53 UTC] PHP Warning:  include(): Failed opening '/../includes/header.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:54 UTC] PHP Warning:  include(/../includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:54 UTC] PHP Warning:  include(/../includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:54 UTC] PHP Warning:  include(): Failed opening '/../includes/header.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:54 UTC] PHP Warning:  include(/../includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:54 UTC] PHP Warning:  include(/../includes/header.php): failed to open stream: No such file or directory in /home/bmkavqtl/public_html/dashboard.php on line 35
+[05-Oct-2025 15:57:54 UTC] PHP Warning:  include(): Failed opening '/../includes/header.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/bmkavqtl/public_html/dashboard.php on line 35
+[07-Oct-2025 13:38:44 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: General error: 1364 Field 'student_code' doesn't have a default value in /home/bmkavqtl/public_html/modules/attendance_qr.php:70
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(70): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 70
+[07-Oct-2025 13:40:04 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: General error: 1364 Field 'student_code' doesn't have a default value in /home/bmkavqtl/public_html/modules/attendance_qr.php:70
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(70): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 70
+[07-Oct-2025 13:44:40 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: General error: 1364 Field 'student_code' doesn't have a default value in /home/bmkavqtl/public_html/modules/attendance_qr.php:80
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(80): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 80
+[07-Oct-2025 13:55:03 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'checkin_method' at row 1 in /home/bmkavqtl/public_html/modules/attendance_qr.php:86
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(86): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 86
+[07-Oct-2025 14:01:36 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'checkin_method' at row 1 in /home/bmkavqtl/public_html/modules/attendance_qr.php:91
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(91): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 91
+[07-Oct-2025 14:01:44 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'checkin_method' at row 1 in /home/bmkavqtl/public_html/modules/attendance_qr.php:91
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(91): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 91
+[07-Oct-2025 14:02:12 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'checkin_method' at row 1 in /home/bmkavqtl/public_html/modules/attendance_qr.php:91
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(91): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 91
+[07-Oct-2025 14:04:58 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'checkin_method' at row 1 in /home/bmkavqtl/public_html/modules/attendance_qr.php:104
+Stack trace:
+#0 /home/bmkavqtl/public_html/modules/attendance_qr.php(104): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/modules/attendance_qr.php on line 104
+[07-Oct-2025 14:44:26 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 9
+[07-Oct-2025 14:44:26 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 9
+[07-Oct-2025 14:51:50 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '6-751' for key 'event_id' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php:151
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php(151): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 151
+[07-Oct-2025 14:52:19 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '6-751' for key 'event_id' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php:151
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php(151): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 151
+[07-Oct-2025 14:53:15 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '6-751' for key 'event_id' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php:155
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php(155): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 155
+[07-Oct-2025 15:10:07 UTC] PHP Parse error:  syntax error, unexpected string content "", expecting "-" or identifier or variable or number in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 165
+[07-Oct-2025 17:55:05 UTC] PHP Warning:  Undefined array key "role" in /home/bmkavqtl/public_html/hethongdiemdanh/modules/users.php on line 6
+[18-Oct-2025 13:28:08 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function tach_ho_ten() in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php:55
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/attendance_qr.php on line 55
+[18-Oct-2025 13:28:17 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:28:23 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:28:23 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:28:24 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:28:24 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:28:25 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:28:27 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:29:00 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:33
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(33): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 33
+[18-Oct-2025 13:35:52 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:31
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(31): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 31
+[18-Oct-2025 13:37:49 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.created_at' in 'SELECT' in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php:35
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php(35): PDOStatement->execute()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/admin_map.php on line 35
+[15-Dec-2025 04:05:35 UTC] PHP Warning:  Undefined global variable $_SESSION in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 8
+[15-Dec-2025 04:05:35 UTC] PHP Warning:  Trying to access array offset on value of type null in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 8
+[15-Dec-2025 04:05:41 UTC] PHP Warning:  Undefined global variable $_SESSION in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 8
+[15-Dec-2025 04:05:41 UTC] PHP Warning:  Trying to access array offset on value of type null in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 8
+[15-Dec-2025 04:05:50 UTC] PHP Warning:  Undefined global variable $_SESSION in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 8
+[15-Dec-2025 04:05:50 UTC] PHP Warning:  Trying to access array offset on value of type null in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 8
+[15-Dec-2025 04:06:44 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[28000] [1045] Access denied for user 'username'@'localhost' (using password: YES) in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php(7): PDO->__construct()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 7
+[15-Dec-2025 04:06:49 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[28000] [1045] Access denied for user 'username'@'localhost' (using password: YES) in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php:7
+Stack trace:
+#0 /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php(7): PDO->__construct()
+#1 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/reopen_event.php on line 7
+[15-Dec-2025 15:27:47 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:27:47 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:27:47 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:34:31 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:34:31 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:34:31 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:35:28 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:35:28 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:35:28 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 3
+[15-Dec-2025 15:39:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:33 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:33 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:34 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:39:34 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:07 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:07 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:07 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:07 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:08 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:08 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:08 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:08 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:08 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:08 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:15 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:15 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:15 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:15 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:16 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:16 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:16 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:16 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:16 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:16 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:17 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:17 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:17 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:17 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:17 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:17 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:18 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:18 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:18 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:18 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:19 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:19 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:19 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:19 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:20 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:20 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:20 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:20 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:21 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:21 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:21 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:21 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:22 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:22 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:22 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:22 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:22 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:22 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:23 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:23 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:23 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:23 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:23 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:23 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:24 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:24 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:24 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:24 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:24 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:24 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:25 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:25 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:25 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:25 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:25 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:26 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:26 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:26 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:26 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:26 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:27 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:27 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:27 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:27 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:27 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:28 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:28 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:28 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:28 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:28 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:29 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:29 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:29 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:29 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:29 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:30 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:30 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:30 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:30 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:30 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:30 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:31 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:31 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:31 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:31 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:31 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:31 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:32 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:33 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:33 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:33 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:34 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:34 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:34 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:35 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:35 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:35 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:35 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:35 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:35 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:36 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:36 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:36 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:36 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:36 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:36 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:37 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:37 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:37 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:37 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:37 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:37 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:38 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:38 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:38 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:38 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:38 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:38 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:39 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:39 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:39 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:39 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:40 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:40 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:40 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:40 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:40 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:40 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:41 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:41 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:41 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:41 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:41 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:41 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:42 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:42 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:42 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:42 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:42 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:42 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:43 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:43 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:43 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:43 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:43 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:43 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:44 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:44 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:44 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:44 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:44 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:44 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:45 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:45 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:45 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:45 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:45 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:45 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:46 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:46 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:46 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:46 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:46 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:46 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:47 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:47 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:47 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:47 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:47 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:47 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:48 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:48 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:48 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:48 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:48 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:48 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:49 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:49 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:49 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:49 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:49 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:49 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:50 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:50 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:50 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:50 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:50 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:50 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:51 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:51 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:51 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:51 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:51 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:51 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:52 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:52 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:52 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:52 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:52 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:52 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:53 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:53 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:53 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:53 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:53 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:53 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:54 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:54 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:54 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:54 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:55 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:55 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:55 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:55 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:55 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:55 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:56 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:56 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:56 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:56 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:56 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:56 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:57 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:57 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:57 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:57 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:57 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:57 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:58 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:58 UTC] PHP Warning:  require(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 15:47:58 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPMailer/PHPMailer.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/process_qr.php on line 4
+[15-Dec-2025 16:37:36 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:36 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:44 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:44 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:45 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:45 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:45 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:45 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:46 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:46 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:46 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:37:46 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/hethongdiemdanh/PHPSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:05 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:05 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:06 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:06 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:07 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:07 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:08 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:08 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:09 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:09 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:10 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:41:10 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:10 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:10 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:11 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:11 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:11 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:11 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:12 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:12 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:12 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:42:12 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:37 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:37 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:38 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:38 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:39 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:39 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[15-Dec-2025 16:44:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[16-Dec-2025 05:59:15 UTC] PHP Warning:  require_once(/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php): Failed to open stream: No such file or directory in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
+[16-Dec-2025 05:59:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/bmkavqtl/public_html/hethongdiemdanh/modules/PHPSpreadsheet/src/PhpSpreadsheet/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/bmkavqtl/public_html/hethongdiemdanh/modules/report.php on line 4
