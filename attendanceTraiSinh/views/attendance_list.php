@@ -148,7 +148,7 @@ body{background:var(--bg);font-family:system-ui;}
 <?php
 $pageTitle = "Kiểm tra điểm danh trại sinh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../config/header.php';
 ?>
 <!-- SEARCH -->
 <div class="container-fluid px-3 mt-3 mb-2">
@@ -193,7 +193,7 @@ include __DIR__ . '/../../includes/header.php';
 
 </div>
 
-<?php include __DIR__ . '/../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../config/footer.php'; ?>
 
 <script>
 const TYPE_LABEL = {

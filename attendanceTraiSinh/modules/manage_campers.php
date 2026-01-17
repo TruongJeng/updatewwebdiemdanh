@@ -238,9 +238,9 @@ body { background:#f4faff; }
 
 <body>
 <?php
-$pageTitle = "Chỉnh sửa trại sinh";
+$pageTitle = "Chỉnh sửa thông tin trại sinh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../config/header.php';
 ?>
 <div class="container py-4">
 <!-- ===== THÊM 1 ===== -->
@@ -423,8 +423,8 @@ include __DIR__ . '/../../includes/header.php';
 
 </div>
 </div>
-<?php include __DIR__ . '/../../includes/footer.php'; ?>
 </div>
+<?php include __DIR__ . '/../config/footer.php'; ?>
 
 <script>
 const search = document.getElementById('search');

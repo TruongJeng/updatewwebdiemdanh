@@ -174,9 +174,9 @@ unset($_SESSION['success']);
 </head>
 <body>
 <?php
-$pageTitle = "CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt";
+$pageTitle = "Chia đội tự động trại sinh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../config/header.php';
 ?>
 <div class="container mt-4 mb-4">
     <div class="bg-white p-4 rounded-4 shadow-sm mb-3">
@@ -399,6 +399,9 @@ include __DIR__ . '/../../includes/header.php';
                 </div>
             <?php endforeach; ?>
             </div>
+
+            <?php include __DIR__ . '/../config/footer.php'; ?>
+
             <script>
             function openTeamModal(teamId) {
                 var modal = document.getElementById('modalTeam'+teamId);

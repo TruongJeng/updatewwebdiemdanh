@@ -153,9 +153,9 @@ body{
 
 <body>
 <?php
-$pageTitle = "Scan QR Điểm Danh";
+$pageTitle = "Điểm danh bằng QR Code";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../config/header.php';
 ?>
 <!-- UNLOCK AUDIO OVERLAY -->
 <div id="unlockAudio"
@@ -187,7 +187,7 @@ cursor:pointer;
 </div>
 </div>
 
-<?php include __DIR__ . '/../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../config/footer.php'; ?>
 
 </div>
 

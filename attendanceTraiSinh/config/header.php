@@ -34,7 +34,7 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
 <body>
 <div class="topbar d-flex align-items-center justify-content-between">
   <div class="logo-area">
-    <a href="../dashboard.php">
+    <a href="../../dashboard.php">
       <img src="/hethongdiemdanh/assets/logo_CLB.png" alt="Logo">
       <span><?= htmlspecialchars($pageTitle) ?></span>
     </a>

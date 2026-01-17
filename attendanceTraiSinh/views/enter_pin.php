@@ -91,7 +91,7 @@ body{
 <?php
 $pageTitle = "Nhập Mã PIN Điểm Danh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../config/header.php';
 ?>
 
 <div class="container py-4">
@@ -135,7 +135,7 @@ include __DIR__ . '/../../includes/header.php';
 
     </div>
 
-<?php include __DIR__ . '/../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../config/footer.php'; ?>
 
 
 </div>
