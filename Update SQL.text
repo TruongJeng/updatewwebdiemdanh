@@ -1,0 +1,32 @@
+update SQL
+18/01/2026 Thêm CHIADOI.php nên cần tạo
+Tạo bảng team_campers
+CREATE TABLE team_campers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    password VARCHAR(64) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+Tạo bảng team_cam_member
+CREATE TABLE team_cam_member (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    team_id INT NOT NULL,
+    student_code VARCHAR(50) NOT NULL,
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uniq_team_student (team_id, student_code),
+
+    CONSTRAINT fk_tcm_team
+        FOREIGN KEY (team_id)
+        REFERENCES team_campers(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_tcm_student
+        FOREIGN KEY (student_code)
+        REFERENCES campers(student_code)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+=================================================

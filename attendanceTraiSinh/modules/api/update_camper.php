@@ -36,7 +36,7 @@ $params = [
 
 if ($profilePhoto !== '') {
     $sql .= ", profile_photo = ?";
-    $params[] = $profilePhoto; // <-- LINK WEB
+    $params[] = $profilePhoto; 
 }
 
 
