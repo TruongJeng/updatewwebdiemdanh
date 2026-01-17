@@ -1,0 +1,103 @@
+# JpGraph library composer package with PHP 8.5 support
+
+[![Packagist Version](https://img.shields.io/packagist/v/mitoteam/jpgraph?include_prereleases&style=flat-square&logo=packagist)](https://packagist.org/packages/mitoteam/jpgraph)
+[![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/mitoteam/jpgraph?style=flat-square&logo=php)](https://github.com/mitoteam/jpgraph)
+[![Packagist Total Downloads](https://img.shields.io/packagist/dt/mitoteam/jpgraph?style=flat-square)](https://packagist.org/packages/mitoteam/jpgraph/stats)
+[![Packagist Monthly Downloads](https://img.shields.io/packagist/dm/mitoteam/jpgraph?style=flat-square)](https://packagist.org/packages/mitoteam/jpgraph/stats)
+
+[![GitHub Version](https://img.shields.io/github/v/release/mitoteam/jpgraph?style=flat-square&logo=github)](https://github.com/mitoteam/jpgraph)
+[![GitHub Release Date](https://img.shields.io/github/release-date/mitoteam/jpgraph?style=flat-square)](https://github.com/mitoteam/jpgraph/releases)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mitoteam/jpgraph?style=flat-square)
+[![GitHub contributors](https://img.shields.io/github/contributors-anon/mitoteam/jpgraph?style=flat-square)](https://github.com/mitoteam/jpgraph/graphs/contributors)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mitoteam/jpgraph?style=flat-square)](https://github.com/mitoteam/jpgraph/commits)
+
+Current JpGraph library version: **4.4.2**
+
+PHP versions support: from 5.5 to **8.5**. [Original notes](https://jpgraph.net/download/manuals/chunkhtml/ch01s05.html) about PHP versions.
+
+
+## Usage with composer
+
+This package is a helper to load original JpGraph library after declaring it as your dependency in composer.json:
+
+```
+composer require mitoteam/jpgraph
+```
+
+Then you can load library from anywhere in your code:
+```php
+use mitoteam\jpgraph\MtJpGraph;
+
+// load library and modules
+MtJpGraph::load();                # not really useful without modules
+//or
+MtJpGraph::load('bar');           # load with single module
+//or
+MtJpGraph::load(['bar', 'line']); # load with several modules
+//or
+MtJpGraph::load(['bar', 'line'], true); # load with several modules in Extended Mode (see below)
+
+//using original JpGraph classes
+$graph = new Graph(200, 300);
+```
+
+You can call `MtJpGraph::load()` method as many times as you need everywhere in your code. Internally it checks if library or module was already loaded and does not load it another time.
+
+## Usage without composer
+
+Download latest version archive from [Releases](https://github.com/mitoteam/jpgraph/releases) page and unpack it.
+
+## Version numbers
+
+We started with version _4.3.5_ as latest available library version in time we started. But we need to make some patches to original library (for example to support latest PHP versions). So we had to switch to own version numbers to be able to release updates.
+
+At 2022-02-25 we decided to switch to version number **10.0.0** to leave some margin in numbering from original library v4.3.5.
+
+Current version numbers:
+
+* **Version 10.5.x** of this package is the latest version of JpGraph library with php **8.2-8.5** compatibility patches (latest code in "main" branch). Can be loaded in Extended Mode (see below).
+* **Version 4.4.x** of this package provides latest version of original JpGraph library as-is without any compatibility patches (latest code in "original" branch).
+
+All changes to the original library can be examined as [difference between **main** and **original** branches](https://github.com/mitoteam/jpgraph/compare/original..main#files_bucket).
+
+## Overriding jpgraph's settings
+
+A lot of original jpgraph's settings are defined as constants in `jpg-config.inc.php` and `jpgraph_ttf.inc.php` files. We wrapped all these constants definitions with `if(!defined())` checks. So you can define them with required values **before** loading MtJpGraph. See [Issue #24](https://github.com/mitoteam/jpgraph/issues/24) for the details.
+
+Code example:
+
+```php
+use mitoteam\jpgraph\MtJpGraph;
+
+//first define required constants
+define('CACHE_FILE_GROUP', 'supergroup');
+
+// and then load library and modules
+MtJpGraph::load('bar');
+```
+
+## Extended Mode
+
+We started with just patches for compatibility with recent PHP versions. Before version 10.3 there were no any changes to original code except adding some typecasting or declaring some class members explicitly.
+
+But after library was used wider there were some bugs discovered in original code. We aware to change functionality of the original library so **Extended Mode** was introduced in version **10.3.0**. Now you can pass `true` as second argument to `MtJpGraph::load()` method to enable Extended Mode. This will enable several more patches to the original code to overcome some bugs.
+
+Extended Mode is disabled by default, you can enable it explicitly only.
+
+### Custom exception handler
+
+jpgraph sets custom exceptions handler internally to be able to draw error message in picture if some exception pops up. It restores old exception handler if any was set after exception processing. This behavior can interfere with some tests runners which are using own exception handlers. For example [phpunit](https://github.com/sebastianbergmann/phpunit) marks tests as _risky_ with message "Test code or tested code did not remove its own exception handlers".
+
+It is possible to disable custom jpgraph's exceptions handler by calling explicitly `MtJpGraph::setSkipExceptionHandler(true);` before first call to `MtJpGraph::load()`. MtJpGraph checks if `PHPUNIT_COMPOSER_INSTALL` constant defined and disables jpgraph's exceptions handler implicitly for phpunit.
+
+**Please note**: this intended to be used in tests context only and should not be used in production mode.
+
+## Links
+
+* Original JpGraph website: https://jpgraph.net
+* Documentation: https://jpgraph.net/doc/
+* Examples: https://jpgraph.net/features/gallery.php
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=mitoteam/jpgraph&type=Date)](https://star-history.com/#mitoteam/jpgraph&Date)
