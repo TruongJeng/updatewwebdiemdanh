@@ -1,4 +1,4 @@
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/bmkavqtl/public_html
+    - export DEPLOYPATH=/home/bmkavqtl/public_html/hethongdiemdanh
     - /bin/cp -R * $DEPLOYPATH
