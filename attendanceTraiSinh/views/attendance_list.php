@@ -59,7 +59,7 @@ body{background:var(--bg);font-family:system-ui;}
 .table-wrapper{
     background:#fff;border-radius:14px;
     box-shadow:0 4px 18px #3178c618;
-    overflow:hidden;
+    overflow:visible;
 }
 .stat-card{
     border-radius:14px;
@@ -84,6 +84,7 @@ body{background:var(--bg);font-family:system-ui;}
 .badge-history:hover .history-tooltip {
   opacity: 1;
   visibility: visible;
+  overflow: visible;
   transform: translateY(0);
 }
 
@@ -102,7 +103,7 @@ body{background:var(--bg);font-family:system-ui;}
   opacity: 0;
   visibility: hidden;
   transition: .2s;
-  z-index: 999;
+  z-index: 99999;
 }
 
 .history-tooltip::after {

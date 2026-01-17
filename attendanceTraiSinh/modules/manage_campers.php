@@ -250,7 +250,7 @@ CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
 <div class="mb-2">
 <label>Ảnh đại diện</label>
 <input class="form-control"
-       name="profile_photo_url"
+       name="profile_photo"
        id="e_avatar"
        placeholder="Dán link Cloudinary avatar">
 </div>
