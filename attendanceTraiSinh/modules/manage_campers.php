@@ -152,7 +152,7 @@ CSV gồm: student_code, full_name, phone, phone_parent, email, profile_photo
 <!-- ===== LIST ===== -->
 <div class="card">
 <div class="card-body">
-<h5 class="mb-3">📋 Danh sách trại sinh</h5>
+<h5 class="mb-3">Danh sách trại sinh</h5>
 
 <table class="table table-hover desktop-only">
 <thead>

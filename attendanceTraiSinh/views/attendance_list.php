@@ -254,7 +254,7 @@ function loadAttendance(){
                 ).join('<br>')
             : 'Chưa có lịch sử';
 
-            /* ===== DESKTOP ===== */
+            /* ===== MÁY TÍNH ===== */
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${row.student_code}</td>
