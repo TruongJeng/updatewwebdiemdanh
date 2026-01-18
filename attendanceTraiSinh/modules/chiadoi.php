@@ -246,7 +246,7 @@ include __DIR__ . '/../config/header.php';
             $teams_data = json_decode($_SESSION['random_teams_effect'], true);
             unset($_SESSION['random_teams_effect']);
         ?>
-            <h4 class="mt-4 mb-3 text-primary text-center" style="font-weight:700;" id="effect-title">ĐANG CHIA ĐỘI...</h4>
+            <h4 class="mt-4 mb-3 text-primary text-center" style="font-weight:700;" id="effect-title">Đang chia đội...</h4>
             <div id="effect-teams" class="row"></div>
             <div class="text-center mt-4 d-none" id="view-teams-real">
                 <a href="chiadoi.php" class="btn btn-success btn-lg"><i class="bi bi-eye"></i> Xem lại danh sách đội</a>
@@ -348,7 +348,7 @@ include __DIR__ . '/../config/header.php';
                         </div>
                     </div>
                 </div>
-                <!-- Modal cho từng đội -->
+                <!-- Modal cho từng đội nè he -->
                 <div class="modal fade" id="modalTeam<?=$team['id']?>" tabindex="-1" aria-labelledby="modalTeamLabel<?=$team['id']?>" aria-hidden="true">
                   <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
