@@ -14,6 +14,17 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// ✏️ Đổi tên đội
+if (isset($_POST['rename_team'], $_POST['team_id'], $_POST['team_name'])) {
+    $name = trim($_POST['team_name']);
+    if ($name !== '') {
+        $stmt = $pdo->prepare("UPDATE team_campers SET name = ? WHERE id = ?");
+        $stmt->execute([$name, $_POST['team_id']]);
+        $_SESSION['success'] = "Đã đổi tên đội";
+    }
+    header("Location: chiadoi.php");
+    exit;
+}
 // 3. Xử lý xóa thành viên khỏi đội
 if (isset($_POST['remove_member']) && isset($_POST['team_id']) && isset($_POST['student_code'])) {
     $pdo->prepare("
@@ -70,16 +81,61 @@ $num_teams = max(1, intval($_POST['num_teams']));
         name VARCHAR(100) NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-        $pdo->exec("CREATE TABLE IF NOT EXISTS team_cam_member (
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS team_cam_member (
             id INT AUTO_INCREMENT PRIMARY KEY,
             team_id INT NOT NULL,
-            student_code INT NOT NULL,
-            joined_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            student_code VARCHAR(30) NOT NULL,
+            joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_tcm_camper
+                FOREIGN KEY (student_code)
+                REFERENCES campers(student_code)
+                ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
         $student_codes = array_column($students, 'student_code');
         shuffle($student_codes);
-        $groups = array_chunk($student_codes, ceil(count($student_codes) / $num_teams));
+        // ==============================
+        // CHIA ĐỘI ĐỀU KHỐI 10–11–12–CHS
+        // ==============================
+
+        // Tạo mảng đội rỗng
+        $groups = array_fill(0, $num_teams, []);
+
+        // Phân loại học sinh theo khối
+        $by_grade = [
+            '12'  => [],
+            '11'  => [],
+            '10'  => [],
+            'CHS' => []
+        ];
+
+        foreach ($students as $s) {
+            $class = trim($s['class']);
+            if (preg_match('/^12/i', $class)) {
+                $by_grade['12'][] = $s['student_code'];
+            } elseif (preg_match('/^11/i', $class)) {
+                $by_grade['11'][] = $s['student_code'];
+            } elseif (preg_match('/^10/i', $class)) {
+                $by_grade['10'][] = $s['student_code'];
+            } else {
+                $by_grade['CHS'][] = $s['student_code'];
+            }
+        }
+
+        // Trộn mỗi khối cho ngẫu nhiên
+        foreach ($by_grade as &$list) {
+            shuffle($list);
+        }
+        unset($list);
+
+        // Chia luân phiên từng khối
+        foreach ($by_grade as $grade => $list) {
+            foreach ($list as $i => $scode) {
+                $groups[$i % $num_teams][] = $scode;
+            }
+        }
+
         $teams_result = [];
         foreach ($groups as $i => $group) {
             $team_name = "Đội " . ($i+1);
@@ -107,7 +163,7 @@ if (empty($_GET['show_effect'])) {
     $stmt = $pdo->prepare("
         SELECT id, name
         FROM team_campers
-        ORDER BY name
+        ORDER BY id ASC
     ");
     $stmt->execute();
     $all_teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -153,6 +209,8 @@ $team_colors = ["#a5d8ff","#b2f2bb","#ffd8a8","#ffadad","#eebefa","#d0ebff","#b8
 // 10. Thông báo flash
 $success = $_SESSION['success'] ?? null;
 unset($_SESSION['success']);
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -347,6 +405,7 @@ include __DIR__ . '/../config/header.php';
                                     </select>
                                     <button class="btn btn-sm btn-outline-success" name="add_member" title="Thêm"><i class="bi bi-plus-lg"></i></button>
                                 </form>
+                                
                             <?php endif; ?>
                         </div>
                     </div>
@@ -357,17 +416,35 @@ include __DIR__ . '/../config/header.php';
                     <div class="modal-content">
                       <div class="modal-header" style="background: <?=$team_colors[$idx%count($team_colors)]?>;">
                         <h5 class="modal-title w-100 text-center" id="modalTeamLabel<?=$team['id']?>" style="font-weight:700;">
-                            <?= htmlspecialchars($team['name']) ?>
-                        </h5>
+                            <?= htmlspecialchars($team['name']) ?>                        </h5>
+                        <form method="post"
+                            onclick="event.stopPropagation();"
+                            class="d-flex gap-1 px-2 mt-2">
+                            <input type="hidden" name="team_id" value="<?=$team['id']?>">
+                            <input type="text"
+                                name="team_name"
+                                class="form-control form-control-sm"
+                                value="<?=htmlspecialchars($team['name'])?>"
+                                required>
+                            <button class="btn btn-sm btn-outline-primary"
+                                    name="rename_team">
+                                <i class="bi bi-check"></i>
+                            </button>
+                        </form>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                       </div>
                       <div class="modal-body">
                         <div class="text-center mb-3" style="font-size:1.2em;">
                             <b>Danh sách thành viên</b>
                         </div>
-                        <div id="team-table-<?=$team['id']?>">
-                        <?php if ($team['members']): ?>
-                            <table class="table table-bordered table-striped w-100 mx-auto" style="font-size:1.2em;max-width:500px;background:#fff;">
+                        <div id="team-image-<?=$team['id']?>" style="padding:12px;background:#fff;">
+                            <h4 class="text-center mb-3">
+                                <?=htmlspecialchars($team['name'])?>
+                            </h4>
+
+                            <div id="team-table-<?=$team['id']?>">
+                                <?php if ($team['members']): ?>
+                                    <table class="table table-bordered table-striped w-100 mx-auto" style="font-size:1.2em;max-width:500px;background:#fff;">
                                 <thead class="table-primary">
                                     <tr>
                                         <th style="width:55px;">STT</th>
@@ -385,14 +462,16 @@ include __DIR__ . '/../config/header.php';
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
-                        <?php else: ?>
-                            <div class="text-center text-muted">(Chưa có thành viên)</div>
-                        <?php endif; ?>
-                        </div>
+                                    <?php else: ?>
+                                        <div class="text-center text-muted">(Chưa có thành viên)</div>
+                                    <?php endif; ?>
+                                </div>
+
+                            </div> 
                       </div>
                       <div class="modal-footer justify-content-center">
                         <button type="button" class="btn btn-success"
-                            onclick="downloadTeamImage('team-table-<?=$team['id']?>', '<?=htmlspecialchars(addslashes($team['name']))?>', 'ChiaDoiHoatDong')">
+                            onclick="downloadTeamImage('team-image-<?=$team['id']?>', '<?=htmlspecialchars(addslashes($team['name']))?>', 'ChiaDoiHoatDong')">
                             <i class="bi bi-image"></i> Tải ảnh PNG
                         </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
