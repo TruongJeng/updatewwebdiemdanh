@@ -155,6 +155,7 @@ a[aria-expanded="true"] .bi-chevron-down {
         <li><a href="attendanceTraiSinh/views/attendance_list.php"><i class="bi bi-list-check"></i> Kiểm tra</a></li>
         <li><a href="attendanceTraiSinh/modules/manage_campers.php"><i class="bi bi-pencil"></i> Quản lý trại sinh</a></li>
         <li><a href="attendanceTraiSinh/modules/chiadoi.php"><i class="bi bi-diagram-3"></i> Chia đội</a></li>
+        <li><a href="attendanceTraiSinh/views/report_attendance.php"><i class="bi bi-archive-fill"></i>Thống kê</a></li>
       </ul>
     </li>
 
