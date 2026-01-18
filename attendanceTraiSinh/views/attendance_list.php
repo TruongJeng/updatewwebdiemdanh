@@ -8,9 +8,9 @@ if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin','club_lea
     die('Không có quyền');
 }
 
-//if (!isset($_SESSION['attendance_session_id'])) {
-//    die('Chưa mở phiên điểm danh');
-//}
+if (!isset($_SESSION['attendance_session_id'])) {
+    die('Chưa mở phiên điểm danh');
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">

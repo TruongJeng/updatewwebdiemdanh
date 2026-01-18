@@ -23,7 +23,6 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
         left: 0;
         right: 0;
         z-index: 1200;
-
         padding: 0 18px;
         }
 
