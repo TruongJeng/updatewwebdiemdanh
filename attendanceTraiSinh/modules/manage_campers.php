@@ -5,13 +5,69 @@ if (!in_array($_SESSION['role'], ['admin','club_leader'])) {
 }
 
 require_once __DIR__ . '/../config/db.php';
-
+require_once __DIR__ . '/../../PHPSpreadsheet/vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /* ===== XOÁ MỀM ===== */
 if (isset($_GET['disable'])) {
     $stmt = $pdo->prepare("UPDATE campers SET is_active = 0 WHERE student_code = ?");
     $stmt->execute([$_GET['disable']]);
     header("Location: manage_campers.php");
     exit;
+}
+if (isset($_GET['restore'])) {
+    $student_code = $_GET['restore'];
+
+    $stmt = $pdo->prepare("
+        UPDATE campers 
+        SET is_active = 1 
+        WHERE student_code = ?
+    ");
+    $stmt->execute([$student_code]);
+
+    header("Location: manage_campers.php?msg=restored");
+    exit;
+}
+
+/* =======================
+   XOÁ VĨNH VIỄN (ADMIN)
+======================= */
+if (isset($_GET['delete_forever']) && $_SESSION['role'] === 'admin') {
+    $student_code = $_GET['delete_forever'];
+
+    $pdo->beginTransaction();
+    try {
+        // Lấy student_id
+        $stmt = $pdo->prepare("SELECT id FROM campers WHERE student_code = ?");
+        $stmt->execute([$student_code]);
+        $student = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($student) {
+            $student_id = $student['id'];
+
+            // Xoá lịch sử điểm danh
+            $stmt = $pdo->prepare("
+                DELETE FROM attendance_logs 
+                WHERE student_id = ?
+            ");
+            $stmt->execute([$student_id]);
+
+            // Xoá trại sinh
+            $stmt = $pdo->prepare("
+                DELETE FROM campers 
+                WHERE id = ?
+            ");
+            $stmt->execute([$student_id]);
+        }
+
+        $pdo->commit();
+        header("Location: manage_campers.php?msg=deleted");
+        exit;
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        die("Lỗi xoá vĩnh viễn: " . $e->getMessage());
+    }
 }
 
 /* ===== THÊM 1 ===== */
@@ -347,6 +403,14 @@ include __DIR__ . '/../config/header.php';
        class="btn btn-sm btn-danger">
        <i class="bi bi-trash"></i>
     </a>
+    <?php if ($_SESSION['role'] === 'admin'): ?>
+    <a href="?delete_forever=<?= $c['student_code'] ?>"
+       onclick="return confirm('⚠️ XOÁ VĨNH VIỄN trại sinh này?\nDữ liệu điểm danh sẽ bị xoá hết!')"
+       class="btn btn-sm btn-dark mt-1">
+       <i class="bi bi-x-octagon"></i> Xoá vĩnh viễn
+    </a>
+    <?php endif; ?>
+
   <?php endif; ?>
   </td>
 </tr>
