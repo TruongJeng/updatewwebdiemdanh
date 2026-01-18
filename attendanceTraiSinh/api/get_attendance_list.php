@@ -11,7 +11,7 @@ if (!isset($_SESSION['attendance_session_id'])) {
     echo json_encode(['success'=>false,'message'=>'Chưa mở phiên']);
     exit;
 }
-
+//Hiện tại chỉ lấy danh sách trong phiên đang mở
 $sessionId = $_SESSION['attendance_session_id'];
 
 $stmt = $pdo->prepare("

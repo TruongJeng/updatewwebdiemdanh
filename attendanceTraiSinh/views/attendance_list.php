@@ -134,7 +134,7 @@ body{background:var(--bg);font-family:system-ui;}
     font-weight: 700;
 }
 
-/* CHECK OUT */
+/* CHECK OUT NÈ */
 .badge-out {
     background-color: #fdecea !important;
     color: #e74c3c !important;
