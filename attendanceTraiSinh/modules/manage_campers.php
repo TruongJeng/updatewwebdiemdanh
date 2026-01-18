@@ -65,8 +65,42 @@ if (isset($_GET['delete_forever']) && $_SESSION['role'] === 'admin') {
         exit;
 
     } catch (Exception $e) {
+    if ($pdo->inTransaction()) {
         $pdo->rollBack();
-        die("Lỗi xoá vĩnh viễn: " . $e->getMessage());
+    }
+    die("Lỗi xoá vĩnh viễn: " . $e->getMessage());
+}
+}
+
+// ==========================
+// XOÁ TẤT CẢ TRẠI SINH (ADMIN)
+// ==========================
+if (
+    isset($_POST['delete_all']) &&
+    isset($_SESSION['role']) &&
+    $_SESSION['role'] === 'admin'
+) {
+    try {
+        $pdo->beginTransaction();
+
+        $pdo->exec("DELETE FROM attendance_logs");
+        $pdo->exec("DELETE FROM campers");
+
+        $pdo->commit();
+
+        // reset auto increment – chạy riêng
+        $pdo->exec("ALTER TABLE campers AUTO_INCREMENT = 1");
+        $pdo->exec("ALTER TABLE attendance_logs AUTO_INCREMENT = 1");
+
+        $deleteMsg = "✅ Đã xoá TOÀN BỘ trại sinh và lịch sử điểm danh!";
+        $deleteMsgType = "success";
+
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        die('Lỗi xoá toàn bộ trại sinh: ' . $e->getMessage());
+
     }
 }
 
@@ -79,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_one'])) {
     $class         = $_POST['class'] ?? null;
     $phone         = $_POST['phone'] ?? null;
     $phone_parent  = $_POST['phone_parent'] ?? null;
-    $email = isset($_POST['email']) && trim($_POST['email']) !== '' ? trim($_POST['email']) : $old['email']; // giữ email cũ
+    $email = isset($_POST['email']) ? trim($_POST['email']) : null;
     $profile_photo = $_POST['profile_photo'] ?? null;
 
     // Check dữ liệu bắt buộc
@@ -289,6 +323,44 @@ body { background:#f4faff; }
     background-color: #fdecea !important;
     color: #e74c3c !important;
     font-weight: 700;}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .list-group-item {
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .list-group-item .fw-bold {
+    font-size: 1rem;
+  }
+
+  .list-group-item .badge {
+    display: inline-block;
+    margin: 6px 0;
+  }
+
+  .list-group-item .btn {
+    font-size: 0.9rem;
+  }
+
+  .list-group-item .text-muted {
+    font-size: 0.9rem;
+  }
+
+  #tableBody {
+    display: none; /* Ẩn bảng Desktop trên Mobile */
+  }
+}
+
+@media (min-width: 769px) {
+  #mobileList {
+    display: none !important; /* Ẩn danh sách Mobile trên Desktop */
+  }
+}
 </style>
 </head>
 
@@ -415,23 +487,73 @@ include __DIR__ . '/../config/header.php';
   </td>
 </tr>
 <?php endforeach; ?>
+<?php if ($_SESSION['role'] === 'admin'): ?>
+<tr>
+<td colspan="6">
+<form method="post"
+      onsubmit="return confirm(
+        '⚠️ XOÁ TOÀN BỘ TRẠI SINH?\n\n' +
+        '• Xoá tất cả trại sinh\n' +
+        '• Xoá toàn bộ lịch sử CHECK IN / OUT\n' +
+        '• KHÔNG THỂ KHÔI PHỤC\n\n' +
+        'Bạn có chắc chắn không?'
+      );">
+    <button type="submit"
+            name="delete_all"
+            class="btn btn-danger">
+        <i class="bi bi-trash3"></i> Xoá tất cả trại sinh
+    </button>
+</form>
+</td>
+</tr>
+<?php endif; ?>
+
 </tbody>
 </table>
 
 
 <!-- MOBILE -->
-<div class="mobile-only" id="cardList">
-<?php foreach ($campers as $c): ?>
-<div class="border rounded p-2 mb-2">
-<b><?= $c['full_name'] ?></b><br>
-<?= $c['student_code'] ?> • <?= $c['class'] ?> • <?= $c['phone'] ?><br>
-<span class="badge <?= $c['is_active'] ? 'badge-active' : 'badge-inactive' ?>">
-<?= $c['is_active'] ? 'Đang trại' : 'Đã xoá' ?>
-</span>
-</div>
-<?php endforeach; ?>
-</div>
-
+<div class="d-lg-none list-group" id="mobileList">
+  <?php foreach ($campers as $c): ?>
+  <div class="list-group-item camper-row">
+    <div class="d-flex justify-content-between">
+      <div>
+        <span class="fw-bold camper-name"><?= $c['full_name'] ?></span>
+        (<span class="camper-class"><?= $c['class'] ?></span>)
+      </div>
+      <!-- Thay đổi trạng thái như desktop -->
+      <div>
+        <?php if ($c['data_status'] === 'DU'): ?>
+          <span class="badge bg-success">Đủ dữ liệu</span>
+        <?php else: ?>
+          <span class="badge bg-warning text-dark">Thiếu dữ liệu</span>
+        <?php endif; ?>
+      </div>
+    </div>
+    <div class="text-muted">SĐT: <?= $c['phone'] ?></div>
+    <div class="text-muted">SĐT phụ huynh: <?= $c['phone_parent'] ?></div>
+    <div class="mt-2">
+      <?php if ($c['is_active']): ?>
+        <button class="btn btn-sm btn-warning me-1 camper-edit"
+                onclick='openEdit(<?= json_encode($c, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+          <i class="bi bi-pencil"></i> Sửa
+        </button>
+        <a href="?disable=<?= $c['student_code'] ?>"
+           onclick="return confirm('Xoá trại sinh này?')"
+           class="btn btn-sm btn-danger">
+           <i class="bi bi-trash"></i> Xoá
+        </a>
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+        <a href="?delete_forever=<?= $c['student_code'] ?>"
+           onclick="return confirm('⚠️ XOÁ VĨNH VIỄN trại sinh?')"
+           class="btn btn-sm btn-dark mt-1">
+           <i class="bi bi-x-octagon"></i> Xoá vĩnh viễn
+        </a>
+        <?php endif; ?>
+      <?php endif; ?>
+    </div>
+  </div>
+  <?php endforeach; ?>
 </div>
 </div>
 
@@ -493,9 +615,19 @@ include __DIR__ . '/../config/header.php';
 <script>
 const search = document.getElementById('search');
 search.addEventListener('input', () => {
-    const q = search.value.toLowerCase();
+    const q = search.value.toLowerCase().trim();
+
+    // Tìm kiếm trong bảng Desktop (Table)
     document.querySelectorAll('#tableBody tr').forEach(tr => {
-        tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+        tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+
+    // Tìm kiếm trong danh sách Mobile
+    document.querySelectorAll('#mobileList .list-group-item').forEach(item => {
+        const name = item.querySelector('.camper-name').textContent.toLowerCase();
+        const cls = item.querySelector('.camper-class').textContent.toLowerCase();
+
+        item.style.display = (name.includes(q) || cls.includes(q)) ? '' : 'none';
     });
 });
 function openEdit(data) {
