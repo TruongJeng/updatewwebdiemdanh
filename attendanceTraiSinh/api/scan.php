@@ -58,7 +58,7 @@ $type = $sess['type']; // CHECK_IN / CHECK_OUT
 
 /* ===== 5. NHẬN QR ===== */
 $studentCode = trim(file_get_contents('php://input'));
-if ($studentCode === '' || !ctype_digit($studentCode)) {
+if ($studentCode === '') {
     echo json_encode(['success'=>false,'message'=>'QR không hợp lệ']);
     exit;
 }
