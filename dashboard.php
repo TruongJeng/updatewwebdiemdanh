@@ -1,133 +1,191 @@
 <?php
 require_once __DIR__ . '/config/session.php';
+require_once __DIR__ . '/includes/db.php';
+
+/* ===== TIMEOUT ===== */
 $timeout = 18000;
 
-if (isset($_SESSION['user_id'])) {
-    if (isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > $timeout)) {
-        session_unset();
-        session_destroy();
-        header("Location: index.php?timeout=1");
-        exit();
-    }
-    $_SESSION['last_active'] = time();
-} else {
+/* ===== CHECK LOGIN & TIMEOUT ===== */
+if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-if (!empty($_SESSION['full_name'])) {
-    $full_name = $_SESSION['full_name'];
-} else {
+
+if (isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > $timeout)) {
+    session_unset();
+    session_destroy();
+    header("Location: index.php?timeout=1");
+    exit();
+}
+$_SESSION['last_active'] = time();
+
+/* ===== GET FULL NAME ===== */
+if (empty($_SESSION['full_name'])) {
     $stmt = $pdo->prepare("SELECT full_name FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
-    $full_name = $stmt->fetchColumn();
-    $_SESSION['full_name'] = $full_name;
+    $_SESSION['full_name'] = $stmt->fetchColumn();
 }
-if ($_SESSION['first_login'] ?? 0) {
+$full_name = $_SESSION['full_name'];
+
+/* ===== FORCE CHANGE PASSWORD ===== */
+if (!empty($_SESSION['first_login'])) {
     header("Location: change_password.php");
     exit();
 }
+
 $pageTitle = "CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt";
 include __DIR__ . '/includes/header.php';
-
 ?>
+
 <style>
-  /* ===== MAIN CONTENT ===== */
-.main {
-  margin-left: 230px;
-  margin-top: 60px; /* né header */
-  padding: 32px 36px 28px 36px;
-  min-height: calc(100vh - 60px);
+/* ===== MAIN ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; 
 }
 
 
-  /* Khung nền */
+/* ===== MAIN ===== */
+.main {
+  position: fixed;
+  top: 0;              /* CHIỀU CAO HEADER */
+  left: 0;            /* CHIỀU RỘNG SIDEBAR */
+  right: 0;
+  bottom: 0;
+
+  padding: 28px 36px;
+  overflow-y: auto;       /* CHỈ MAIN ĐƯỢC CUỘN */
+  overflow-x: hidden;
+
   background: linear-gradient(180deg, #f6faff, #eef5ff);
-  border-radius: 22px 0 0 22px;
   box-shadow:
     inset 0 0 0 1.5px #cfe0f5,
     0 6px 24px rgba(49,120,198,0.08);
+}
 
-  transition: margin-left .25s ease, padding .25s ease;
+
+/* Mobile */
+@media (max-width: 900px) {
+  .main {
+    margin-left: 0;
+    padding: 20px;
+    border-radius: 0;
+  }
+}
+
+
+/* ===== INFO BOARD ===== */
+.info-board { padding: 1px 7px;}
+
+
+.info-board h2 {
+  font-weight: 800;
+  margin-bottom: 22px;
+  color: #1f3a5f;
+}
+
+/* Card */
+.info-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.07);
+  border-left: 6px solid transparent;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.10);
+}
+
+.info-card.small {
+  padding: 14px 20px;
+}
+
+.info-card .title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.info-card .icon {
+  font-size: 1.3em;
+  margin-right: 8px;
+}
+
+.info-card p {
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Màu */
+.card-year {
+  border-left-color: #3178c6;
+  background: linear-gradient(180deg, #fff, #f3f8ff);
+}
+.card-warning {
+  border-left-color: #e72c2c;
+  background: linear-gradient(180deg, #fff, #fff4f4);
+}
+.card-thanks {
+  border-left-color: #2ea44f;
+  background: linear-gradient(180deg, #fff, #f4fff8);
 }
 
 /* Mobile */
 @media (max-width: 900px) {
   .main {
     margin-left: 0;
-    padding: 18px 5vw 26px 5vw;
+    padding: 20px;
     border-radius: 0;
-    box-shadow: none;
-    background: #f6faff;
   }
 }
-
 </style>
-<?php include 'includes/sidebar.php'; ?>
+
+<?php include __DIR__ . '/includes/sidebar.php'; ?>
+
 <div class="main">
   <div class="info-board">
-    <h2>BẢNG THÔNG TIN</h2>
-    <div style="color:#3178c6;font-weight:600;margin-bottom:8px;">
-      HIỆN TẠI: NĂM HỌC 2025 – 2026
-    </div>
-    <div style="border:1.5px dashed #6fa6e3;border-radius:7px;padding:13px 16px;margin-bottom:18px;">
-      <span style="color:#e72c2c;font-weight:600;">THÔNG BÁO QUAN TRỌNG</span><br>
-      <span style="color:#222;">
-        Đây là <b>phiên bản thử nghiệm BETA 01</b>. Đội ngũ 
-        <b>CLB KỸ NĂNG ĐOÀN – HỘI TRƯỜNG THPT LÝ THƯỜNG KIỆT</b> 
-        đang trong quá trình phát triển, vì vậy có thể vẫn còn một số thiếu sót và lỗi nhỏ. 
-        Rất mong quý thầy cô và các bạn thông cảm và đóng góp ý kiến để chúng em hoàn thiện hơn!
-      </span>
-    </div>
-    <div style="border:1.5px dashed #6fa6e3;border-radius:7px;padding:13px 16px;">
-      <span style="color:#e72c2c;font-weight:600;">LỜI CẢM ƠN</span><br>
-      <span style="color:#222;">
-        CLB KỸ NĂNG ĐOÀN – HỘI xin gửi lời cảm ơn chân thành đến quý thầy cô và các bạn đã tin tưởng 
-        và trải nghiệm phiên bản thử nghiệm này. Sự đồng hành và đóng góp ý kiến từ các bạn 
-        chính là nguồn động lực lớn để đội ngũ tiếp tục cải tiến và mang đến những trải nghiệm tốt hơn.  
-        <br><br>
-        <i>💡 Mỗi góp ý của bạn là một bước tiến để chúng ta cùng nhau xây dựng một nền tảng hoàn thiện hơn!</i>
-      </span>
-    </div>
-  </div>
-  <!-- Modal Thông tin phần mềm -->
-  <div class="modal fade" id="softInfoModal" tabindex="-1" aria-labelledby="softInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-light">
-          <h5 class="modal-title" id="softInfoModalLabel"><i class="bi bi-info-circle"></i> Thông tin phần mềm</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-        </div>
-        <div class="modal-body">
-          <table class="table table-bordered mb-0">
-              <tr>
-                  <th style="width:240px;">Tên</th>
-                  <td>Hệ thống quản lý thành viên và sự kiện</td>
-              </tr>
-              <tr>
-                  <th>Đơn vị xử lý sự cố phần mềm</th>
-                  <td>Cội nguồn CLB (Email: <a href="mailto:tophanmem@tdtu.edu.vn">clbkynangdoan.ltk@gmail.com</a>)</td>
-              </tr>
-              <tr>
-                  <th>Fan Page</th>
-                  <td><a href="https://www.facebook.com/clbkynangdoan.ltk" target="_blank">https://www.facebook.com/clbkynangdoan.ltk</a></td>
-              </tr>
-              <tr>
-                  <th>Đơn vị hỗ trợ thông tin</th>
-                  <td>CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt</td>
-              </tr>
-              <tr>
-                  <th>Trình duyệt hỗ trợ tốt nhất</th>
-                  <td>
-                      <span style="font-size:1.5em;">🦊</span>
-                      <span style="font-size:1.5em;">🌐</span>
-                  </td>
-              </tr>
-          </table>
-        </div>
+    <h2>📌 BẢNG THÔNG TIN</h2>
+
+    <div class="info-card small card-year">
+      <div class="title">
+        <span class="icon">📅</span> HIỆN TẠI
       </div>
+      <p><b>Năm học 2025 – 2026</b></p>
+    </div>
+
+    <div class="info-card card-warning">
+      <div class="title">
+        <span class="icon">⚠️</span> THÔNG BÁO QUAN TRỌNG
+      </div>
+      <p>
+        Đây là <b>phiên bản thử nghiệm BETA 01</b>.  
+        CLB Kỹ năng Đoàn – Hội Trường THPT Lý Thường Kiệt đang trong quá trình phát triển,
+        nên có thể vẫn còn một số thiếu sót.  
+        Rất mong quý thầy cô và các bạn đóng góp ý kiến để hệ thống hoàn thiện hơn.
+      </p>
+    </div>
+
+    <div class="info-card card-thanks">
+      <div class="title">
+        <span class="icon">💚</span> LỜI CẢM ƠN
+      </div>
+      <p>
+        CLB Kỹ năng Đoàn – Hội xin chân thành cảm ơn quý thầy cô và các bạn
+        đã tin tưởng và trải nghiệm hệ thống.
+        <br><br>
+        <i>💡 Mỗi góp ý của bạn là một bước tiến để xây dựng nền tảng tốt hơn.</i>
+      </p>
     </div>
   </div>
 </div>
+
 <?php include __DIR__ . '/includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
