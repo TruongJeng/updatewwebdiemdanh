@@ -9,6 +9,7 @@ require_once __DIR__ . '/../config/db.php'; // $pdo
 $stmt = $pdo->prepare("
     SELECT c.student_code, c.full_name, c.class
     FROM campers c
+    WHERE c.is_active = 1
     ORDER BY c.full_name
 ");
 $stmt->execute();
