@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/../../config/session.php';
 require_once __DIR__ . '/../config/db.php'; // $pdo
+// 1. Kiểm tra quyền truy cập
 if (!in_array($_SESSION['role'], ['admin','club_leader'])) {
     die('Không có quyền');
 }
