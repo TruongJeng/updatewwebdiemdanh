@@ -64,103 +64,86 @@ if (isset($_POST['delete_all_teams'])) {
 
 // 6. Xử lý chia đội random
 if (isset($_POST['random_team_do'], $_POST['num_teams'])) {
-$num_teams = max(1, intval($_POST['num_teams']));
-    if (count($students) < $num_teams) {
-        $error = "Số lượng đội lớn hơn số học sinh!";
+    $num_teams = max(1, intval($_POST['num_teams']));
+    
+    // ĐẢM BẢO PDO BÁO LỖI DƯỚI DẠNG EXCEPTION
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    if (empty($students) || count($students) < $num_teams) {
+        $error = "Số lượng học sinh không đủ!";
     } else {
-        // Xóa dữ liệu cũ
-        $teamIds = $pdo->prepare("SELECT id FROM team_campers");
-        $teamIds->execute();
-        $ids = $teamIds->fetchAll(PDO::FETCH_COLUMN);
-        if ($ids) {
-            $in = str_repeat('?,', count($ids)-1) . '?';
-            $pdo->prepare("DELETE FROM team_cam_member WHERE team_id IN ($in)")->execute($ids);
-            $pdo->prepare("DELETE FROM team_campers WHERE id IN ($in)")->execute($ids);
-        }
-
-        // Tạo bảng nếu chưa có
-        $pdo->exec("
-        CREATE TABLE IF NOT EXISTS team_campers (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-        $pdo->exec("
-            CREATE TABLE IF NOT EXISTS team_cam_member (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            team_id INT NOT NULL,
-            student_code VARCHAR(30) NOT NULL,
-            joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            CONSTRAINT fk_tcm_camper
-                FOREIGN KEY (student_code)
-                REFERENCES campers(student_code)
-                ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-
-        $student_codes = array_column($students, 'student_code');
-        shuffle($student_codes);
-        // ==============================
-        // CHIA ĐỘI ĐỀU KHỐI 10–11–12–CHS
-        // ==============================
-
-        // Tạo mảng đội rỗng
-        $groups = array_fill(0, $num_teams, []);
-
-        // Phân loại học sinh theo khối
-        $by_grade = [
-            '12'  => [],
-            '11'  => [],
-            '10'  => [],
-            'CHS' => []
-        ];
-
-        foreach ($students as $s) {
-            $class = trim($s['class']);
-            if (preg_match('/^12/i', $class)) {
-                $by_grade['12'][] = $s['student_code'];
-            } elseif (preg_match('/^11/i', $class)) {
-                $by_grade['11'][] = $s['student_code'];
-            } elseif (preg_match('/^10/i', $class)) {
-                $by_grade['10'][] = $s['student_code'];
-            } else {
-                $by_grade['CHS'][] = $s['student_code'];
+        try {
+            // Bước 1: Khởi tạo dữ liệu trước khi mở Transaction (Giảm tải cho DB)
+            $by_grade = ['12' => [], '11' => [], '10' => [], 'CHS' => []];
+            $student_map = []; 
+            foreach ($students as $s) {
+                $student_map[$s['student_code']] = $s;
+                $class = strtoupper(trim($s['class']));
+                if (preg_match('/^12/', $class)) $by_grade['12'][] = $s['student_code'];
+                elseif (preg_match('/^11/', $class)) $by_grade['11'][] = $s['student_code'];
+                elseif (preg_match('/^10/', $class)) $by_grade['10'][] = $s['student_code'];
+                else $by_grade['CHS'][] = $s['student_code'];
             }
-        }
 
-        // Trộn mỗi khối cho ngẫu nhiên
-        foreach ($by_grade as &$list) {
-            shuffle($list);
-        }
-        unset($list);
+            foreach ($by_grade as &$list) { shuffle($list); }
+            unset($list);
+            $all_students_sorted = array_merge($by_grade['12'], $by_grade['11'], $by_grade['10'], $by_grade['CHS']);
 
-        // Chia luân phiên từng khối
-        foreach ($by_grade as $grade => $list) {
-            foreach ($list as $i => $scode) {
-                $groups[$i % $num_teams][] = $scode;
+            // Bước 2: Bắt đầu làm việc với Database
+            $pdo->beginTransaction(); // <--- Lệnh này cực kỳ quan trọng
+
+            // Xóa dữ liệu cũ
+            $pdo->exec("DELETE FROM team_cam_member");
+            $pdo->exec("DELETE FROM team_campers");
+            
+            // Chia đội tuần tự (Rải bài)
+            $groups = array_fill(0, $num_teams, []);
+            foreach ($all_students_sorted as $index => $scode) {
+                $groups[$index % $num_teams][] = $scode;
             }
-        }
 
-        $teams_result = [];
-        foreach ($groups as $i => $group) {
-            $team_name = "Đội " . ($i+1);
-            $pdo->prepare("INSERT INTO team_campers (name) VALUES (?)")
-            ->execute([$team_name]);
-            $team_id = $pdo->lastInsertId();
-            $team_members = [];
-            foreach ($group as $scode) {
-                $pdo->prepare("
-                INSERT INTO team_cam_member (team_id, student_code) VALUES (?, ?)")
-                ->execute([$team_id, $scode]);
-                foreach ($students as $s) if ($s['student_code'] == $scode) $team_members[] = ['student_code'=>$scode, 'full_name'=>$s['full_name'], 'class'=>$s['class']];
+            $stmtTeam = $pdo->prepare("INSERT INTO team_campers (name) VALUES (?)");
+            $stmtMember = $pdo->prepare("INSERT INTO team_cam_member (team_id, student_code) VALUES (?, ?)");
+
+            $teams_result = [];
+            foreach ($groups as $i => $group) {
+                $team_name = "Đội " . ($i + 1);
+                $stmtTeam->execute([$team_name]);
+                $team_id = $pdo->lastInsertId();
+
+                $team_members_info = [];
+                foreach ($group as $scode) {
+                    $stmtMember->execute([$team_id, $scode]);
+                    $team_members_info[] = [
+                        'student_code' => $scode,
+                        'full_name'    => $student_map[$scode]['full_name'],
+                        'class'        => $student_map[$scode]['class']
+                    ];
+                }
+                $teams_result[] = ['name' => $team_name, 'team_id' => $team_id, 'members' => $team_members_info];
             }
-            $teams_result[] = ['name'=>$team_name, 'members'=>$team_members, 'team_id'=>$team_id];
+
+            $pdo->commit();
+            
+            $_SESSION['random_teams_effect'] = json_encode($teams_result);
+            header("Location: chiadoi.php?show_effect=1");
+            exit;
+
+        } catch (PDOException $e) {
+            // Chỉ rollback nếu transaction thực sự tồn tại
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            // HIỆN LỖI CHI TIẾT ĐỂ FIX
+            die("Lỗi Database: " . $e->getMessage()); 
+        } catch (Exception $e) {
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            die("Lỗi Code: " . $e->getMessage());
         }
-        $_SESSION['random_teams_effect'] = json_encode($teams_result);
-        header("Location: chiadoi.php?show_effect=1");
-        exit;
     }
 }
-
 // 7. Lấy danh sách các đội và thành viên đội cho sự kiện đã chọn (sort theo lớp)
 $all_teams = [];
 if (empty($_GET['show_effect'])) {
@@ -484,6 +467,12 @@ include __DIR__ . '/../config/header.php';
                   </div>
                 </div>
             <?php endforeach; ?>
+            <a href="../api/export_teams_excel.php"
+            class="btn btn-success mt-3">
+            <i class="bi bi-file-earmark-excel"></i>
+            Xuất Excel (mỗi đội 1 sheet)
+            </a>
+
             </div>
 
             <?php include __DIR__ . '/../config/footer.php'; ?>
