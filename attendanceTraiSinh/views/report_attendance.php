@@ -65,14 +65,12 @@ include __DIR__ . '/../config/header.php';
     <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
     <input type="text" id="searchBox" class="form-control" placeholder="Tìm theo tên, mã hoặc lớp...">
   </div>
-</div>
-
-<a href="../api/export_attendance_excel.php"
+  <a href="../api/export_attendance_excel.php"
    class="btn btn-success mb-3">
    <i class="bi bi-file-earmark-excel"></i>
    Xuất báo cáo Excel
 </a>
-
+</div>
 
 <div class="container-fluid px-3 py-3">
 
@@ -84,8 +82,13 @@ include __DIR__ . '/../config/header.php';
     <table class="table table-hover mb-0">
       <thead>
         <tr>
-          <th>Mã</th><th>Họ tên</th><th>Lớp</th>
-          <th>Trạng thái</th><th>Thời gian</th><th>Ban Tổ Chức</th>
+          <th>Mã</th>
+          <th>Họ tên</th>
+          <th>Lớp</th>
+          <th>Đội</th>
+          <th>Trạng thái</th>
+          <th>Thời gian</th>
+          <th>Ban Tổ Chức</th>
         </tr>
       </thead>
       <tbody id="table"></tbody>
@@ -133,6 +136,7 @@ function loadAttendance(){
         const status=getStatus(row.last_type);
         const time=row.last_scan_time || '';
         const btc=row.scanned_by || '';
+        const team = row.team_name || '--';
 
         const history=row.history
           ? row.history.split(';;').map(h=>{
@@ -149,7 +153,9 @@ function loadAttendance(){
         card.dataset.code=row.student_code.toLowerCase();
         card.innerHTML=`
           <div class="name">${row.full_name}</div>
-          <div class="meta">${row.student_code} • ${row.class}</div>
+          <div class="meta">
+            ${row.student_code} • ${row.class} • <b>${team}</b>
+          </div>
           <span class="badge ${status.cls} mt-2">${status.text}</span>
           <div class="meta mt-1">⏰ ${time || '—'}</div>
         `;
@@ -169,9 +175,11 @@ function loadAttendance(){
           <td>${row.student_code}</td>
           <td class="fw-semibold">${row.full_name}</td>
           <td>${row.class}</td>
+          <td>${team}</td>
           <td>
             <span class="badge-history">
-              <span class="badge ${status.cls}" onclick='openHistory(${JSON.stringify(history)})'>
+              <span class="badge ${status.cls}"
+                    onclick='openHistory(${JSON.stringify(history)})'>
                 ${status.text}
               </span>
               <div class="history-tooltip">${tooltip}</div>

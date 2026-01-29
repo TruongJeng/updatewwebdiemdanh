@@ -5,63 +5,68 @@ error_reporting(E_ALL);
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 header('Content-Type: application/json; charset=utf-8');
 
-require_once __DIR__ . '/../../config/session.php'; // nếu cần phân quyền
-require_once __DIR__ . '/../config/db.php';          // $pdo
+require_once __DIR__ . '/../../config/session.php';
+require_once __DIR__ . '/../config/db.php';
 
-$stmt = $pdo->prepare("
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin','club_leader','staff'])) {
+    echo json_encode(['success'=>false,'message'=>'Không có quyền']);
+    exit;
+}
+
+$sql = "
 SELECT
-    s.student_code,
-    s.full_name,
-    s.class,
+    c.student_code,
+    c.full_name,
+    c.class,
 
-    /* LẦN QUÉT GẦN NHẤT */
-    l.type        AS last_type,
-    l.scan_time   AS last_scan_time,
-    u.full_name   AS scanned_by,
+    /* ===== ĐỘI (CÓ / KHÔNG) ===== */
+    tc.name AS team_name,
 
-    /* TRẠNG THÁI HIỂN THỊ */
-    CASE
-        WHEN l.type = 'IN'  THEN 'Đã check-in'
-        WHEN l.type = 'OUT' THEN 'Đã check-out'
-        ELSE 'Chưa tham gia'
-    END AS status_text,
+    /* ===== LẦN QUÉT GẦN NHẤT ===== */
+    last_log.type        AS last_type,
+    last_log.scan_time  AS last_scan_time,
+    u.full_name         AS scanned_by,
 
-    /* TOÀN BỘ LỊCH SỬ (nếu cần) */
+    /* ===== TOÀN BỘ LỊCH SỬ ===== */
     GROUP_CONCAT(
         CONCAT(
-            l2.type, '|',
-            DATE_FORMAT(l2.scan_time,'%H:%i:%s %d/%m/%Y'), '|',
-            IFNULL(asess.pin_code,''), '|',
+            al.type, '|',
+            DATE_FORMAT(al.scan_time,'%H:%i %d/%m/%Y'), '|',
+            s.pin_code, '|',
             u2.full_name
         )
-        ORDER BY l2.scan_time ASC
+        ORDER BY al.scan_time ASC
         SEPARATOR ';;'
     ) AS history
 
-FROM campers s
+FROM campers c
 
-/* LẤY LOG GẦN NHẤT (KHÔNG LỌC SESSION) */
-LEFT JOIN attendance_logs l
-    ON l.id = (
+/* ===== TEAM ===== */
+LEFT JOIN team_cam_member tcm ON c.student_code = tcm.student_code
+LEFT JOIN team_campers tc ON tcm.team_id = tc.id
+
+/* ===== LẦN QUÉT GẦN NHẤT ===== */
+LEFT JOIN attendance_logs last_log
+    ON last_log.id = (
         SELECT id
         FROM attendance_logs
-        WHERE student_id = s.id
+        WHERE student_id = c.id
         ORDER BY scan_time DESC
         LIMIT 1
     )
 
-LEFT JOIN users u ON l.scanned_by = u.id
+LEFT JOIN users u ON last_log.scanned_by = u.id
 
-/* LỊCH SỬ */
-LEFT JOIN attendance_logs l2 ON l2.student_id = s.id
-LEFT JOIN attendance_sessions asess ON l2.session_id = asess.id
-LEFT JOIN users u2 ON l2.scanned_by = u2.id
+/* ===== LỊCH SỬ ===== */
+LEFT JOIN attendance_logs al ON al.student_id = c.id
+LEFT JOIN attendance_sessions s ON al.session_id = s.id
+LEFT JOIN users u2 ON al.scanned_by = u2.id
 
-GROUP BY s.id
-ORDER BY l.scan_time DESC
-");
+GROUP BY c.id
+ORDER BY last_log.scan_time DESC
+";
 
-$stmt->execute();
+$stmt = $pdo->query($sql);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo json_encode([
