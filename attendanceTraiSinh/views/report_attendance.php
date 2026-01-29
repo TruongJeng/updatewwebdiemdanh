@@ -66,10 +66,10 @@ include __DIR__ . '/../config/header.php';
     <input type="text" id="searchBox" class="form-control" placeholder="Tìm theo tên, mã hoặc lớp...">
   </div>
   <a href="../api/export_attendance_excel.php"
-   class="btn btn-success mb-3">
-   <i class="bi bi-file-earmark-excel"></i>
-   Xuất báo cáo Excel
-</a>
+    class="btn btn-success mb-3">
+    <i class="bi bi-file-earmark-excel"></i>
+    Xuất báo cáo Excel
+  </a>
 </div>
 
 <div class="container-fluid px-3 py-3">
@@ -93,7 +93,7 @@ include __DIR__ . '/../config/header.php';
       </thead>
       <tbody id="table"></tbody>
     </table>
-  </div>
+  </div> 
 </div>
 
 <!-- MODAL HISTORY -->
