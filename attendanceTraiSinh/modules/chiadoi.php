@@ -182,13 +182,18 @@ if (empty($_GET['show_effect'])) {
     unset($team);
 }
 
-// 8. Lấy học sinh chưa thuộc đội nào (cho tính năng thêm thành viên)
-$students_no_team = [];
-if ($all_teams) {
-    $codes = [];
-    foreach ($all_teams as $tm) foreach ($tm['members'] as $m) $codes[] = $m['student_code'];
-    foreach ($students as $s) if (!in_array($s['student_code'], $codes)) $students_no_team[] = $s;
-}
+// 8. Lấy học sinh chưa thuộc đội nào (chuẩn SQL)
+$stmt = $pdo->prepare("
+    SELECT c.student_code, c.full_name, c.class
+    FROM campers c
+    LEFT JOIN team_cam_member t ON c.student_code = t.student_code
+    WHERE c.is_active = 1
+      AND t.student_code IS NULL
+    ORDER BY c.full_name
+");
+$stmt->execute();
+$students_no_team = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // 9. Màu pastel cho đội
 $team_colors = ["#a5d8ff","#b2f2bb","#ffd8a8","#ffadad","#eebefa","#d0ebff","#b8f2e6","#ffe066","#ffa8a8","#c0eb75"];
