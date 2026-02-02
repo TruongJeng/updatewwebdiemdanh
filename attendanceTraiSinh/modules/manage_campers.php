@@ -426,6 +426,11 @@ include __DIR__ . '/../config/header.php';
 
 <!-- ===== SEARCH ===== -->
 <input type="text" id="search" class="form-control mb-3" placeholder="Tìm theo mã hoặc tên...">
+<a href="api/export_campers_excel.php"
+   class="btn btn-success mb-3">
+   <i class="bi bi-file-earmark-excel"></i>
+   Xuất danh sách trại sinh (Excel)
+</a>
 
 <!-- ===== LIST ===== -->
 <div class="card">
