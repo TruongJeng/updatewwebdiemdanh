@@ -284,6 +284,7 @@ usort($campers, function ($a, $b) {
 });
 
 ?>
+<?php
 $pageTitle = "Quản lý trại sinh";
 $full_name = $_SESSION['full_name'] ?? '';
 include __DIR__ . '/../../includes/header.php';
