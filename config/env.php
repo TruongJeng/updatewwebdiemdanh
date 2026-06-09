@@ -2,10 +2,10 @@
 // File cấu hình tập trung cho toàn bộ ứng dụng
 return [
     'db' => [
-        'host' => 'localhost',
-        'dbname' => 'clbupdate',
-        'user' => 'root',
-        'pass' => '',
+        'host' => 'clbkynangdoanhoiltk.io.vn',
+        'dbname' => 'bmkavqtl_clbkynang',
+        'user' => 'bmkavqtl_truonggiang',
+        'pass' => 'Giang15052006@',
     ],
     'mail' => [
         'host' => 'mail.clbkynangdoanhoiltk.io.vn',
