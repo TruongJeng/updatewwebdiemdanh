@@ -18,18 +18,22 @@ header('Content-Type: application/json; charset=UTF-8');
 
 // Hàm gửi email xác nhận điểm danh
 function send_confirm_mail($to_email, $to_name, $event_name, $action, $time, $logo_path = null) {
+    static $env = null;
+    if ($env === null) {
+        $env = require __DIR__ . '/../config/env.php';
+    }
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = 'mail.clbkynangdoanhoiltk.io.vn'; // Thay bằng SMTP server của bạn
+        $mail->Host = $env['mail']['host'];
         $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@clbkynangdoanhoiltk.io.vn'; // Email gửi đi
-        $mail->Password = 'Giang15052006@';                    // Mật khẩu
-        $mail->SMTPSecure = 'ssl';                             // Mã hóa SSL
-        $mail->Port = 465;
+        $mail->Username = $env['mail']['username'];
+        $mail->Password = $env['mail']['password'];
+        $mail->SMTPSecure = $env['mail']['secure'];
+        $mail->Port = $env['mail']['port'];
 
         // Gửi email
-        $mail->setFrom('no-reply@clbkynangdoanhoiltk.io.vn', 'CLB Kỹ năng Đoàn - Hội');
+        $mail->setFrom($env['mail']['from_email'], $env['mail']['from_name']);
         $mail->addAddress($to_email, $to_name);
 
         // Gửi logo nếu có

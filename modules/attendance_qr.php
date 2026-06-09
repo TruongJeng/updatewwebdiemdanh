@@ -66,17 +66,21 @@ function tao_ma_hoc_sinh() {
 
 // Hàm gửi mail xác nhận chuyên nghiệp, nhúng logo
 function send_confirm_mail($to_email, $to_name, $subject, $body_html, $logo_path = null) {
+    static $env = null;
+    if ($env === null) {
+        $env = require __DIR__ . '/../config/env.php';
+    }
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = 'mail.clbkynangdoanhoiltk.io.vn';
+        $mail->Host = $env['mail']['host'];
         $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@clbkynangdoanhoiltk.io.vn';
-        $mail->Password = 'Giang15052006@';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        $mail->Username = $env['mail']['username'];
+        $mail->Password = $env['mail']['password'];
+        $mail->SMTPSecure = $env['mail']['secure'];
+        $mail->Port = $env['mail']['port'];
 
-        $mail->setFrom('no-reply@clbkynangdoanhoiltk.io.vn', 'CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt');
+        $mail->setFrom($env['mail']['from_email'], $env['mail']['from_name']);
         $mail->addAddress($to_email, $to_name);
 
         if ($logo_path && file_exists($logo_path)) {
@@ -194,170 +198,234 @@ $pageTitle = "Điểm danh QR - " . htmlspecialchars($event['title']);
 $full_name = $_SESSION['full_name'] ?? '';
 include '../includes/header.php';
 ?>
-<div class="main-wrap">
-    <div class="event-title">
-        Sự kiện: <?= htmlspecialchars($event['title']) ?>
-    </div>
-    <?php if ($event['event_date']): ?>
-        <div class="event-date">
-            <i class="bi bi-calendar-event"></i> <?= date('d/m/Y H:i', strtotime($event['event_date'])) ?>
-        </div>
-    <?php endif; ?>
+<?php
+if (isset($_SESSION['user_id'])) {
+    include '../includes/sidebar.php';
+}
+?>
 
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <div class="qr-block">
-            <div class="qr-inner">
-                <div class="qr-title">Quét mã QR này để điểm danh:</div>
-                <div id="qrcode" style="display: flex; justify-content: center; align-items: center;"></div>
-                <div class="mt-2 small" style="color:#888;word-break:break-all;">Hoặc truy cập:<br>
-                    <span style="color:#3178c6;" id="qr-link"></span>
+<main class="<?= isset($_SESSION['user_id']) ? 'ml-0 lg:ml-64' : '' ?> min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 flex items-center justify-center">
+    <div class="w-full max-w-2xl bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden relative mt-8">
+        <!-- Decorator -->
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600"></div>
+
+        <div class="p-8 sm:p-10">
+            <!-- Event Info -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-50 text-primary-600 mb-4 shadow-sm border border-primary-100">
+                    <i class="bi bi-qr-code-scan text-3xl"></i>
                 </div>
-                <div class="admin-action">
-                    <!-- Chuyển nút Kết thúc để mở bản đồ quản lý (admin_map.php) -->
-                    <a href="admin_map.php?event_id=<?= urlencode($event_id) ?>" class="btn btn-finish"><i class="bi bi-geo-alt"></i> Kết thúc điểm danh</a>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight mb-2">
+                    <?= htmlspecialchars($event['title']) ?>
+                </h1>
+                <?php if ($event['event_date']): ?>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium mt-2">
+                    <i class="bi bi-calendar-event"></i>
+                    <?= date('d/m/Y H:i', strtotime($event['event_date'])) ?>
                 </div>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-        <script>
-        function updateQR() {
-            var t = Math.floor(Date.now()/1000/30);
-            var url = window.location.origin + window.location.pathname + window.location.search;
-            if(url.indexOf('?') > -1) url += '&t=' + t; else url += '?t=' + t;
-            document.getElementById('qr-link').textContent = url;
-            document.getElementById('qrcode').innerHTML = '';
-            var size = window.innerWidth < 500 ? 180 : 240;
-            new QRCode(document.getElementById("qrcode"), {
-                text: url,
-                width: size,
-                height: size,
-                colorDark : "#3178c6",
-                colorLight : "#fff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-        }
-        updateQR();
-        setInterval(updateQR, 10000);
-        window.addEventListener('resize', updateQR);
-        </script>
-    <?php else: ?>
-        <div class="form-checkin">
-        <h5 class="mb-3 text-center" style="color:#3178c6;"><i class="bi bi-qr-code"></i> Form điểm danh</h5>
-        <?php if ($msg): ?>
-            <div class="<?= $success ? 'msg-success' : 'msg-error' ?>">
-                <?php if ($success): ?><i class="bi bi-check-circle-fill"></i><?php endif; ?>
-                <?= $msg ?>
-                <?php if ($success): ?>
-                <form method="get" action="../">
-                    <button type="submit" class="btn btn-exit w-100"><i class="bi bi-door-open"></i> Đóng/tắt điểm danh</button>
-                </form>
                 <?php endif; ?>
             </div>
-        <?php endif; ?>
-        <?php if (!$success): ?>
-        <form id="checkinForm" method="post" autocomplete="off">
-            <!-- Hidden fields for GPS -->
-            <input type="hidden" name="lat" id="lat" value="">
-            <input type="hidden" name="lng" id="lng" value="">
-            <input type="hidden" name="gps_time" id="gps_time" value="">
-            <input type="hidden" name="gps_source" id="gps_source" value="">
 
-            <div class="mb-3">
-                <label class="form-label" for="full_name">Họ và tên:</label>
-                <input type="text" id="full_name" name="full_name" class="form-control" required autocomplete="name">
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="class">Lớp:</label>
-                <input type="text" id="class" name="class" class="form-control" required autocomplete="organization">
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required autocomplete="email">
-            </div>
-            <button id="submitBtn" type="submit" class="btn btn-primary w-100" style="font-weight:600;">
-                <i class="bi bi-check-circle"></i> Điểm danh
-            </button>
-        </form>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <!-- Admin View: Show QR Code -->
+                <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <h3 class="text-lg font-bold text-slate-700 mb-6 text-center z-10 flex items-center gap-2">
+                        <i class="bi bi-phone"></i> Quét mã QR này để điểm danh
+                    </h3>
+                    
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 z-10 mb-8 transition-transform duration-500 hover:scale-105 hover:shadow-md">
+                        <div id="qrcode" class="flex justify-center items-center"></div>
+                    </div>
+                    
+                    <div class="text-center z-10 w-full max-w-sm">
+                        <p class="text-sm font-medium text-slate-500 mb-3">Hoặc truy cập link trực tiếp:</p>
+                        <div class="bg-white px-4 py-3.5 rounded-xl border border-slate-200 text-sm font-mono text-primary-600 shadow-sm flex items-center justify-between relative group/link cursor-pointer hover:border-primary-400 hover:ring-2 hover:ring-primary-500/20 transition-all overflow-hidden" onclick="copyLink()">
+                            <span id="qr-link" class="truncate pr-4 mr-2"></span>
+                            <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 group-hover/link:bg-primary-50 group-hover/link:border-primary-200 transition-colors shrink-0">
+                                <i class="bi bi-clipboard text-slate-400 group-hover/link:text-primary-600 transition-colors"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <script>
-        // Geolocation: lấy lat/lng trước khi submit. Nếu user từ chối hoặc timeout, submit không có tọa độ.
-        (function(){
-            const form = document.getElementById('checkinForm');
-            const submitBtn = document.getElementById('submitBtn');
+                <div class="mt-8 flex justify-center">
+                    <a href="admin_map.php?event_id=<?= urlencode($event_id) ?>" class="inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md">
+                        <i class="bi bi-geo-alt text-lg"></i> Xem bản đồ & Kết thúc
+                    </a>
+                </div>
 
-            form.addEventListener('submit', function(e){
-                // nếu đã có giá trị lat/lng (ví dụ từ lần trước), submit luôn
-                if (document.getElementById('lat').value !== '' || document.getElementById('lng').value !== '') {
-                    return; // allow submit
+                <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+                <script>
+                function updateQR() {
+                    var t = Math.floor(Date.now()/1000/30);
+                    var url = window.location.origin + window.location.pathname + window.location.search;
+                    if(url.indexOf('?') > -1) url += '&t=' + t; else url += '?t=' + t;
+                    
+                    document.getElementById('qr-link').textContent = url;
+                    // For copying
+                    window.currentUrl = url;
+
+                    document.getElementById('qrcode').innerHTML = '';
+                    var size = window.innerWidth < 500 ? 200 : 260;
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: url,
+                        width: size,
+                        height: size,
+                        colorDark : "#0f172a", // slate-900
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.H
+                    });
                 }
-                e.preventDefault();
-                submitBtn.disabled = true;
-                submitBtn.innerText = 'Đang lấy vị trí...';
-
-                if (!navigator.geolocation) {
-                    document.getElementById('gps_source').value = 'unsupported';
-                    submitBtn.disabled = false;
-                    form.submit();
-                    return;
+                
+                function copyLink() {
+                    navigator.clipboard.writeText(window.currentUrl).then(() => {
+                        const icon = document.querySelector('.bi-clipboard');
+                        const container = icon.closest('.w-8');
+                        
+                        icon.classList.replace('bi-clipboard', 'bi-check2');
+                        icon.classList.replace('text-slate-400', 'text-emerald-600');
+                        icon.classList.replace('group-hover/link:text-primary-600', 'group-hover/link:text-emerald-600');
+                        
+                        container.classList.replace('bg-slate-50', 'bg-emerald-50');
+                        container.classList.replace('group-hover/link:bg-primary-50', 'group-hover/link:bg-emerald-100');
+                        container.classList.replace('border-slate-100', 'border-emerald-200');
+                        
+                        setTimeout(() => {
+                            icon.classList.replace('bi-check2', 'bi-clipboard');
+                            icon.classList.replace('text-emerald-600', 'text-slate-400');
+                            icon.classList.replace('group-hover/link:text-emerald-600', 'group-hover/link:text-primary-600');
+                            
+                            container.classList.replace('bg-emerald-50', 'bg-slate-50');
+                            container.classList.replace('group-hover/link:bg-emerald-100', 'group-hover/link:bg-primary-50');
+                            container.classList.replace('border-emerald-200', 'border-slate-100');
+                        }, 2000);
+                    });
                 }
 
-                const geoOpts = { enableHighAccuracy: false, timeout: 7000, maximumAge: 0 };
-                navigator.geolocation.getCurrentPosition(function(pos){
-                    document.getElementById('lat').value = pos.coords.latitude;
-                    document.getElementById('lng').value = pos.coords.longitude;
-                    // format YYYY-MM-DD HH:MM:SS
-                    const dt = new Date();
-                    const pad = n => (n<10?'0':'')+n;
-                    const gpsTime = dt.getFullYear() + '-' + pad(dt.getMonth()+1) + '-' + pad(dt.getDate()) + ' ' + pad(dt.getHours()) + ':' + pad(dt.getMinutes()) + ':' + pad(dt.getSeconds());
-                    document.getElementById('gps_time').value = gpsTime;
-                    document.getElementById('gps_source').value = 'browser_geo';
-                    form.submit();
-                }, function(err){
-                    // user denied or timeout
-                    document.getElementById('gps_source').value = 'denied_or_timeout';
-                    submitBtn.disabled = false;
-                    form.submit();
-                }, geoOpts);
-            });
-        })();
-        </script>
+                updateQR();
+                setInterval(updateQR, 10000);
+                window.addEventListener('resize', updateQR);
+                </script>
 
-        <?php endif; ?>
+            <?php else: ?>
+                <!-- Student View: Check-in Form -->
+                
+                <?php if ($msg): ?>
+                    <div class="mb-8 p-6 rounded-2xl <?= $success ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-red-800' ?> text-center shadow-sm">
+                        <?php if ($success): ?>
+                            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+                                <i class="bi bi-check-lg text-3xl"></i>
+                            </div>
+                        <?php else: ?>
+                            <div class="w-16 h-16 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
+                                <i class="bi bi-exclamation-triangle text-3xl"></i>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="text-lg font-medium leading-relaxed">
+                            <?= $msg ?>
+                        </div>
+                        
+                        <?php if ($success): ?>
+                        <div class="mt-6">
+                            <form method="get" action="../">
+                                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-sm">
+                                    <i class="bi bi-door-open"></i> Đóng / Tắt điểm danh
+                                </button>
+                            </form>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!$success): ?>
+                <div class="bg-slate-50 p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-inner">
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center justify-center gap-2">
+                        <i class="bi bi-person-badge text-primary-500"></i>
+                        Thông tin cá nhân
+                    </h3>
+                    
+                    <form id="checkinForm" method="post" autocomplete="off" class="space-y-5">
+                        <!-- Hidden fields for GPS -->
+                        <input type="hidden" name="lat" id="lat" value="">
+                        <input type="hidden" name="lng" id="lng" value="">
+                        <input type="hidden" name="gps_time" id="gps_time" value="">
+                        <input type="hidden" name="gps_source" id="gps_source" value="">
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5" for="full_name">Họ và tên</label>
+                            <input type="text" id="full_name" name="full_name" required autocomplete="name" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="Nhập đầy đủ họ và tên">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5" for="class">Lớp</label>
+                            <input type="text" id="class" name="class" required autocomplete="organization" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="Ví dụ: 10A1">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5" for="email">Email liên hệ</label>
+                            <input type="email" id="email" name="email" required autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="email@example.com">
+                        </div>
+                        
+                        <div class="pt-4">
+                            <button id="submitBtn" type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3.5 rounded-xl font-bold transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 text-lg group">
+                                <i class="bi bi-check2-circle group-hover:scale-110 transition-transform"></i> Xác nhận điểm danh
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <script>
+                // Geolocation
+                (function(){
+                    const form = document.getElementById('checkinForm');
+                    const submitBtn = document.getElementById('submitBtn');
+
+                    form.addEventListener('submit', function(e){
+                        if (document.getElementById('lat').value !== '' || document.getElementById('lng').value !== '') {
+                            return; 
+                        }
+                        e.preventDefault();
+                        
+                        // Thay đổi state button
+                        const originalContent = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                        submitBtn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> Đang lấy vị trí...';
+
+                        if (!navigator.geolocation) {
+                            document.getElementById('gps_source').value = 'unsupported';
+                            submitBtn.disabled = false;
+                            form.submit();
+                            return;
+                        }
+
+                        const geoOpts = { enableHighAccuracy: false, timeout: 7000, maximumAge: 0 };
+                        navigator.geolocation.getCurrentPosition(function(pos){
+                            document.getElementById('lat').value = pos.coords.latitude;
+                            document.getElementById('lng').value = pos.coords.longitude;
+                            
+                            const dt = new Date();
+                            const pad = n => (n<10?'0':'')+n;
+                            const gpsTime = dt.getFullYear() + '-' + pad(dt.getMonth()+1) + '-' + pad(dt.getDate()) + ' ' + pad(dt.getHours()) + ':' + pad(dt.getMinutes()) + ':' + pad(dt.getSeconds());
+                            
+                            document.getElementById('gps_time').value = gpsTime;
+                            document.getElementById('gps_source').value = 'browser_geo';
+                            form.submit();
+                        }, function(err){
+                            document.getElementById('gps_source').value = 'denied_or_timeout';
+                            submitBtn.disabled = false;
+                            form.submit();
+                        }, geoOpts);
+                    });
+                })();
+                </script>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
-    <?php endif; ?>
-</div>
+    </div>
+</main>
+
 <?php include '../includes/footer.php'; ?>
-<style>
-body { background: linear-gradient(135deg, #c9e5ff 0%, #f8e7ff 100%);}
-.main-wrap { max-width:700px; margin:40px auto 0 auto; background:#fff; border-radius:16px; box-shadow:0 6px 32px #3178c615; padding:38px 24px;}
-.qr-block { text-align:center; margin-bottom: 30px; }
-.qr-inner { display: flex; flex-direction: column; align-items: center; }
-.qr-title { font-weight:700; font-size:1.2em; color:#3178c6; margin-bottom:12px;}
-.form-label { color:#3178c6; font-weight:600;}
-.msg-success { background: linear-gradient(90deg,#e0f7fa 60%, #f3e5f5 100%); color: #3178c6; font-weight:700; border:1px solid #b3d8fd; border-radius:8px; box-shadow:0 2px 12px #3178c62a; padding:18px; font-size:1.19em; text-align:center;}
-.msg-error { color: #d62c2c; font-weight:700; }
-.checked-name { color:#3178c6; font-size:1.23em; font-weight:800;}
-.student-code { color:#6f42c1; font-weight:600; font-size:1.06em;}
-.event-title { text-align:center; color:#3178c6; font-size:1.38em; font-weight:700; margin-bottom:24px;}
-.event-date { text-align:center; color:#6f42c1; margin-bottom:18px;}
-.form-checkin { background: linear-gradient(90deg,#f8fafc 60%, #e2e7f9 100%); border-radius:12px; box-shadow:0 2px 14px #3178c62a; padding:24px 18px;}
-.btn-primary { background:#3178c6; font-weight:600;}
-.btn-primary:hover { background:#1757a6;}
-.btn-finish, .btn-exit { background: #6f42c1; color: #fff; font-weight: 600; border-radius: 7px; margin-top: 16px;}
-.btn-finish:hover, .btn-exit:hover { background: #4b2976;}
-.bi-check-circle-fill { color:#3178c6; font-size:2em; margin-bottom:8px;}
-.admin-action { text-align:center; margin-top:16px;}
-/* Tối ưu cho điện thoại */
-@media (max-width: 600px) {
-    .main-wrap {padding:10px 2px; max-width:100vw;}
-    .form-checkin, .qr-block {padding:10px 2px;}
-    .event-title{font-size:1.1em;}
-    .qr-title{font-size:1em;}
-    .form-label{font-size:0.95em;}
-    input.form-control {font-size:1em;}
-    .btn {font-size:1em;}
-    .qr-inner {padding:0;}
-}
-</style>
-</body>
-</html>

@@ -157,301 +157,440 @@ $team_colors = ["#a5d8ff","#b2f2bb","#ffd8a8","#ffadad","#eebefa","#d0ebff","#b8
 $success = $_SESSION['success'] ?? null;
 unset($_SESSION['success']);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt</title>
-    <link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <style>
-        body{ background: #f6faff;}
-        .table-scroll { max-height:370px; overflow:auto;}
-        .manual-input { width:120px; }
-        .btn-lg { font-size: 1.1em; padding: 0.75em 2em;}
-        .card-team {
-            border-radius: 14px; box-shadow: 0 2px 8px #3178c60a; margin-bottom:18px;
-            min-height: 180px;
-        }
-        .card-team .card-header { font-weight: bold; border-bottom: none;}
-        .team-member .bi-x { cursor:pointer; color:#e8590c;}
-        .add-member-form {display:flex; gap:7px; align-items: center;}
-    </style>
-</head>
-<body>
 <?php
-$pageTitle = "CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt";
+$pageTitle = "CHIA ĐỘI HOẠT ĐỘNG";
 $full_name = $_SESSION['full_name'] ?? '';
 include '../includes/header.php';
+include '../includes/sidebar.php';
 ?>
-<div class="container mt-4 mb-4">
-    <div class="bg-white p-4 rounded-4 shadow-sm mb-3">
-        <h3 class="mb-3 text-primary text-center" style="font-weight:800;letter-spacing:1px;">
-            Chia đội cho hoạt động
-        </h3>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="../dashboard.php" class="back-link"><i class="bi bi-arrow-left-circle"></i> Về Trang chủ</a>
+
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8" x-data="{ showRandomForm: false, showEffect: <?= isset($_GET['show_effect']) && isset($_SESSION['random_teams_effect']) ? 'true' : 'false' ?> }">
+    <div class="max-w-7xl mx-auto pb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <a href="../dashboard.php" class="text-slate-500 hover:text-primary-600 transition-colors flex items-center gap-1.5 text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm hover:shadow">
+                <i class="bi bi-arrow-left"></i> Về Trang chủ
+            </a>
         </div>
-        <form method="get" class="row g-2 mb-3 justify-content-center">
-            <div class="col-auto d-flex align-items-center">
-                <label class="me-2"><b>Chọn hoạt động:</b></label>
-                <select name="event_id" class="form-select" style="width:270px;" required onchange="this.form.submit()">
-                    <option value="">-- Chọn --</option>
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                    <i class="bi bi-diagram-3 text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">CHIA ĐỘI HOẠT ĐỘNG</h2>
+                    <p class="text-sm font-medium text-slate-500 mt-1">Phân chia nhóm nhanh chóng và ngẫu nhiên</p>
+                </div>
+            </div>
+            
+            <form method="get" class="flex items-center bg-white rounded-xl shadow-sm border border-slate-200 p-2">
+                <label class="px-3 text-sm font-semibold text-slate-600 flex-shrink-0">Hoạt động:</label>
+                <select name="event_id" class="flex-1 min-w-[200px] border-none bg-slate-50 rounded-lg px-3 py-2 text-sm font-medium focus:ring-0 outline-none text-slate-700" required onchange="this.form.submit()">
+                    <option value="">-- Chọn hoạt động --</option>
                     <?php foreach($events as $ev): ?>
                         <option value="<?= $ev['id'] ?>" <?= $event_id==$ev['id']?'selected':'' ?>>
                             <?= htmlspecialchars($ev['title']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-            </div>
-        </form>
-        <?php if ($event_id): ?>
-        <?php if (empty($_GET['show_effect'])): ?>
-        <form method="post" class="text-end mb-3" onsubmit="return confirm('Bạn chắc chắn muốn xóa toàn bộ đội và thành viên của hoạt động này?');">
-            <button class="btn btn-outline-danger" name="delete_all_teams" type="submit"><i class="bi bi-trash"></i> Xóa tất cả đội của hoạt động này</button>
-        </form>
-        <div class="row mt-3">
-            <div class="col-md-7 mb-3">
-                <h5 class="mb-2 text-secondary" style="font-weight:600;">Danh sách học sinh đã điểm danh</h5>
-                <div class="table-scroll">
-                <table class="table table-bordered table-striped table-hover align-middle shadow-sm">
-                    <thead class="table-primary">
-                        <tr>
-                            <th style="width:45px;">STT</th>
-                            <th>Tên</th>
-                            <th style="width:90px;">Lớp</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($students as $k=>$s): ?>
-                        <tr>
-                            <td><?= $k+1 ?></td>
-                            <td><?= htmlspecialchars($s['full_name']) ?></td>
-                            <td><?= htmlspecialchars($s['class']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                </div>
-            </div>
-            <div class="col-md-5 mb-3">
-                <div class="d-flex flex-wrap gap-2 mb-3 justify-content-center">
-                    <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRandom" aria-expanded="false" aria-controls="collapseRandom">
-                        <i class="bi bi-shuffle"></i> Chia đội tự động
-                    </button>
-                </div>
-                <div class="collapse mt-3" id="collapseRandom">
-                    <form method="post" class="border rounded-3 shadow-sm p-3 bg-light">
-                        <input type="hidden" name="event_id" value="<?= $event_id ?>">
-                        <div class="mb-2">
-                            <label class="mb-1"><b>Số đội cần chia:</b></label>
-                            <input type="number" name="num_teams" min="1" max="<?= count($students) ?>" class="form-control" style="width:110px;" required>
-                        </div>
-                        <button type="submit" name="random_team_do" class="btn btn-primary mt-1">Bắt đầu chia tự động</button>
-                    </form>
-                </div>
-            </div>
+            </form>
         </div>
-        <?php endif; ?>
-        <?php endif; ?>
-
+        
+        <!-- Alerts -->
         <?php if (!empty($success)): ?>
-            <div class="alert alert-success mt-3"><?= $success ?></div>
-        <?php elseif (!empty($error)): ?>
-            <div class="alert alert-danger mt-3"><?= $error ?></div>
-        <?php endif; ?>
-
-        <?php
-        // Hiệu ứng xổ số random đội
-        if (isset($_GET['show_effect']) && isset($_SESSION['random_teams_effect'])):
-            $teams_data = json_decode($_SESSION['random_teams_effect'], true);
-            unset($_SESSION['random_teams_effect']);
-        ?>
-            <h4 class="mt-4 mb-3 text-primary text-center" style="font-weight:700;" id="effect-title">ĐANG CHIA ĐỘI...</h4>
-            <div id="effect-teams" class="row"></div>
-            <div class="text-center mt-4 d-none" id="view-teams-real">
-                <a href="team.php?event_id=<?=$event_id?>" class="btn btn-success btn-lg"><i class="bi bi-eye"></i> Xem lại danh sách đội</a>
+            <div class="mb-6 flex items-center justify-between p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($success) ?></span>
+                </div>
             </div>
-            <script>
-            let teams = <?=json_encode($teams_data)?>;
-            let colors = <?=json_encode($team_colors)?>;
-            let container = document.getElementById('effect-teams');
-            let viewRealBtn = document.getElementById('view-teams-real');
-            let t = 0;
-            function showNextTeam() {
-                if (t >= teams.length) {
-                    setTimeout(()=>{viewRealBtn.classList.remove('d-none')}, 1000);
-                    return;
-                }
-                let team = teams[t];
-                let col = document.createElement('div');
-                col.className = "col-md-4 mb-3";
-                let color = colors[t % colors.length];
-                let member0 = team.members.length ? team.members[0] : null;
-                let html = `<div class="card card-team h-100 animate__animated animate__fadeInUp" style="background:${color};cursor:pointer;" onclick="showAllMembers(this,${t})">
-                    <div class="card-header fs-5 text-dark text-center">${team.name}</div>
-                    <div class="card-body team-body-${t}">
-                        <ol class="mb-0 ps-3">`;
-                if(member0)
-                    html += `<li><b>${member0.full_name}</b> <span class="text-muted">(${member0.class})</span></li>`;
-                for(let i=1;i<team.members.length;i++)
-                    html += `<li class="d-none"><b>${team.members[i].full_name}</b> <span class="text-muted">(${team.members[i].class})</span></li>`;
-                html += `</ol><div class="text-center text-muted mt-2 team-hint">Nhấn để xem thành viên</div></div></div>`;
-                col.innerHTML = html;
-                container.appendChild(col);
-                t++;
-                setTimeout(showNextTeam, 1200);
-            }
-            // hiệu ứng chữ "Đang chia đội..."
-            let title = document.getElementById('effect-title');
-            let dots = 0;
-            setInterval(()=>{
-                if(title) {
-                    title.innerHTML = "ĐANG CHIA ĐỘI" + '.'.repeat((++dots)%4);
-                }
-            }, 350);
-
-            function showAllMembers(card, idx) {
-                let body = card.querySelector('.team-body-'+idx);
-                if(!body) return;
-                let lis = body.querySelectorAll('li.d-none');
-                lis.forEach(li=>li.classList.remove('d-none'));
-                let hint = body.querySelector('.team-hint');
-                if(hint) hint.style.display='none';
-                card.onclick=null;
-            }
-            showNextTeam();
-            </script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <?php endif; ?>
+        <?php if (!empty($error)): ?>
+            <div class="mb-6 flex items-center justify-between p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($error) ?></span>
+                </div>
+            </div>
         <?php endif; ?>
 
-        <?php if ($event_id && $all_teams && empty($_GET['show_effect'])): ?>
-            <h4 class="mt-4 mb-3 text-primary" style="font-weight:700;">Danh sách các đội & thành viên</h4>
-            <div class="row">
-            <?php foreach ($all_teams as $idx=>$team): ?>
-                <div class="col-md-4 mb-3">
-                    <div class="card card-team h-100 shadow"
-                         style="background: <?=$team_colors[$idx%count($team_colors)]?>; cursor:pointer;"
-                         onclick="openTeamModal(<?=$team['id']?>)">
-                        <div class="card-header text-center fs-5"><?= htmlspecialchars($team['name']) ?></div>
-                        <div class="card-body pb-2">
-                            <div class="mb-1"><b>Thành viên:</b></div>
+        <?php if ($event_id && empty($_GET['show_effect'])): ?>
+            <!-- Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6 bg-white p-4 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100">
+                <button @click="showRandomForm = !showRandomForm" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md text-sm">
+                    <i class="bi bi-shuffle"></i> Chia đội tự động
+                </button>
+                
+                <?php if (!empty($all_teams)): ?>
+                <form method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa toàn bộ đội và thành viên của hoạt động này?');">
+                    <button class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2.5 rounded-xl font-semibold transition-colors shadow-sm text-sm border border-red-100" name="delete_all_teams" type="submit">
+                        <i class="bi bi-trash3"></i> Xóa tất cả đội
+                    </button>
+                </form>
+                <?php endif; ?>
+            </div>
+
+            <!-- Random Team Form (Alpine Collapse) -->
+            <div x-show="showRandomForm" x-collapse x-cloak class="mb-6">
+                <div class="bg-primary-50 rounded-2xl p-6 border border-primary-100 shadow-inner">
+                    <h4 class="text-base font-bold text-primary-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-gear-fill"></i> Thiết lập chia đội ngẫu nhiên
+                    </h4>
+                    <form method="post" class="flex flex-col sm:flex-row items-end gap-4">
+                        <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                        <div class="w-full sm:w-auto flex-1 max-w-xs">
+                            <label class="block text-xs font-semibold text-primary-700 uppercase tracking-wider mb-2">Số đội cần chia</label>
+                            <input type="number" name="num_teams" min="1" max="<?= count($students) ?: 1 ?>" class="w-full px-4 py-2.5 bg-white border border-primary-200 rounded-xl text-primary-900 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none font-bold" required placeholder="Nhập số đội...">
+                        </div>
+                        <button type="submit" name="random_team_do" class="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm flex items-center justify-center gap-2 h-[42px]">
+                            <i class="bi bi-magic"></i> Bắt đầu chia
+                        </button>
+                    </form>
+                    <p class="text-xs text-primary-600 font-medium mt-3 flex items-center gap-1.5">
+                        <i class="bi bi-info-circle"></i> Số học sinh hiện có: <b><?= count($students) ?></b>
+                    </p>
+                </div>
+            </div>
+
+            <?php if (empty($all_teams)): ?>
+                <!-- List of check-in students (before teams created) -->
+                <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50/50">
+                        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="bi bi-people-fill text-primary-500"></i> Danh sách học sinh đã điểm danh
+                        </h3>
+                    </div>
+                    <?php if ($students): ?>
+                    <div class="overflow-auto max-h-[400px]">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider sticky top-0 z-10 shadow-sm">
+                                <tr>
+                                    <th class="px-5 py-4 w-16 text-center">STT</th>
+                                    <th class="px-5 py-4">Họ và tên</th>
+                                    <th class="px-5 py-4 w-32 text-center">Lớp</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                            <?php foreach($students as $k=>$s): ?>
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3 text-center text-slate-500 font-medium"><?= $k+1 ?></td>
+                                    <td class="px-5 py-3 font-bold text-slate-800"><?= htmlspecialchars($s['full_name']) ?></td>
+                                    <td class="px-5 py-3 text-center">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+                                            <?= htmlspecialchars($s['class']) ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php else: ?>
+                    <div class="p-8 text-center text-slate-500">
+                        <i class="bi bi-person-x text-4xl text-slate-300 mb-3 block"></i>
+                        Chưa có học sinh nào điểm danh sự kiện này!
+                    </div>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <!-- Display Teams -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($all_teams as $idx=>$team): 
+                    $color = $team_colors[$idx % count($team_colors)];
+                    // Convert hex to a slightly lighter bg color for tailwind if needed, but we can just use inline styles for the distinct colors
+                ?>
+                    <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border border-slate-100 flex flex-col transition-all duration-300 hover:-translate-y-1 group" style="box-shadow: 0 10px 40px <?= $color ?>40;">
+                        <!-- Team Header -->
+                        <div class="px-6 py-5 border-b border-black/5 flex justify-between items-center" style="background-color: <?= $color ?>; color: #1e293b;">
+                            <h3 class="font-extrabold text-lg tracking-tight"><?= htmlspecialchars($team['name']) ?></h3>
+                            <button onclick="openTeamModal(<?=$team['id']?>)" class="w-8 h-8 rounded-full bg-white/40 hover:bg-white text-slate-800 flex items-center justify-center transition-colors shadow-sm backdrop-blur-sm">
+                                <i class="bi bi-arrows-fullscreen text-sm"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Team Members -->
+                        <div class="p-6 flex-1 bg-white">
+                            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Thành viên (<?= count($team['members']) ?>)</div>
+                            
                             <?php if ($team['members']): ?>
-                                <ol class="mb-0 ps-3">
+                                <ul class="space-y-2 mb-4">
                                     <?php foreach ($team['members'] as $mem): ?>
-                                        <li class="team-member small">
-                                            <?= htmlspecialchars($mem['full_name']) ?>
-                                            <span class="text-muted">(<?= htmlspecialchars($mem['class']) ?>)</span>
-                                            <form method="post" style="display:inline" onsubmit="event.stopPropagation();return confirm('Xóa thành viên khỏi đội?');">
+                                        <li class="flex items-center justify-between group/item p-2 -mx-2 rounded-lg hover:bg-slate-50 transition-colors">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-xs font-bold border border-slate-200">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="font-bold text-slate-700 text-sm"><?= htmlspecialchars($mem['full_name']) ?></div>
+                                                    <div class="text-xs text-slate-500 font-medium"><?= htmlspecialchars($mem['class']) ?></div>
+                                                </div>
+                                            </div>
+                                            <form method="post" onsubmit="return confirm('Xóa thành viên khỏi đội?');" class="opacity-0 group-hover/item:opacity-100 transition-opacity">
                                                 <input type="hidden" name="team_id" value="<?=$team['id']?>">
                                                 <input type="hidden" name="student_id" value="<?=$mem['id']?>">
-                                                <button name="remove_member" class="btn btn-link btn-sm p-0" title="Xóa thành viên"><i class="bi bi-x"></i></button>
+                                                <button name="remove_member" class="w-7 h-7 rounded-md bg-red-50 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa thành viên">
+                                                    <i class="bi bi-x-lg text-xs"></i>
+                                                </button>
                                             </form>
                                         </li>
                                     <?php endforeach; ?>
-                                </ol>
+                                </ul>
                             <?php else: ?>
-                                <div><i>Chưa có thành viên</i></div>
+                                <div class="text-center py-6 text-slate-400 text-sm font-medium italic bg-slate-50 rounded-xl mb-4 border border-slate-100">
+                                    Chưa có thành viên
+                                </div>
                             <?php endif; ?>
+                            
+                            <!-- Add Member -->
                             <?php if (!empty($students_no_team)): ?>
-                                <hr>
-                                <form method="post" class="add-member-form" onclick="event.stopPropagation();">
-                                    <input type="hidden" name="team_id" value="<?=$team['id']?>">
-                                    <select name="student_id" class="form-select form-select-sm" style="width:180px" required>
-                                        <option value="">Thêm thành viên...</option>
-                                        <?php foreach($students_no_team as $s): ?>
-                                            <option value="<?=$s['id']?>"><?=htmlspecialchars($s['full_name'].' ('.$s['class'].')')?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <button class="btn btn-sm btn-outline-success" name="add_member" title="Thêm"><i class="bi bi-plus-lg"></i></button>
-                                </form>
+                                <div class="pt-4 border-t border-slate-100 mt-auto">
+                                    <form method="post" class="flex items-center gap-2">
+                                        <input type="hidden" name="team_id" value="<?=$team['id']?>">
+                                        <select name="student_id" class="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 text-sm focus:border-primary-500 focus:bg-white focus:ring-2 outline-none transition-colors" required>
+                                            <option value="">+ Thêm người...</option>
+                                            <?php foreach($students_no_team as $s): ?>
+                                                <option value="<?=$s['id']?>"><?=htmlspecialchars($s['full_name'].' ('.$s['class'].')')?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button class="w-10 h-10 rounded-lg bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white flex items-center justify-center transition-colors border border-emerald-100 hover:border-emerald-500 shadow-sm" name="add_member" title="Thêm">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
+                <?php endforeach; ?>
                 </div>
-                <!-- Modal cho từng đội -->
-                <div class="modal fade" id="modalTeam<?=$team['id']?>" tabindex="-1" aria-labelledby="modalTeamLabel<?=$team['id']?>" aria-hidden="true">
-                  <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header" style="background: <?=$team_colors[$idx%count($team_colors)]?>;">
-                        <h5 class="modal-title w-100 text-center" id="modalTeamLabel<?=$team['id']?>" style="font-weight:700;">
+
+                <!-- Modals for Teams (Alpine or Bootstrap. Let's keep a simple structure) -->
+                <?php foreach ($all_teams as $idx=>$team): 
+                    $color = $team_colors[$idx % count($team_colors)];
+                ?>
+                <div class="modal fade" id="modalTeam<?=$team['id']?>" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 rounded-3xl overflow-hidden shadow-2xl">
+                      <div class="px-6 py-4 flex justify-between items-center" style="background-color: <?= $color ?>;">
+                        <h5 class="text-xl font-extrabold text-slate-900 m-0">
                             <?= htmlspecialchars($team['name']) ?>
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                       </div>
-                      <div class="modal-body">
-                        <div class="text-center mb-3" style="font-size:1.2em;">
-                            <b>Danh sách thành viên</b>
+                      <div class="p-6 bg-white">
+                        <div class="text-center mb-4 text-slate-500 font-semibold text-sm uppercase tracking-wider">
+                            Danh sách thành viên
                         </div>
-                        <div id="team-table-<?=$team['id']?>">
+                        <div id="team-table-<?=$team['id']?>" class="bg-white p-2">
                         <?php if ($team['members']): ?>
-                            <table class="table table-bordered table-striped w-100 mx-auto" style="font-size:1.2em;max-width:500px;background:#fff;">
-                                <thead class="table-primary">
-                                    <tr>
-                                        <th style="width:55px;">STT</th>
-                                        <th>Họ và tên</th>
-                                        <th>Lớp</th>
+                            <table class="w-full text-left text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100">
+                                        <th class="px-4 py-3 border border-slate-200 font-bold text-slate-700 w-12 text-center">#</th>
+                                        <th class="px-4 py-3 border border-slate-200 font-bold text-slate-700">Họ và tên</th>
+                                        <th class="px-4 py-3 border border-slate-200 font-bold text-slate-700 w-24 text-center">Lớp</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($team['members'] as $n=>$mem): ?>
                                         <tr>
-                                            <td class="text-center"><?= $n+1 ?></td>
-                                            <td><?= htmlspecialchars($mem['full_name']) ?></td>
-                                            <td><?= htmlspecialchars($mem['class']) ?></td>
+                                            <td class="px-4 py-3 border border-slate-200 text-center font-medium text-slate-500"><?= $n+1 ?></td>
+                                            <td class="px-4 py-3 border border-slate-200 font-bold text-slate-800 text-base"><?= htmlspecialchars($mem['full_name']) ?></td>
+                                            <td class="px-4 py-3 border border-slate-200 text-center text-slate-600 font-semibold"><?= htmlspecialchars($mem['class']) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
                         <?php else: ?>
-                            <div class="text-center text-muted">(Chưa có thành viên)</div>
+                            <div class="text-center text-slate-400 italic py-4">Chưa có thành viên</div>
                         <?php endif; ?>
                         </div>
                       </div>
-                      <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-success"
+                      <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50">
+                        <button type="button" class="px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-200 transition-colors" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="px-5 py-2.5 rounded-xl font-bold bg-slate-800 hover:bg-slate-900 text-white shadow-sm flex items-center gap-2 transition-colors"
                             onclick="downloadTeamImage('team-table-<?=$team['id']?>','<?=$team['name']?>','<?=addslashes($eventTitle)?>')">
-                            <i class="bi bi-image"></i> Tải ảnh PNG
+                            <i class="bi bi-download"></i> Tải ảnh PNG
                         </button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                       </div>
                     </div>
                   </div>
                 </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <!-- Hiệu ứng random (Alpine/JS) -->
+        <?php if (isset($_GET['show_effect']) && isset($_SESSION['random_teams_effect'])):
+            $teams_data = json_decode($_SESSION['random_teams_effect'], true);
+            unset($_SESSION['random_teams_effect']);
+        ?>
+            <div x-show="showEffect" class="py-8">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-black text-primary-600 tracking-wider flex items-center justify-center gap-3" id="effect-title">
+                        <i class="bi bi-arrow-repeat animate-spin"></i> ĐANG CHIA ĐỘI...
+                    </h3>
+                </div>
+                
+                <div id="effect-teams" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                
+                <div class="text-center mt-12 hidden transition-all" id="view-teams-real">
+                    <a href="team.php?event_id=<?=$event_id?>" class="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+                        <i class="bi bi-eye"></i> Xem danh sách chính thức
+                    </a>
+                </div>
             </div>
+
             <script>
-            function openTeamModal(teamId) {
-                var modal = document.getElementById('modalTeam'+teamId);
-                if (modal) {
-                    var bsModal = new bootstrap.Modal(modal);
-                    bsModal.show();
-                }
-            }
-            function downloadTeamImage(elementId, teamName, eventName) {
-                const node = document.getElementById(elementId);
-                if (!node) return;
-                html2canvas(node, {
-                    backgroundColor: "#fff",
-                    scale: 2
-                }).then(canvas => {
-                    let clean = function(str) {
-                        return (str||'').replace(/[^\w\d]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+            document.addEventListener('DOMContentLoaded', function() {
+                let teams = <?=json_encode($teams_data)?>;
+                let colors = <?=json_encode($team_colors)?>;
+                let container = document.getElementById('effect-teams');
+                let viewRealBtn = document.getElementById('view-teams-real');
+                let t = 0;
+                
+                function showNextTeam() {
+                    if (t >= teams.length) {
+                        setTimeout(()=>{
+                            viewRealBtn.classList.remove('hidden');
+                            document.getElementById('effect-title').innerHTML = '<i class="bi bi-check-circle-fill"></i> HOÀN TẤT CHIA ĐỘI!';
+                            document.getElementById('effect-title').classList.remove('text-primary-600');
+                            document.getElementById('effect-title').classList.add('text-emerald-500');
+                        }, 1000);
+                        return;
                     }
-                    let fileName = clean(teamName) + "_" + clean(eventName) + ".png";
-                    let link = document.createElement('a');
-                    link.download = fileName;
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
-                });
-            }
+                    let team = teams[t];
+                    let col = document.createElement('div');
+                    let color = colors[t % colors.length];
+                    let member0 = team.members.length ? team.members[0] : null;
+                    
+                    let html = `
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col cursor-pointer transition-all hover:scale-105 active:scale-95 duration-300 animate-[fadeInUp_0.5s_ease-out_forwards]" style="box-shadow: 0 10px 40px ${color}40;" onclick="showAllMembers(this,${t})">
+                        <div class="px-6 py-5 border-b border-black/5 text-center" style="background-color: ${color}; color: #1e293b;">
+                            <h3 class="font-black text-xl tracking-tight">${team.name}</h3>
+                        </div>
+                        <div class="p-6 flex-1 bg-white team-body-${t}">
+                            <ul class="space-y-3 relative">
+                    `;
+                    
+                    if(member0) {
+                        html += `
+                                <li class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-xs"><i class="bi bi-person"></i></div>
+                                    <div>
+                                        <div class="font-bold text-slate-800">${member0.full_name}</div>
+                                        <div class="text-xs text-slate-500">${member0.class}</div>
+                                    </div>
+                                </li>`;
+                    }
+                    
+                    for(let i=1; i<team.members.length; i++) {
+                        html += `
+                                <li class="hidden items-center gap-3 animate-[fadeIn_0.3s_ease-out_forwards]">
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-xs"><i class="bi bi-person"></i></div>
+                                    <div>
+                                        <div class="font-bold text-slate-800">${team.members[i].full_name}</div>
+                                        <div class="text-xs text-slate-500">${team.members[i].class}</div>
+                                    </div>
+                                </li>`;
+                    }
+                    
+                    html += `
+                            </ul>
+                            <div class="mt-6 text-center team-hint">
+                                <div class="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-500 rounded-full text-xs font-semibold uppercase tracking-wider border border-slate-200 animate-pulse">
+                                    <i class="bi bi-hand-index-thumb"></i> Nhấn để mở
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    
+                    col.innerHTML = html;
+                    container.appendChild(col);
+                    t++;
+                    setTimeout(showNextTeam, 1000);
+                }
+                
+                // hiệu ứng chữ "Đang chia đội..."
+                let title = document.getElementById('effect-title');
+                let dots = 0;
+                let loadingInt = setInterval(()=>{
+                    if(title && t < teams.length) {
+                        title.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> ĐANG CHIA ĐỘI' + '.'.repeat((++dots)%4);
+                    } else {
+                        clearInterval(loadingInt);
+                    }
+                }, 400);
+
+                window.showAllMembers = function(card, idx) {
+                    let body = card.querySelector('.team-body-'+idx);
+                    if(!body) return;
+                    let lis = body.querySelectorAll('li.hidden');
+                    lis.forEach((li, i) => {
+                        setTimeout(() => {
+                            li.classList.remove('hidden');
+                            li.classList.add('flex');
+                        }, i * 150); // delay từng người
+                    });
+                    let hint = body.querySelector('.team-hint');
+                    if(hint) hint.style.display='none';
+                    card.onclick = null;
+                    card.classList.remove('hover:scale-105', 'active:scale-95', 'cursor-pointer');
+                };
+                
+                showNextTeam();
+            });
             </script>
-            <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+            <style>
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(30px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateX(-10px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+            </style>
         <?php endif; ?>
     </div>
-</div>
-<?php include '../includes/footer.php'; ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</main>
+
+<!-- Bootstrap JS (for modal fallback if used above) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+    function openTeamModal(teamId) {
+        var modal = document.getElementById('modalTeam' + teamId);
+        if (modal) {
+            var bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        }
+    }
+    
+    function downloadTeamImage(elementId, teamName, eventName) {
+        const node = document.getElementById(elementId);
+        if (!node) return;
+        
+        // Hide scrollbars temporarily
+        const oldOverflow = node.style.overflow;
+        node.style.overflow = 'hidden';
+        
+        html2canvas(node, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            logging: false,
+            useCORS: true
+        }).then(canvas => {
+            node.style.overflow = oldOverflow;
+            let clean = function(str) {
+                return (str||'').replace(/[^\w\d]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+            }
+            let fileName = clean(teamName) + "_" + clean(eventName) + ".png";
+            let link = document.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
+</script>
+
+<?php include '../includes/footer.php'; ?>

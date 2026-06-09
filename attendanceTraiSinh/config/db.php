@@ -1,9 +1,11 @@
 <?php
+$env = require __DIR__ . '/../../config/env.php';
+
 // Kết nối PDO
-$host = 'clbkynangdoanhoiltk.io.vn';
-$dbname = 'bmkavqtl_clbkynang';
-$user = 'bmkavqtl_truonggiang'; // đổi thành tài khoản thật của bạn
-$pass = 'Giang15052006@';     // đổi thành mật khẩu thật của bạn
+$host = $env['db']['host'];
+$dbname = $env['db']['dbname'];
+$user = $env['db']['user'];
+$pass = $env['db']['pass'];
 $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
 $pdo->exec("SET time_zone = '+07:00'");
 

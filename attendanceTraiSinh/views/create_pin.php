@@ -25,6 +25,11 @@ if (isset($_POST['close_session'])) {
     ");
     $stmt->execute();
 
+    // Xóa session PHP khi đóng phiên
+    unset($_SESSION['attendance_session_id']);
+    unset($_SESSION['attendance_type']);
+    unset($_SESSION['scanner_pin']);
+
     header("Location: ".$_SERVER['PHP_SELF']."?closed=1");
     exit;
 }
@@ -43,6 +48,14 @@ if (isset($_POST['open_last']) && $_SESSION['role'] === 'admin') {
         LIMIT 1
     ");
     $stmt->execute();
+
+    // Đồng bộ session PHP với phiên vừa mở lại
+    $reopened = $pdo->query("SELECT id, type, pin_code FROM attendance_sessions WHERE is_active = 1 ORDER BY start_time DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+    if ($reopened) {
+        $_SESSION['attendance_session_id'] = $reopened['id'];
+        $_SESSION['attendance_type']       = $reopened['type'];
+        $_SESSION['scanner_pin']           = $reopened['pin_code'];
+    }
 
     header("Location: ".$_SERVER['PHP_SELF']."?opened=1");
     exit;
@@ -85,6 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
             ");
             $stmt->execute([$pin, 'CHECK_IN', $userId]);
 
+            // Lưu session ID vào PHP session để các trang thống kê có thể truy cập
+            $_SESSION['attendance_session_id'] = $pdo->lastInsertId();
+            $_SESSION['attendance_type']       = 'CHECK_IN';
+            $_SESSION['scanner_pin']           = $pin;
+
         } else {
 
             $stmt = $pdo->prepare("
@@ -95,7 +113,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
                 ORDER BY start_time DESC
                 LIMIT 1
             ");
-        $stmt->execute([$pin]);
+            $stmt->execute([$pin]);
+
+            // Cập nhật session PHP
+            $activeStmt = $pdo->query("SELECT id FROM attendance_sessions WHERE is_active = 1 ORDER BY start_time DESC LIMIT 1");
+            $activeSession = $activeStmt->fetch(PDO::FETCH_ASSOC);
+            if ($activeSession) {
+                $_SESSION['attendance_session_id'] = $activeSession['id'];
+                $_SESSION['attendance_type']       = 'CHECK_OUT';
+                $_SESSION['scanner_pin']           = $pin;
+            }
         }
 
         $pdo->commit();
@@ -187,235 +214,154 @@ if (isset($_POST['delete_all_sessions']) && $_SESSION['role'] === 'admin') {
 
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TẠO PIN</title>
-
-<!-- Bootstrap + Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-<link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
-<style>
-:root{
-    --primary:#3178c6;
-    --bg:#f4faff;
-    --card:#ffffff;
-    --green:#2ecc71;
-    --red:#e74c3c;
-}
-
-body{
-    background:var(--bg);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont;
-}
-
-/* HEADER */
-.header{
-    background:linear-gradient(90deg,#3178c6,#6fa6e3);
-    color:#fff;
-    padding:14px 18px;
-    font-size:18px;
-    font-weight:700;
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-/* CARD */
-.pin-card{
-    background:var(--card);
-    border-radius:16px;
-    padding:22px 20px;
-    box-shadow:0 4px 18px #3178c61a;
-    max-width:420px;
-    margin:auto;
-}
-
-/* PIN DISPLAY */
-.pin-box{
-    font-size:38px;
-    font-weight:800;
-    letter-spacing:10px;
-    text-align:center;
-    padding:16px 10px;
-    border-radius:14px;
-    margin-top:16px;
-}
-
-.pin-in{
-    background:#eafaf1;
-    color:var(--green);
-}
-
-.pin-out{
-    background:#fdecea;
-    color:var(--red);
-}
-
-/* FOOTER */
-.footer{
-    text-align:center;
-    font-size:13px;
-    color:#666;
-    margin-top:20px;
-}
-</style>
-</head>
-
-<body>
+?>
 <?php
 $pageTitle = "Tạo Pin Điểm Danh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../config/header.php';
+include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/sidebar.php';
 ?>
 
-<div class="container py-4">
-
-    <div class="pin-card">
-
-        <form method="post">
-            <label class="form-label fw-semibold">
-                <i class="bi bi-toggle-on"></i> Chọn loại điểm danh
-            </label>
-
-            <select name="type" class="form-select mb-3" required>
-                <option value="CHECK_IN" <?= $type === 'CHECK_IN' ? 'selected' : '' ?>>
-                    CHECK IN (Vào trại)
-                </option>
-                <option value="CHECK_OUT" <?= $type === 'CHECK_OUT' ? 'selected' : '' ?>>
-                    CHECK OUT (Rời trại)
-                </option>
-            </select>
-
-            <button type="submit" class="btn btn-primary w-100 fw-semibold">
-                <i class="bi bi-plus-circle"></i> Tạo PIN mới
-            </button>
-        </form>
-
-        <?php if ($pin): ?>
-            <div class="text-center mt-4">
-                <div class="fw-semibold text-muted">
-                    PIN hiện tại (<?= $type ?>)
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8">
+    <div class="max-w-4xl mx-auto pb-12">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                    <i class="bi bi-key text-2xl"></i>
                 </div>
-
-                <div class="pin-box <?= $type === 'CHECK_IN' ? 'pin-in' : 'pin-out' ?>">
-                    <?= htmlspecialchars($pin) ?>
-                </div>
-
-                <div class="text-muted mt-2" style="font-size:13px;">
-                    Cung cấp PIN này cho BTC để bắt đầu điểm danh
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">TẠO PIN</h2>
+                    <p class="text-sm font-medium text-slate-500 mt-1">Khởi tạo phiên điểm danh mới cho trại sinh</p>
                 </div>
             </div>
-        <?php endif; ?>
-
-        <div class="d-flex gap-2 mt-3">
-            <form method="post" class="flex-fill">
-                <button name="close_session"
-                        class="btn btn-warning w-100"
-                        onclick="return confirm('Đóng phiên điểm danh hiện tại?')">
-                    <i class="bi bi-lock"></i> Đóng phiên hiện tại
-                </button>
-            </form>
-
-            <?php if ($_SESSION['role'] === 'admin'): ?>
-            <form method="post" class="flex-fill">
-                <button name="open_last"
-                        class="btn btn-success w-100"
-                        onclick="return confirm('Mở lại phiên gần nhất?')">
-                    <i class="bi bi-unlock"></i> Mở lại phiên
-                </button>
-            </form>
-            <?php endif; ?>
+            <a href="attendance_list.php" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm border border-slate-200 text-sm">
+                <i class="bi bi-list-check text-primary-600"></i> Xem điểm danh
+            </a>
         </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Cột trái: Form tạo PIN -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                    <form method="post" class="relative z-10">
+                        <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                            <i class="bi bi-toggle-on text-primary-500"></i> Chọn loại điểm danh
+                        </label>
 
+                        <select name="type" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all mb-5 font-medium" required>
+                            <option value="CHECK_IN" <?= $type === 'CHECK_IN' ? 'selected' : '' ?>>CHECK IN (Vào trại)</option>
+                            <option value="CHECK_OUT" <?= $type === 'CHECK_OUT' ? 'selected' : '' ?>>CHECK OUT (Rời trại)</option>
+                        </select>
 
+                        <button type="submit" class="w-full flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-sm">
+                            <i class="bi bi-plus-circle"></i> Tạo PIN mới
+                        </button>
+                    </form>
+                    
+                    <?php if ($pin): ?>
+                        <div class="mt-6 pt-6 border-t border-slate-100 text-center animate-[fadeIn_0.5s_ease-out]">
+                            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                PIN HIỆN TẠI (<?= $type ?>)
+                            </div>
+                            <div class="text-4xl font-black tracking-[0.2em] py-4 rounded-xl <?= $type === 'CHECK_IN' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-red-50 text-red-600 border border-red-100' ?>">
+                                <?= htmlspecialchars($pin) ?>
+                            </div>
+                            <div class="text-slate-500 mt-3 text-xs font-medium">
+                                Cung cấp PIN này cho BTC để bắt đầu điểm danh
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="space-y-3">
+                    <form method="post">
+                        <button name="close_session" class="w-full flex justify-center items-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm" onclick="return confirm('Đóng phiên điểm danh hiện tại?')">
+                            <i class="bi bi-lock-fill"></i> Đóng phiên hiện tại
+                        </button>
+                    </form>
+
+                    <?php if ($_SESSION['role'] === 'admin'): ?>
+                    <form method="post">
+                        <button name="open_last" class="w-full flex justify-center items-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm" onclick="return confirm('Mở lại phiên gần nhất?')">
+                            <i class="bi bi-unlock-fill"></i> Mở lại phiên gần nhất
+                        </button>
+                    </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Cột phải: Lịch sử -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="bi bi-clock-history text-primary-500"></i> Lịch sử phiên điểm danh
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
+                                <tr>
+                                    <th class="px-5 py-4 text-center">PIN</th>
+                                    <th class="px-5 py-4">Loại</th>
+                                    <th class="px-5 py-4">Trạng thái</th>
+                                    <th class="px-5 py-4">Thời gian</th>
+                                    <th class="px-5 py-4">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <?php foreach ($sessions as $s): ?>
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3.5 text-center font-black text-slate-700 tracking-wider font-mono">
+                                        <?= $s['pin_code'] ?>
+                                    </td>
+                                    <td class="px-5 py-3.5">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold <?= $s['type']==='CHECK_IN' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200' ?>">
+                                            <?= $s['type']==='CHECK_IN'?'CHECK IN':'CHECK OUT' ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-3.5">
+                                        <?= $s['is_active']
+                                          ? '<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-100 text-primary-700 text-xs font-bold"><i class="bi bi-circle-fill text-[8px] text-primary-500 mr-1.5 animate-pulse"></i> Đang mở</span>'
+                                          : '<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold border border-slate-200">Đã đóng</span>' ?>
+                                    </td>
+                                    <td class="px-5 py-3.5 text-xs text-slate-600">
+                                        <div class="font-medium text-slate-800"><?= date('H:i d/m/Y', strtotime($s['start_time'])) ?></div>
+                                        <?php if ($s['end_time']): ?>
+                                            <div class="text-slate-500 flex items-center gap-1 mt-0.5">
+                                                <i class="bi bi-arrow-return-right"></i> <?= date('H:i d/m/Y', strtotime($s['end_time'])) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="text-[10px] text-slate-400 uppercase mt-1">Tạo bởi: <?= htmlspecialchars($s['created_by']) ?></div>
+                                    </td>
+                                    <td class="px-5 py-3.5">
+                                        <?php if (!$s['is_active'] && $_SESSION['role']==='admin'): ?>
+                                          <a href="?delete_session=<?= $s['id'] ?>" onclick="return confirm('Xoá vĩnh viễn phiên điểm danh này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100 mx-auto" title="Xóa">
+                                             <i class="bi bi-trash"></i>
+                                          </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <?php if ($_SESSION['role'] === 'admin'): ?>
+                <div class="mt-4 flex justify-end">
+                    <form method="post">
+                        <button name="delete_all_sessions" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-sm" onclick="return confirm('⚠️ XOÁ TOÀN BỘ phiên + lịch sử điểm danh?\nKhông thể khôi phục!')">
+                            <i class="bi bi-trash3"></i> Xóa tất cả phiên
+                        </button>
+                    </form>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
-<div class="card mt-4">
-  <div class="card-body">
-    <h5 class="mb-3">
-      <i class="bi bi-clock-history"></i> Lịch sử phiên điểm danh
-    </h5>
+</main>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
 
-    <table class="table table-hover align-middle">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>PIN</th>
-          <th>Loại</th>
-          <th>Trạng thái</th>
-          <th>Người tạo</th>
-          <th>Thời gian</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($sessions as $s): ?>
-        <tr>
-          <td><?= $s['id'] ?></td>
-
-          <td class="fw-bold">
-            <?= $s['pin_code'] ?>
-          </td>
-
-          <td>
-            <span class="badge <?= $s['type']==='CHECK_IN'?'bg-success':'bg-danger' ?>">
-              <?= $s['type']==='CHECK_IN'?'CHECK IN':'CHECK OUT' ?>
-            </span>
-          </td>
-
-          <td>
-            <?= $s['is_active']
-              ? '<span class="badge bg-primary">Đang mở</span>'
-              : '<span class="badge bg-secondary">Đã đóng</span>' ?>
-          </td>
-
-          <td><?= htmlspecialchars($s['created_by']) ?></td>
-
-        <td>
-            <?= date('H:i d/m/Y', strtotime($s['start_time'])) ?>
-            <?php if ($s['end_time']): ?>
-                <br>
-                <small class="text-muted">
-                    → <?= date('H:i d/m/Y', strtotime($s['end_time'])) ?>
-                </small>
-            <?php endif; ?>
-        </td>
-
-
-          <td class="text-end">
-            <?php if (!$s['is_active'] && $_SESSION['role']==='admin'): ?>
-              <a href="?delete_session=<?= $s['id'] ?>"
-                 onclick="return confirm('Xoá vĩnh viễn phiên điểm danh này?')"
-                 class="btn btn-sm btn-danger">
-                 <i class="bi bi-trash"></i>
-              </a>
-            <?php endif; ?>
-          </td>
-        </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<?php if ($_SESSION['role'] === 'admin'): ?>
-<form method="post" class="mt-3 text-end">
-    <button name="delete_all_sessions"
-            class="btn btn-danger"
-            onclick="return confirm('⚠️ XOÁ TOÀN BỘ phiên + lịch sử điểm danh?\nKhông thể khôi phục!')">
-        <i class="bi bi-trash3"></i> Xoá tất cả phiên
-    </button>
-</form>
-<?php endif; ?>
-
-<?php include __DIR__ . '/../config/footer.php'; ?>
-
-
-</div>
-
-</body>
-</html>

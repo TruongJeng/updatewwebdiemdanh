@@ -24,7 +24,7 @@ function send_otp_mail($to, $otp, $name = '') {
         <meta charset="UTF-8">
         <title>Xác thực OTP - CLB Kỹ năng</title>
       </head>
-      <body style="margin:0; padding:0; background:#f5f7fa; font-family:'Segoe UI', Arial, sans-serif; color:#333;">
+      <body style="margin:0; padding:0; background:#f5f7fa; font-family:\'Segoe UI\', Arial, sans-serif; color:#333;">
         <div style="max-width:520px; margin:40px auto; background:#fff; border-radius:16px; box-shadow:0 4px 25px rgba(0,0,0,0.08); overflow:hidden;">
     
           <!-- Header -->
@@ -70,18 +70,23 @@ function send_otp_mail($to, $otp, $name = '') {
 
     ';
 
+    static $env = null;
+    if ($env === null) {
+        $env = require __DIR__ . '/../config/env.php';
+    }
+    
     $mail = new PHPMailer(true);
     try {
         $mail->CharSet = 'UTF-8';
         $mail->isSMTP();
-        $mail->Host = 'mail.clbkynangdoanhoiltk.io.vn';
+        $mail->Host = $env['mail']['host'];
         $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@clbkynangdoanhoiltk.io.vn';
-        $mail->Password = 'Giang15052006@'; // ĐỔI thành mật khẩu thật
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
+        $mail->Username = $env['mail']['username'];
+        $mail->Password = $env['mail']['password'];
+        $mail->SMTPSecure = $env['mail']['secure'];
+        $mail->Port = $env['mail']['port'];
 
-        $mail->setFrom('no-reply@clbkynangdoanhoiltk.io.vn', 'CLB Kỹ năng Đoàn Hội Trường THPT Lý Thường Kiệt');
+        $mail->setFrom($env['mail']['from_email'], $env['mail']['from_name']);
         $mail->addAddress($to);
         $mail->isHTML(true);
         $mail->Subject = $subject;

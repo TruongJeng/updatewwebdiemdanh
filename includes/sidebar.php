@@ -1,242 +1,151 @@
 <?php
 // sidebar.php – FINAL
 $currentPage = basename($_SERVER['PHP_SELF']);
+
+// Helper function to check active state
+function isActive($path, $currentPage) {
+    return $currentPage === $path ? 'bg-primary-50 text-primary-700 font-semibold border-r-4 border-primary-600' : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium border-r-4 border-transparent';
+}
 ?>
 
-<!-- ===== SIDEBAR + MAIN STYLE ===== -->
-<style>
-/* ===== SIDEBAR ===== */
-.sidebar {
-  position: fixed;
-  top: 50px;                 /* dính header */
-  left: 0;
-  width: 230px;
-  height: calc(100vh - 50px);
-  background: #f4faff;
-  border-right: 1.5px solid #a8c8f0;
-  padding-top: 12px;
-  overflow-y: auto;
-  z-index: 1090;
-  transition: left .25s ease;
-}
+<!-- Alpine Store for Sidebar State -->
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.store('sidebar', {
+            open: false,
+            toggle() { this.open = !this.open }
+        })
+    })
+</script>
 
-.sidebar ul { list-style: none; padding: 0; margin: 0; }
-.sidebar li { margin-bottom: 4px; }
-
-.sidebar a {
-  display: flex;
-  align-items: center;
-  padding: 10px 18px;
-  color: #3178c6;
-  text-decoration: none;
-  border-radius: 8px 0 0 8px;
-  font-weight: 500;
-}
-.sidebar a:hover,
-.sidebar a.active {
-  background: #a8c8f0;
-  color: #1757a6;
-}
-.sidebar i { margin-right: 10px; }
-
-/* Chevron animation */
-.bi-chevron-down {
-  transition: transform .2s ease;
-}
-a[aria-expanded="true"] .bi-chevron-down {
-  transform: rotate(180deg);
-}
-
-/* ===== TOGGLE BUTTON (MOBILE) ===== */
-#sidebarToggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-  z-index: 2000;
-}
-
-/* ===== BACKDROP ===== */
-.sidebar-backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(40,60,110,.18);
-  z-index: 1080;
-}
-
-/* ===== MAIN CONTENT ===== */
-.main {
-  margin-left: 230px;
-  margin-top: 60px;
-  padding: 32px 36px;
-  min-height: calc(100vh - 60px);
-  transition: margin-left .25s ease;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 900px) {
-  .sidebar {
-    left: -240px;
-    border-radius: 0 18px 18px 0;
-    box-shadow: 2px 0 12px rgba(0,0,0,.15);
-  }
-  .sidebar.active { left: 0; }
-
-  #sidebarToggle {
-    display: flex;
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    color: #fff;
-  }
-
-  .main {
-    margin-left: 0;
-    margin-top: 60px;
-    padding: 16px 4vw 24px 4vw;
-  }
-
-  body.sidebar-open {
-    overflow: hidden;
-  }
-}
-</style>
-
-<!-- ===== SIDEBAR TOGGLE (MOBILE) ===== -->
-<button id="sidebarToggle" aria-label="Mở menu" title="Mở menu">
-  <i class="bi bi-list"></i>
+<!-- Mobile Toggle Button (Floating) -->
+<button @click="$store.sidebar.toggle()" 
+        class="lg:hidden fixed bottom-6 right-6 z-[2000] w-14 h-14 bg-primary-600 text-white rounded-full shadow-[0_10px_25px_-5px_rgba(37,99,235,0.5)] flex items-center justify-center hover:bg-primary-700 hover:scale-105 active:scale-95 transition-all focus:outline-none"
+        aria-label="Toggle Menu">
+    <i class="bi bi-list text-2xl" x-show="!$store.sidebar.open"></i>
+    <i class="bi bi-x-lg text-xl" x-show="$store.sidebar.open" x-cloak></i>
 </button>
 
-<!-- ===== SIDEBAR ===== -->
-<div class="sidebar" id="sidebar">
-  <ul id="Chung">
+<!-- Backdrop -->
+<div x-show="$store.sidebar.open" 
+     @click="$store.sidebar.open = false"
+     x-transition:enter="transition-opacity ease-linear duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition-opacity ease-linear duration-300"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1080] lg:hidden" 
+     x-cloak></div>
 
-    <li>
-      <a href="dashboard.php" class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>">
-        <i class="bi bi-house-door"></i> Trang chủ
-      </a>
-    </li>
+<!-- Sidebar -->
+<aside :class="$store.sidebar.open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+       class="fixed top-16 left-0 z-[1090] w-64 h-[calc(100vh-4rem)] bg-white border-r border-slate-200 shadow-sm transition-transform duration-300 ease-in-out overflow-y-auto flex flex-col pb-20 lg:pb-0">
+    
+    <nav class="flex-1 px-4 py-6 space-y-1.5">
+        
+        <!-- Dashboard -->
+        <a href="/hethongdiemdanh/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-l-lg transition-colors <?= isActive('dashboard.php', $currentPage) ?>">
+            <i class="bi bi-house-door text-lg"></i>
+            <span>Trang chủ</span>
+        </a>
 
-    <li>
-      <a href="modules/events.php">
-        <i class="bi bi-calendar-event"></i> Quản lý sự kiện
-      </a>
-    </li>
+        <!-- Events -->
+        <a href="/hethongdiemdanh/modules/events.php" class="flex items-center gap-3 px-3 py-2.5 rounded-l-lg transition-colors <?= isActive('events.php', $currentPage) ?>">
+            <i class="bi bi-calendar-event text-lg"></i>
+            <span>Quản lý sự kiện</span>
+        </a>
 
-    <li>
-      <a href="modules/students.php">
-        <i class="bi bi-people"></i> Quản lý học sinh
-      </a>
-    </li>
+        <!-- Students -->
+        <a href="/hethongdiemdanh/modules/students.php" class="flex items-center gap-3 px-3 py-2.5 rounded-l-lg transition-colors <?= isActive('students.php', $currentPage) ?>">
+            <i class="bi bi-people text-lg"></i>
+            <span>Quản lý học sinh</span>
+        </a>
 
-    <li>
-      <a href="modules/attendance.php">
-        <i class="bi bi-clipboard-check"></i> Điểm danh
-      </a>
-    </li>
+        <!-- Attendance -->
+        <a href="/hethongdiemdanh/modules/attendance.php" class="flex items-center gap-3 px-3 py-2.5 rounded-l-lg transition-colors <?= isActive('attendance.php', $currentPage) ?>">
+            <i class="bi bi-clipboard-check text-lg"></i>
+            <span>Điểm danh</span>
+        </a>
 
-    <!-- ===== ĐIỂM DANH TRẠI SINH ===== -->
-    <li>
-      <a href="#"
-         data-bs-toggle="collapse"
-         data-bs-target="#menuTraiSinh"
-         aria-expanded="false"
-         class="d-flex align-items-center">
-        <i class="bi bi-grid"></i>
-        <span style="flex:1;">Điểm danh Trại sinh</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-      </a>
+        <!-- Điểm danh trại sinh (Dropdown) -->
+        <div x-data="{ expanded: false }" class="pt-1">
+            <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-grid text-lg"></i>
+                    <span>Trại sinh</span>
+                </div>
+                <i class="bi bi-chevron-down text-xs transition-transform duration-300" :class="expanded ? 'rotate-180' : ''"></i>
+            </button>
+            
+            <div x-show="expanded" 
+                 x-transition:enter="transition ease-out duration-200 origin-top"
+                 x-transition:enter-start="opacity-0 scale-y-95"
+                 x-transition:enter-end="opacity-100 scale-y-100"
+                 x-transition:leave="transition ease-in duration-150 origin-top"
+                 x-transition:leave-start="opacity-100 scale-y-100"
+                 x-transition:leave-end="opacity-0 scale-y-95"
+                 x-cloak>
+                <ul class="pl-11 pr-3 py-2 space-y-1 border-l-2 border-slate-100 ml-[18px] mt-1">
+                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/create_pin.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-key mr-2"></i> Tạo mã PIN</a></li>
+                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/enter_pin.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-person-check mr-2"></i> Điểm danh</a></li>
+                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/attendance_list.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-list-check mr-2"></i> Kiểm tra</a></li>
+                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/modules/manage_campers.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-pencil mr-2"></i> QL trại sinh</a></li>
+                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/modules/chiadoi.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-diagram-3 mr-2"></i> Chia đội</a></li>
+                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/report_attendance.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-archive-fill mr-2"></i> Thống kê</a></li>
+                </ul>
+            </div>
+        </div>
 
-      <ul class="collapse list-unstyled ps-4" id="menuTraiSinh" data-bs-parent="#Chung">
-        <li><a href="attendanceTraiSinh/views/create_pin.php"><i class="bi bi-key"></i> Tạo mã PIN</a></li>
-        <li><a href="attendanceTraiSinh/views/enter_pin.php"><i class="bi bi-person-check"></i> Điểm danh</a></li>
-        <li><a href="attendanceTraiSinh/views/attendance_list.php"><i class="bi bi-list-check"></i> Kiểm tra</a></li>
-        <li><a href="attendanceTraiSinh/modules/manage_campers.php"><i class="bi bi-pencil"></i> Quản lý trại sinh</a></li>
-        <li><a href="attendanceTraiSinh/modules/chiadoi.php"><i class="bi bi-diagram-3"></i> Chia đội</a></li>
-        <li><a href="attendanceTraiSinh/views/report_attendance.php"><i class="bi bi-archive-fill"></i>Thống kê</a></li>
-      </ul>
-    </li>
+        <!-- Tiện ích (Dropdown) -->
+        <div x-data="{ expanded: false }" class="pt-1">
+            <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-tools text-lg"></i>
+                    <span>Tiện ích</span>
+                </div>
+                <i class="bi bi-chevron-down text-xs transition-transform duration-300" :class="expanded ? 'rotate-180' : ''"></i>
+            </button>
+            
+            <div x-show="expanded" 
+                 x-transition:enter="transition ease-out duration-200 origin-top"
+                 x-transition:enter-start="opacity-0 scale-y-95"
+                 x-transition:enter-end="opacity-100 scale-y-100"
+                 x-transition:leave="transition ease-in duration-150 origin-top"
+                 x-transition:leave-start="opacity-100 scale-y-100"
+                 x-transition:leave-end="opacity-0 scale-y-95"
+                 x-cloak>
+                <ul class="pl-11 pr-3 py-2 space-y-1 border-l-2 border-slate-100 ml-[18px] mt-1">
+                    <li><a href="/hethongdiemdanh/modules/team.php" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-people-fill mr-2"></i> Đội</a></li>
+                    <li><a href="https://www.online-stopwatch.com/" target="_blank" rel="noopener noreferrer" class="block px-2 py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-stopwatch mr-2"></i> Trò chơi</a></li>
+                </ul>
+            </div>
+        </div>
 
-    <!-- ===== TIỆN ÍCH ===== -->
-    <li>
-      <a href="#"
-         data-bs-toggle="collapse"
-         data-bs-target="#menuUtilities"
-         aria-expanded="false"
-         class="d-flex align-items-center">
-        <i class="bi bi-grid"></i>
-        <span style="flex:1;">Tiện ích</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-      </a>
+        <!-- Report -->
+        <a href="/hethongdiemdanh/modules/report.php" class="flex items-center gap-3 px-3 py-2.5 rounded-l-lg transition-colors <?= isActive('report.php', $currentPage) ?>">
+            <i class="bi bi-bar-chart-line text-lg"></i>
+            <span>Thống kê</span>
+        </a>
 
-      <ul class="collapse list-unstyled ps-4" id="menuUtilities" data-bs-parent="#Chung">
-        <li><a href="modules/team.php"><i class="bi bi-people-fill"></i> Đội</a></li>
-        <li>
-          <a href="https://www.online-stopwatch.com/" target="_blank" rel="noopener noreferrer">
-            <i class="bi bi-stopwatch"></i> Trò chơi
-          </a>
-        </li>
-      </ul>
-    </li>
+        <!-- Users -->
+        <a href="/hethongdiemdanh/modules/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-l-lg transition-colors <?= isActive('users.php', $currentPage) ?>">
+            <i class="bi bi-person-gear text-lg"></i>
+            <span>Quản lý tài khoản</span>
+        </a>
+    </nav>
+    
+    <!-- Footer / Bottom Links in Sidebar -->
+    <div class="px-4 py-4 border-t border-slate-100 mt-auto bg-slate-50/50">
+        <!-- Info Modal Trigger -->
+        <a href="#" data-bs-toggle="modal" data-bs-target="#softInfoModal" class="flex items-center gap-3 px-3 py-2.5 mb-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 text-sm font-medium rounded-lg transition-colors">
+            <i class="bi bi-info-circle text-lg"></i>
+            <span>Thông tin phần mềm</span>
+        </a>
+        <a href="/hethongdiemdanh/logout.php" class="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
+            <i class="bi bi-box-arrow-right text-lg"></i>
+            <span>Đăng xuất</span>
+        </a>
+    </div>
+</aside>
 
-    <li>
-      <a href="modules/report.php">
-        <i class="bi bi-bar-chart-line"></i> Thống kê
-      </a>
-    </li>
-
-    <li>
-      <a href="modules/users.php">
-        <i class="bi bi-person-gear"></i> Quản lý tài khoản
-      </a>
-    </li>
-
-    <li>
-      <a href="#" data-bs-toggle="modal" data-bs-target="#softInfoModal">
-        <i class="bi bi-info-circle"></i> Thông tin phần mềm
-      </a>
-    </li>
-
-    <li>
-      <a href="logout.php">
-        <i class="bi bi-box-arrow-right"></i> Đăng xuất
-      </a>
-    </li>
-
-  </ul>
-</div>
-
-<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-
-<!-- ===== SIDEBAR SCRIPT ===== -->
-<script>
-const sidebar = document.getElementById('sidebar');
-const toggle = document.getElementById('sidebarToggle');
-const backdrop = document.getElementById('sidebarBackdrop');
-
-toggle.addEventListener('click', () => {
-  sidebar.classList.add('active');
-  backdrop.style.display = 'block';
-  document.body.classList.add('sidebar-open');
-});
-
-backdrop.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  backdrop.style.display = 'none';
-  document.body.classList.remove('sidebar-open');
-
-  document.querySelectorAll('.collapse.show').forEach(el => {
-    bootstrap.Collapse.getOrCreateInstance(el).hide();
-  });
-});
-
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 900) {
-    sidebar.classList.remove('active');
-    backdrop.style.display = 'none';
-    document.body.classList.remove('sidebar-open');
-  }
-});
-</script>

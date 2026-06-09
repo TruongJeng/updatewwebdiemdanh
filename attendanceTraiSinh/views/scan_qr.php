@@ -17,179 +17,118 @@ if (!$s || $s['is_active'] == 0) {
     header('Location: enter_pin.php?expired=1');
     exit;
 }
-?>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ĐIỂM DANH</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-<link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
-<style>
-:root{
-    --primary:#3178c6;
-    --bg:#f4faff;
-    --card:#ffffff;
-    --green:#2ecc71;
-    --red:#e74c3c;
-}
-body{
-    background:var(--bg);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont;
-}
-.header{
-    background:linear-gradient(90deg,#3178c6,#6fa6e3);
-    color:#fff;
-    padding:14px 18px;
-    font-size:18px;
-    font-weight:700;
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-.scan-card{
-    background:var(--card);
-    border-radius:16px;
-    padding:16px;
-    box-shadow:0 4px 18px #3178c61a;
-    max-width:420px;
-    margin:auto;
-}
-.result-card{
-    text-align:center;
-    margin-top:16px;
-}
-.result-card img{
-    width:200px;
-    height:200px;
-    object-fit:cover;
-    border-radius:12px;
-    border:2px solid #eee;
-}
-.badge-in{ background:#eafaf1; color:var(--green); }
-.badge-out{ background:#fdecea; color:var(--red); }
-.footer{
-    text-align:center;
-    font-size:13px;
-    color:#666;
-    margin-top:20px;
-}
-.scan-result {
-  margin-top: 15px;
-  padding: 18px;
-  border-radius: 14px;
-  text-align: center;
-  background: #fff;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  animation: popIn 0.35s ease;
-}
-
-.scan-result.in {
-  border-left: 6px solid #2ecc71;
-}
-
-.scan-result.out {
-  border-left: 6px solid #e74c3c;
-}
-
-.scan-result .avatar {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid #eee;
-  margin-bottom: 10px;
-}
-
-.scan-result.in .avatar {
-  border-color: #2ecc71;
-}
-
-.scan-result.out .avatar {
-  border-color: #e74c3c;
-}
-
-.scan-result .name {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.scan-result .class {
-  color: #666;
-  margin-bottom: 8px;
-}
-
-.scan-result .status {
-  font-weight: 700;
-  font-size: 1rem;
-  margin: 6px 0;
-}
-
-.scan-result .time {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-@keyframes popIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-</style>
-</head>
-
-<body>
-<?php
 $pageTitle = "Điểm danh bằng QR Code";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../config/header.php';
+include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/sidebar.php';
 ?>
+
 <!-- UNLOCK AUDIO OVERLAY -->
-<div id="unlockAudio"
-style="
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.65);
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:9999;
-text-align:center;
-cursor:pointer;
-">
-<div>
-<i class="bi bi-hand-index-thumb fs-1 mb-3"></i><br>
-<b>Chạm màn hình để bắt đầu</b><br>
-<small>(Bật âm thanh & rung)</small>
-</div>
+<div id="unlockAudio" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[9999] flex items-center justify-center text-white cursor-pointer transition-opacity duration-300">
+    <div class="text-center bg-white/10 p-8 rounded-3xl border border-white/20 shadow-2xl backdrop-blur-md animate-[popIn_0.4s_ease-out]">
+        <div class="w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/50 animate-bounce">
+            <i class="bi bi-hand-index-thumb-fill text-4xl"></i>
+        </div>
+        <h3 class="text-2xl font-black tracking-tight mb-2">Chạm để bắt đầu</h3>
+        <p class="text-white/70 font-medium">Kích hoạt âm thanh & rung khi quét</p>
+    </div>
 </div>
 
-<div class="container py-3">
-<div class="scan-card">
-<div id="reader"></div>
-<div id="result" class="result-card"></div>
-<div class="text-center text-muted mt-2" style="font-size:13px;">
-Đưa mã QR vào khung để quét
-</div>
-</div>
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ease-in-out">
+    <div class="w-full max-w-md">
+        
+        <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-12 h-12 bg-primary-100 text-primary-600 rounded-xl shadow-sm mb-3">
+                <i class="bi bi-qr-code-scan text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">QUÉT MÃ QR</h2>
+            <p class="text-sm font-medium text-slate-500 mt-1">Đưa mã QR của trại sinh vào khung camera</p>
+        </div>
 
-<?php include __DIR__ . '/../config/footer.php'; ?>
+        <div class="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden relative z-10">
+            <!-- QR Scanner UI Customization via CSS -->
+            <div id="reader" class="w-full border-0"></div>
+            
+            <div class="p-4 bg-slate-50 border-t border-slate-100 text-center">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Trạng thái máy quét</p>
+            </div>
+        </div>
 
-</div>
+        <div id="result" class="mt-6 min-h-[120px]"></div>
+
+    </div>
+</main>
+
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
+
+<style>
+/* Reset Html5Qrcode styles */
+#reader { border: none !important; }
+#reader__dashboard_section_csr span { display: none !important; }
+#reader__dashboard_section_csr button {
+    background: #3178c6 !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    margin-top: 10px !important;
+    box-shadow: 0 4px 14px rgba(49, 120, 198, 0.3) !important;
+}
+#reader video {
+    border-radius: 1.5rem 1.5rem 0 0 !important;
+    object-fit: cover;
+}
+
+/* Animations & Results */
+@keyframes popIn {
+  from { transform: scale(0.95) translateY(10px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.scan-result-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+    animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.scan-result-card.in {
+    border: 2px solid #10b981;
+}
+
+.scan-result-card.out {
+    border: 2px solid #ef4444;
+}
+
+.scan-result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+}
+.scan-result-card.in::before { background: #10b981; }
+.scan-result-card.out::before { background: #ef4444; }
+
+.result-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem;
+    border: 4px solid white;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+.scan-result-card.in .result-avatar { border-color: #d1fae5; }
+.scan-result-card.out .result-avatar { border-color: #fee2e2; }
+</style>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <script>
 /* ===== AUDIO UNLOCK ===== */
@@ -203,7 +142,9 @@ function unlockAudio(){
     audioCtx.resume();
     if(navigator.vibrate) navigator.vibrate(50);
     audioUnlocked = true;
-    document.getElementById('unlockAudio').style.display = 'none';
+    const overlay = document.getElementById('unlockAudio');
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 300);
 }
 document.getElementById('unlockAudio').addEventListener('click', unlockAudio);
 
@@ -243,13 +184,11 @@ function onScanSuccess(decodedText){
 function onScanFailure(){}
 
 const html5QrcodeScanner = new Html5QrcodeScanner(
-"reader",
-{fps:10, qrbox:250},
-false
+    "reader",
+    {fps: 10, qrbox: {width: 250, height: 250}},
+    false
 );
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-
-
 
 function submitScan(code){
     fetch('../api/scan.php',{
@@ -260,12 +199,12 @@ function submitScan(code){
         body: code
     })
     .then(async r => {
-    const text = await r.text();
-    try {
-        return JSON.parse(text);
-    } catch(e){
-        console.error('Response không phải JSON:', text);
-        throw e;
+        const text = await r.text();
+        try {
+            return JSON.parse(text);
+        } catch(e){
+            console.error('Response không phải JSON:', text);
+            throw e;
         }
     })
     .then(data=>{
@@ -283,8 +222,6 @@ function submitScan(code){
     });
 }
 
-
-
 /* ===== UI ===== */
 function showSuccess(data){
     beep(900,120);
@@ -293,22 +230,25 @@ function showSuccess(data){
     const isIn = data.type === 'CHECK_IN';
 
     resultBox.innerHTML = `
-      <div class="scan-result ${isIn ? 'in' : 'out'}">
-        <img class="avatar"
-             src="${data.student.avatar || '/hethongdiemdanh/assets/default.png'}">
+      <div class="scan-result-card ${isIn ? 'in' : 'out'}">
+        <img class="result-avatar"
+             src="${data.student.avatar || '/hethongdiemdanh/assets/default.png'}" 
+             onerror="this.src='/hethongdiemdanh/assets/default.png'">
 
-        <div class="name">${data.student.name}</div>
-        <div class="class">Lớp ${data.student.class}</div>
+        <div class="text-xl font-black text-slate-800 tracking-tight">${data.student.name}</div>
+        <div class="text-sm font-medium text-slate-500 mt-1 mb-3">Lớp ${data.student.class}</div>
 
-        <div class="status">
-          ${isIn ? ' CHECK IN' : ' CHECK OUT'}
+        <div class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-bold text-sm ${isIn ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}">
+          <i class="bi ${isIn ? 'bi-box-arrow-in-right' : 'bi-box-arrow-left'}"></i>
+          ${isIn ? 'CHECK IN' : 'CHECK OUT'}
         </div>
 
-        <div class="time">${data.time}</div>
+        <div class="mt-4 text-xs font-semibold text-slate-400 flex justify-center items-center gap-1">
+            <i class="bi bi-clock"></i> ${data.time}
+        </div>
       </div>
     `;
 
-    // tự ẩn sau 7 giây (nếu muốn)
     setTimeout(() => {
         resultBox.innerHTML = '';
     }, 7000);
@@ -318,11 +258,16 @@ function showError(msg){
     beep(400,300);
     vibrate([200,100,200]);
     resultBox.innerHTML = `
-        <div class="alert alert-danger py-2 mb-0">
-        <i class="bi bi-exclamation-triangle"></i> ${msg}
+        <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl flex items-start gap-3 shadow-sm animate-[popIn_0.3s_ease-out]">
+            <i class="bi bi-exclamation-triangle-fill text-xl mt-0.5"></i>
+            <div>
+                <h4 class="font-bold text-sm">Quét thất bại</h4>
+                <p class="text-sm mt-0.5 opacity-90">${msg}</p>
+            </div>
         </div>
     `;
 }
+
 function restartScan(delay=800){
     setTimeout(()=>{
         resultBox.innerHTML='';
@@ -330,6 +275,3 @@ function restartScan(delay=800){
     },delay);
 }
 </script>
-
-</body>
-</html>

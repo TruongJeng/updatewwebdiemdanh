@@ -78,6 +78,39 @@ if (isset($_POST['delete_all'])) {
     $deleteMsgType = "success";
 }
 
+// ==========================
+// XOÁ TẤT CẢ TRẠI SINH (ADMIN)
+// ==========================
+if (
+    isset($_POST['delete_all']) &&
+    isset($_SESSION['role']) &&
+    $_SESSION['role'] === 'admin'
+) {
+    try {
+        $pdo->beginTransaction();
+
+        // 1️⃣ Xoá toàn bộ lịch sử điểm danh
+        $pdo->exec("DELETE FROM attendance_logs");
+
+        // 2️⃣ Xoá toàn bộ trại sinh
+        $pdo->exec("DELETE FROM campers");
+
+        // (tuỳ chọn) reset AUTO_INCREMENT
+        $pdo->exec("ALTER TABLE campers AUTO_INCREMENT = 1");
+        $pdo->exec("ALTER TABLE attendance_logs AUTO_INCREMENT = 1");
+
+        $pdo->commit();
+
+        $deleteMsg = "✅ Đã xoá TOÀN BỘ trại sinh và lịch sử điểm danh!";
+        $deleteMsgType = "success";
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $deleteMsg = "❌ Lỗi xoá dữ liệu: " . $e->getMessage();
+        $deleteMsgType = "danger";
+    }
+}
+
 // Xử lý sửa học sinh
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_student'])) {
     $edit_id = $_POST['edit_id'];
@@ -195,7 +228,22 @@ if (!empty($_GET['class'])) {
     $params[] = $_GET['class'];
 }
 $where_sql = $where ? "WHERE ".implode(" AND ", $where) : "";
-$stmt = $pdo->prepare("SELECT * FROM students $where_sql ORDER BY class, ho, ten");
+
+// Phân trang
+$limit = 20; // Số học sinh trên mỗi trang
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
+// Lấy tổng số học sinh
+$stmt_count = $pdo->prepare("SELECT COUNT(*) FROM students $where_sql");
+$stmt_count->execute($params);
+$total_records = $stmt_count->fetchColumn();
+$total_pages = ceil($total_records / $limit);
+
+$offset = ($page - 1) * $limit;
+
+// Truy vấn lấy dữ liệu theo trang
+$stmt = $pdo->prepare("SELECT * FROM students $where_sql ORDER BY class, ho, ten LIMIT $limit OFFSET $offset");
 $stmt->execute($params);
 $students = $stmt->fetchAll();
 
@@ -208,291 +256,376 @@ if (isset($_GET['edit_id'])) {
     $editStudent = $stmt->fetch();
 }
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <title>CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
-    <!-- Bootstrap 5 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body { background: #e8f1fb; }
-        .container-student {
-            background: #fff; max-width: 1150px; margin: 38px auto 24px auto;
-            padding: 32px 22px 28px 22px; border-radius: 14px;
-            box-shadow: 0 4px 24px #3178c615, 0 1.5px 8px #a8c8f088;
-        }
-        .title-main { color: #3178c6; font-weight: 700; text-align: center; margin-bottom: 16px; }
-        .form-label { color: #3178c6; font-weight: 500; }
-        .btn-main {
-            background: #6fa6e3; color: #fff; font-weight: 600;
-            border-radius: 8px; transition: background 0.2s;
-        }
-        .btn-main:hover { background: #3178c6;}
-        .table thead { background: #a8c8f0; color: #3178c6; }
-        .table tbody tr td { vertical-align: middle; }
-        .back-link { color: #3178c6; text-decoration: none;}
-        .back-link:hover { text-decoration: underline; color: #1757a6;}
-        .actions a { margin-right: 10px; color: #3178c6; text-decoration: none;}
-        .actions a:hover { color: #1757a6; text-decoration: underline;}
-        .logout-link { color: #e72c2c; float:right; text-decoration:none;}
-        .logout-link:hover { text-decoration: underline;}
-        @media (max-width: 600px) {
-            .container-student { padding: 12px 4px; }
-            .title-main { font-size: 1.1em; }
-        }
-    </style>
-</head>
-<body>
 <?php
 $pageTitle = "QUẢN LÝ HỌC SINH";
 $full_name = $_SESSION['full_name'] ?? '';
 include '../includes/header.php';
+include '../includes/sidebar.php';
 ?>
-<div class="container-student shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="../dashboard.php" class="back-link"><i class="bi bi-arrow-left-circle"></i> Về Trang chủ</a>
-    </div>
-    <h2 class="title-main"><i class="bi bi-people"></i> Quản lý học sinh</h2>
-    <!-- Thông báo -->
-    <?php if ($addMsg): ?>
-        <div class="alert alert-<?= $addMsgType ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($addMsg) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
-        </div>
-    <?php endif; ?>
-    <?php if ($editMsg): ?>
-        <div class="alert alert-<?= $editMsgType ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($editMsg) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
-        </div>
-    <?php endif; ?>
-    <?php if ($deleteMsg): ?>
-        <div class="alert alert-<?= $deleteMsgType ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($deleteMsg) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
-        </div>
-    <?php endif; ?>
 
-    <!-- Nút Thêm học sinh (ẩn/hiện form) -->
-    <div class="mb-3 d-flex justify-content-end">
-        <button class="btn btn-main" id="showAddFormBtn"><i class="bi bi-plus-circle"></i> Thêm học sinh</button>
-    </div>
-
-    <!-- Form Thêm học sinh (ẩn mặc định)-->
-    <div id="addStudentForm" class="mb-4" style="display:none;">
-        <form method="POST" class="row g-3">
-            <h5 class="mb-2" style="color:#3178c6;">Thêm học sinh mới</h5>
-            <div class="col-md-2">
-                <label class="form-label">Mã học sinh (tự động)</label>
-                <input type="text" class="form-control" name="student_code" id="student_code" readonly style="background:#f1f1f1;">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Họ</label>
-                <input type="text" class="form-control" name="ho" id="inputHo" required oninput="updateFullName()">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Tên</label>
-                <input type="text" class="form-control" name="ten" id="inputTen" required oninput="updateFullName()">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Lớp</label>
-                <input type="text" class="form-control" name="class">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Số ĐT</label>
-                <input type="text" class="form-control" name="phone">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" name="email">
-            </div>
-            <div class="col-md-12">
-                <label class="form-label">Địa chỉ</label>
-                <input type="text" class="form-control" name="address">
-            </div>
-            <div class="col-md-12">
-                <label class="form-label">Họ và tên:</label>
-                <span id="fullNamePreview" style="font-weight:600; color:#3178c6;">...</span>
-            </div>
-            <div class="col-12 d-flex justify-content-end">
-                <button type="submit" name="add_student" class="btn btn-main px-4"><i class="bi bi-plus-circle"></i> Thêm học sinh</button>
-                <button type="button" class="btn btn-outline-secondary ms-2" onclick="hideAddForm()">Hủy</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Form sửa học sinh -->
-    <?php if ($editStudent): ?>
-    <div class="mb-4">
-    <form method="POST" class="row g-3">
-        <h5 class="mb-2" style="color:#3178c6;">Sửa thông tin học sinh</h5>
-        <input type="hidden" name="edit_id" value="<?= $editStudent['id'] ?>">
-        <div class="col-md-2">
-            <label class="form-label">Mã học sinh</label>
-            <input type="text" class="form-control" name="student_code" value="<?= htmlspecialchars($editStudent['student_code']) ?>" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Họ</label>
-            <input type="text" class="form-control" name="ho" value="<?= htmlspecialchars($editStudent['ho']) ?>" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Tên</label>
-            <input type="text" class="form-control" name="ten" value="<?= htmlspecialchars($editStudent['ten']) ?>" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Lớp</label>
-            <input type="text" class="form-control" name="class" value="<?= htmlspecialchars($editStudent['class']) ?>">
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Số ĐT</label>
-            <input type="text" class="form-control" name="phone" value="<?= htmlspecialchars($editStudent['phone']) ?>">
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($editStudent['email']) ?>">
-        </div>
-        <div class="col-md-12">
-            <label class="form-label">Địa chỉ</label>
-            <input type="text" class="form-control" name="address" value="<?= htmlspecialchars($editStudent['address']) ?>">
-        </div>
-        <div class="col-12 d-flex justify-content-end">
-            <button type="submit" name="edit_student" class="btn btn-main px-4 me-2"><i class="bi bi-save"></i> Lưu thay đổi</button>
-            <a href="students.php" class="btn btn-outline-secondary">Hủy</a>
-        </div>
-    </form>
-    </div>
-    <?php endif; ?>
-
-    <div class="row g-3 mb-4 align-items-end">
-        <div class="col-md-5">
-            <form method="POST" enctype="multipart/form-data">
-                <label class="form-label">Import học sinh từ file CSV</label>
-                <input type="file" class="form-control" name="csv_file" accept=".csv" required>
-                <button type="submit" name="import_csv" class="btn btn-outline-primary mt-2 w-100">
-                    <i class="bi bi-upload"></i> Import
-                </button>
-            </form>
-        </div>
-        <div class="col-md-3">
-            <a href="../assets/download.php?file=student.csv" class="btn btn-outline-secondary w-100">
-                <i class="bi bi-download"></i> Tải file mẫu
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto pb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <a href="../dashboard.php" class="text-slate-500 hover:text-primary-600 transition-colors flex items-center gap-1.5 text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm hover:shadow">
+                <i class="bi bi-arrow-left"></i> Về Trang chủ
             </a>
         </div>
-        <div class="col-md-3">
-            <form method="GET">
-                <button type="submit" name="export_csv" value="1" class="btn btn-outline-success w-100">
-                    <i class="bi bi-file-earmark-spreadsheet"></i> Export CSV
+        
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                <i class="bi bi-people text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">QUẢN LÝ HỌC SINH</h2>
+        </div>
+        
+        <!-- Alerts -->
+        <?php if ($addMsg): ?>
+            <div class="mb-4 flex items-center justify-between p-4 bg-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-50 border-l-4 border-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-500 text-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-<?= $addMsgType == 'success' ? 'check-circle-fill' : 'exclamation-circle-fill' ?> text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($addMsg) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($editMsg): ?>
+            <div class="mb-4 flex items-center justify-between p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($editMsg) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($deleteMsg): ?>
+            <div class="mb-4 flex items-center justify-between p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($deleteMsg) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alpine State for Forms -->
+        <div x-data="{ showAddForm: false }">
+            
+            <!-- Add Student Button & Bulk Actions -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div>
+                    <!-- Bulk Xoa tat ca form -->
+                    <form method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa TẤT CẢ học sinh?');" class="inline-block">
+                        <button type="submit" name="delete_all" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg font-semibold transition-colors shadow-sm text-sm">
+                            <i class="bi bi-trash3"></i> Xóa tất cả
+                        </button>
+                    </form>
+                </div>
+                
+                <button x-show="!showAddForm" @click="showAddForm = true; $nextTick(() => $refs.inputHo.focus())" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md text-sm">
+                    <i class="bi bi-plus-circle"></i> Thêm học sinh
                 </button>
+            </div>
+
+            <!-- Add Student Form -->
+            <div x-show="showAddForm" 
+                 x-transition:enter="transition ease-out duration-300 origin-top"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-200 origin-top"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 x-cloak class="mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+                    <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <i class="bi bi-person-plus text-primary-500"></i> Thêm học sinh mới
+                    </h3>
+                    <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5" x-data="{ ho: '', ten: '' }">
+                        <!-- Code -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Mã HS</label>
+                            <?php
+                            $year = date('y');
+                            $stmt = $pdo->prepare("SELECT student_code FROM students WHERE LEFT(student_code,2)=? ORDER BY student_code DESC LIMIT 1");
+                            $stmt->execute([$year]);
+                            $max = 0;
+                            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $code_num = (int)substr($row['student_code'],2,4);
+                                if ($code_num > $max) $max = $code_num;
+                            }
+                            $next_num = str_pad($max+1, 4, '0', STR_PAD_LEFT);
+                            $auto_code = $year . $next_num;
+                            ?>
+                            <input type="text" name="student_code" value="<?= $auto_code ?>" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-500 text-sm font-medium outline-none cursor-not-allowed">
+                        </div>
+                        
+                        <!-- Ho -->
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Họ</label>
+                            <input type="text" name="ho" x-model="ho" x-ref="inputHo" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all">
+                        </div>
+
+                        <!-- Ten -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Tên</label>
+                            <input type="text" name="ten" x-model="ten" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all">
+                        </div>
+
+                        <!-- Class -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Lớp</label>
+                            <input type="text" name="class" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all">
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Số ĐT</label>
+                            <input type="text" name="phone" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Email</label>
+                            <input type="email" name="email" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="lg:col-span-4">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Địa chỉ</label>
+                            <input type="text" name="address" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all">
+                        </div>
+                        
+                        <!-- Fullname preview -->
+                        <div class="lg:col-span-6 mt-2 pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
+                            <div class="text-sm font-medium text-slate-500">
+                                Họ và tên: <span class="font-bold text-primary-600" x-text="(ho + ' ' + ten).trim() || '...'"></span>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <button type="button" @click="showAddForm = false" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Hủy</button>
+                                <button type="submit" name="add_student" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
+                                    <i class="bi bi-plus-circle"></i> Thêm học sinh
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <?php if ($editStudent): ?>
+        <div class="mb-8 bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-primary-100 ring-2 ring-primary-500/20">
+            <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
+                <i class="bi bi-pencil-square text-primary-500"></i> Sửa thông tin học sinh
+            </h3>
+            <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5">
+                <input type="hidden" name="edit_id" value="<?= $editStudent['id'] ?>">
+                
+                <div class="lg:col-span-1">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Mã HS</label>
+                    <input type="text" name="student_code" value="<?= htmlspecialchars($editStudent['student_code']) ?>" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+                
+                <div class="lg:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Họ</label>
+                    <input type="text" name="ho" value="<?= htmlspecialchars($editStudent['ho']) ?>" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+
+                <div class="lg:col-span-1">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Tên</label>
+                    <input type="text" name="ten" value="<?= htmlspecialchars($editStudent['ten']) ?>" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+
+                <div class="lg:col-span-1">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Lớp</label>
+                    <input type="text" name="class" value="<?= htmlspecialchars($editStudent['class']) ?>" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+
+                <div class="lg:col-span-1">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Số ĐT</label>
+                    <input type="text" name="phone" value="<?= htmlspecialchars($editStudent['phone']) ?>" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+
+                <div class="lg:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Email</label>
+                    <input type="email" name="email" value="<?= htmlspecialchars($editStudent['email']) ?>" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+
+                <div class="lg:col-span-4">
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Địa chỉ</label>
+                    <input type="text" name="address" value="<?= htmlspecialchars($editStudent['address']) ?>" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                </div>
+                
+                <div class="lg:col-span-6 mt-2 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                    <a href="students.php" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Hủy</a>
+                    <button type="submit" name="edit_student" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
+                        <i class="bi bi-save"></i> Lưu thay đổi
+                    </button>
+                </div>
             </form>
         </div>
-    </div>
+        <?php endif; ?>
 
-
-    <!-- Nút XÓA TẤT CẢ -->
-    <form method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa TẤT CẢ học sinh?');" class="mb-3 d-flex justify-content-end">
-        <button type="submit" name="delete_all" class="btn btn-danger">
-            <i class="bi bi-trash3"></i> XÓA TẤT CẢ
-        </button>
-    </form>
-
-    <h5 class="mt-4 mb-2" style="color:#3178c6;">Danh sách học sinh</h5>
-    <!--Tìm kiếm và lọc-->
-    <form method="get" class="row g-3 mb-3">
-        <div class="col-md-5">
-            <input type="text" class="form-control" name="q" value="<?= htmlspecialchars($_GET['q']??'') ?>" placeholder="Tìm mã số, tên, lớp, số ĐT, email...">
+        <!-- Import / Export Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white rounded-2xl p-5 shadow-[0_2px_10px_rgb(0,0,0,0.02)] border border-slate-100 mb-6">
+            <div class="md:col-span-6 lg:col-span-5">
+                <form method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+                    <div class="w-full flex-1">
+                        <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Import từ CSV</label>
+                        <input type="file" name="csv_file" accept=".csv" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all border border-slate-200 rounded-lg cursor-pointer bg-slate-50">
+                    </div>
+                    <button type="submit" name="import_csv" class="w-full sm:w-auto mt-2 sm:mt-0 whitespace-nowrap bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-5 py-2.5 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 text-sm border border-indigo-200">
+                        <i class="bi bi-upload"></i> Import
+                    </button>
+                </form>
+            </div>
+            
+            <div class="md:col-span-6 lg:col-span-7 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 pt-2 sm:pt-6">
+                <a href="../assets/download.php?file=student.csv" class="w-full sm:w-auto bg-slate-50 text-slate-700 hover:bg-slate-100 px-5 py-2.5 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 text-sm border border-slate-200">
+                    <i class="bi bi-download"></i> Tải file mẫu
+                </a>
+                
+                <form method="GET" class="w-full sm:w-auto">
+                    <button type="submit" name="export_csv" value="1" class="w-full sm:w-auto bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-5 py-2.5 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 text-sm border border-emerald-200">
+                        <i class="bi bi-file-earmark-spreadsheet"></i> Export CSV
+                    </button>
+                </form>
+            </div>
         </div>
-        <div class="col-md-4">
-            <select name="class" class="form-select">
-                <option value="">--Lọc theo lớp--</option>
+
+        <!-- Search and Filter -->
+        <div class="bg-white rounded-t-2xl p-5 border-b border-slate-100 shadow-[0_-2px_10px_rgb(0,0,0,0.02)]">
+            <h3 class="text-base font-bold text-slate-800 mb-4">Danh sách học sinh</h3>
+            <form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="md:col-span-6 lg:col-span-5 relative">
+                    <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" name="q" value="<?= htmlspecialchars($_GET['q']??'') ?>" placeholder="Tìm mã, tên, lớp, SĐT..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all">
+                </div>
+                <div class="md:col-span-4 lg:col-span-4">
+                    <select name="class" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all text-slate-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_1rem_center] bg-[length:10px_10px] pr-10">
+                        <option value="">Tất cả các lớp</option>
+                        <?php
+                        $classList = $pdo->query("SELECT DISTINCT class FROM students WHERE class IS NOT NULL AND class!='' ORDER BY class")->fetchAll();
+                        foreach($classList as $c) {
+                            $sel = (($_GET['class']??'')==$c['class']) ? 'selected' : '';
+                            echo "<option value='".htmlspecialchars($c['class'])."' $sel>".htmlspecialchars($c['class'])."</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="md:col-span-2 lg:col-span-3">
+                    <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm flex items-center justify-center gap-2 text-sm">
+                        Lọc kết quả
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-b-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="px-5 py-4 text-center">Mã HS</th>
+                            <th class="px-5 py-4">Họ và tên</th>
+                            <th class="px-5 py-4 text-center">Lớp</th>
+                            <th class="px-5 py-4 text-center">Số ĐT</th>
+                            <th class="px-5 py-4">Email</th>
+                            <th class="px-5 py-4">Địa chỉ</th>
+                            <th class="px-5 py-4 text-center w-28">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                    <?php if (count($students) > 0): ?>
+                        <?php foreach ($students as $student): ?>
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-5 py-3.5 text-center">
+                                    <span class="inline-flex items-center px-2 py-1 rounded bg-slate-100 text-slate-600 text-xs font-bold font-mono tracking-wider">
+                                        <?= htmlspecialchars($student['student_code']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <span class="font-bold text-slate-800"><?= htmlspecialchars(trim($student['ho'] . ' ' . $student['ten'])) ?></span>
+                                </td>
+                                <td class="px-5 py-3.5 text-center text-slate-600 font-medium"><?= htmlspecialchars($student['class']) ?></td>
+                                <td class="px-5 py-3.5 text-center text-slate-600"><?= htmlspecialchars($student['phone']) ?></td>
+                                <td class="px-5 py-3.5 text-slate-600 truncate max-w-[150px]"><?= htmlspecialchars($student['email']) ?></td>
+                                <td class="px-5 py-3.5 text-slate-500 text-xs truncate max-w-[200px]"><?= htmlspecialchars($student['address']) ?></td>
+                                <td class="px-5 py-3.5 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="students.php?edit_id=<?= $student['id'] ?>" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="px-5 py-12 text-center text-slate-500 bg-slate-50/50">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i class="bi bi-inbox text-4xl mb-3 text-slate-300"></i>
+                                    <p>Không tìm thấy học sinh nào!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <?php if ($total_pages > 1): ?>
+        <div class="flex justify-center mt-6">
+            <nav class="inline-flex rounded-xl shadow-sm bg-white border border-slate-200 p-1">
                 <?php
-                $classList = $pdo->query("SELECT DISTINCT class FROM students WHERE class IS NOT NULL AND class!='' ORDER BY class")->fetchAll();
-                foreach($classList as $c) {
-                    $sel = (($_GET['class']??'')==$c['class']) ? 'selected' : '';
-                    echo "<option value='".htmlspecialchars($c['class'])."' $sel>".htmlspecialchars($c['class'])."</option>";
+                $qs = $_GET; unset($qs['page']);
+                $query_string = http_build_query($qs);
+                $query_prefix = $query_string ? "&" . $query_string : "";
+                
+                // Prev
+                if ($page <= 1) {
+                    echo '<span class="px-3 py-1.5 text-slate-300 cursor-not-allowed"><i class="bi bi-chevron-left"></i></span>';
+                } else {
+                    $prev = $page - 1;
+                    echo "<a href='?page=$prev$query_prefix' class='px-3 py-1.5 text-slate-500 hover:text-primary-600 hover:bg-slate-50 rounded-lg transition-colors'><i class='bi bi-chevron-left'></i></a>";
+                }
+
+                // Numbers
+                $start_page = max(1, $page - 2);
+                $end_page = min($total_pages, $page + 2);
+                
+                if ($start_page > 1) {
+                    echo "<a href='?page=1$query_prefix' class='px-3.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg transition-colors'>1</a>";
+                    if ($start_page > 2) echo '<span class="px-2 py-1.5 text-slate-400">...</span>';
+                }
+
+                for ($i = $start_page; $i <= $end_page; $i++) {
+                    if ($i == $page) {
+                        echo "<span class='px-3.5 py-1.5 text-sm font-bold bg-primary-50 text-primary-600 rounded-lg'>$i</span>";
+                    } else {
+                        echo "<a href='?page=$i$query_prefix' class='px-3.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg transition-colors'>$i</a>";
+                    }
+                }
+
+                if ($end_page < $total_pages) {
+                    if ($end_page < $total_pages - 1) echo '<span class="px-2 py-1.5 text-slate-400">...</span>';
+                    echo "<a href='?page=$total_pages$query_prefix' class='px-3.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg transition-colors'>$total_pages</a>";
+                }
+
+                // Next
+                if ($page >= $total_pages) {
+                    echo '<span class="px-3 py-1.5 text-slate-300 cursor-not-allowed"><i class="bi bi-chevron-right"></i></span>';
+                } else {
+                    $next = $page + 1;
+                    echo "<a href='?page=$next$query_prefix' class='px-3 py-1.5 text-slate-500 hover:text-primary-600 hover:bg-slate-50 rounded-lg transition-colors'><i class='bi bi-chevron-right'></i></a>";
                 }
                 ?>
-            </select>
+            </nav>
         </div>
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Tìm kiếm/Lọc</button>
-        </div>
-    </form>
-
-    <div class="table-responsive">
-    <table class="table table-bordered align-middle">
-        <thead>
-            <tr>
-                <th>Mã học sinh</th>
-                <th><b>Họ và tên</b></th>
-                <th>Lớp</th>
-                <th>Số ĐT</th>
-                <th>Email</th>
-                <th>Địa chỉ</th>
-                <th style="width:110px;">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($students as $student): ?>
-            <tr>
-                <td><?= htmlspecialchars($student['student_code']) ?></td>
-                <td><b><?= htmlspecialchars(trim($student['ho'] . ' ' . $student['ten'])) ?></b></td>
-                <td><?= htmlspecialchars($student['class']) ?></td>
-                <td><?= htmlspecialchars($student['phone']) ?></td>
-                <td><?= htmlspecialchars($student['email']) ?></td>
-                <td><?= htmlspecialchars($student['address']) ?></td>
-                <td class="actions">
-                    <a href="students.php?edit_id=<?= $student['id'] ?>" title="Sửa"><i class="bi bi-pencil-square"></i></a>
-                    <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" title="Xóa"><i class="bi bi-trash"></i></a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+        <?php endif; ?>
     </div>
-    <?php include '../includes/footer.php'; ?>
-</div>
-<!-- Bootstrap JS & show/hide add form, live họ tên, hiển thị mã học sinh mẫu -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.getElementById('showAddFormBtn').onclick = function() {
-    document.getElementById('addStudentForm').style.display = 'block';
-    this.style.display = 'none';
-    setTimeout(function(){document.getElementById('inputHo').focus();}, 100);
-    return false;
-};
-function hideAddForm() {
-    document.getElementById('addStudentForm').style.display = 'none';
-    document.getElementById('showAddFormBtn').style.display = 'inline-block';
-    document.getElementById('inputHo').value = '';
-    document.getElementById('inputTen').value = '';
-    updateFullName();
-}
-// Hiển thị mã học sinh mẫu (dự đoán số tiếp theo)
-window.addEventListener('DOMContentLoaded', function() {
-    <?php
-    $year = date('y');
-    $stmt = $pdo->prepare("SELECT student_code FROM students WHERE LEFT(student_code,2)=? ORDER BY student_code DESC LIMIT 1");
-    $stmt->execute([$year]);
-    $max = 0;
-    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $code_num = (int)substr($row['student_code'],2,4);
-        if ($code_num > $max) $max = $code_num;
-    }
-    $next_num = str_pad($max+1, 4, '0', STR_PAD_LEFT);
-    $auto_code = $year . $next_num;
-    ?>
-    document.getElementById('student_code').value = '<?= $auto_code ?>';
-});
-function updateFullName() {
-    var ho = document.getElementById('inputHo').value.trim();
-    var ten = document.getElementById('inputTen').value.trim();
-    var full = (ho + ' ' + ten).replace(/\s+/g,' ').trim();
-    document.getElementById('fullNamePreview').textContent = full ? full : '...';
-}
-</script>
-</body>
-</html>
+</main>
+<?php include '../includes/footer.php'; ?>

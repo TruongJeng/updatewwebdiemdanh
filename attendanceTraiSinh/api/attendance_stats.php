@@ -9,11 +9,20 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 if (!isset($_SESSION['attendance_session_id'])) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Chưa mở phiên'
-    ]);
-    exit;
+    // Thử tự động phát hiện phiên đang hoạt động từ DB
+    $activeStmt = $pdo->query("SELECT id, type, pin_code FROM attendance_sessions WHERE is_active = 1 ORDER BY start_time DESC LIMIT 1");
+    $activeSession = $activeStmt->fetch(PDO::FETCH_ASSOC);
+    if ($activeSession) {
+        $_SESSION['attendance_session_id'] = $activeSession['id'];
+        $_SESSION['attendance_type']       = $activeSession['type'];
+        $_SESSION['scanner_pin']           = $activeSession['pin_code'];
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Chưa mở phiên'
+        ]);
+        exit;
+    }
 }
 
 $sessionId = $_SESSION['attendance_session_id'];

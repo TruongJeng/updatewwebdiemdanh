@@ -284,399 +284,276 @@ usort($campers, function ($a, $b) {
 });
 
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quản lý trại sinh</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
-<style>
-body { background:#f4faff; }
-.card { border-radius:14px; }
-.table td { vertical-align:middle; }
-.badge-active { background:#eafaf1;opacity: 1; color:#2ecc71; }
-.badge-inactive { background:#fdecea;opacity: 1; color:#e74c3c; }
-@media(max-width:768px){
-    .desktop-only { display:none; }
-}
-@media(min-width:769px){
-    .mobile-only { display:none; }
-}
-.badge {
-    opacity: 1 !important;
-    filter: none !important;
-}
-
-/* CHECK IN */
-.badge-active {
-    background-color: #eafaf1 !important;
-    color: #2ecc71 !important;
-    font-weight: 700;
-}
-
-/* CHECK OUT */
-.badge-inactive {
-    background-color: #fdecea !important;
-    color: #e74c3c !important;
-    font-weight: 700;}
-
-/* Mobile Styles */
-@media (max-width: 768px) {
-  .list-group-item {
-    background-color: #ffffff;
-    border: 1px solid #eaeaea;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-
-  .list-group-item .fw-bold {
-    font-size: 1rem;
-  }
-
-  .list-group-item .badge {
-    display: inline-block;
-    margin: 6px 0;
-  }
-
-  .list-group-item .btn {
-    font-size: 0.9rem;
-  }
-
-  .list-group-item .text-muted {
-    font-size: 0.9rem;
-  }
-
-  #tableBody {
-    display: none; /* Ẩn bảng Desktop trên Mobile */
-  }
-}
-
-@media (min-width: 769px) {
-  #mobileList {
-    display: none !important; /* Ẩn danh sách Mobile trên Desktop */
-  }
-}
-</style>
-</head>
-
-<body>
-<?php
-$pageTitle = "Chỉnh sửa thông tin trại sinh";
+$pageTitle = "Quản lý trại sinh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../config/header.php';
+include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/sidebar.php';
 ?>
-<div class="container py-4">
-<!-- ===== THÊM 1 ===== -->
-<div class="card mb-4">
-<div class="card-body">
-<h5 class="mb-3">➕ Thêm trại sinh</h5>
-<form method="post" class="row g-2">
-<input type="hidden" name="add_one">
-<div class="col-md-2">
-<input class="form-control" name="student_code" placeholder="Mã" required>
-</div>
-<div class="col-md-3">
-<input class="form-control" name="full_name" placeholder="Họ tên" required>
-</div>
-<div class="col-md-2">
-<input class="form-control" name="class" placeholder="Lớp">
-</div>
-<div class="col-md-2">
-<input class="form-control" name="phone" placeholder="Số điện thoại">
-</div>
-<div class="col-md-2">
-<input class="form-control" name="phone_parent" placeholder="Số điện thoại phụ huynh">
-</div>
-<div class="col-md-3">
-<input class="form-control" name="email" placeholder="Email">
-</div>
-<div class="col-12">
-<input class="form-control" name="profile_photo" placeholder="Đường dẫn ảnh (tuỳ chọn)">
-</div>
-<div class="col-12">
-<button class="btn btn-primary w-100">Thêm trại sinh</button>
-</div>
-</form>
-</div>
-</div>
 
-<!-- ===== IMPORT Excel ===== -->
-<div class="card mb-4">
-<div class="card-body">
-<h5 class="mb-3">📥 Import Excel</h5>
-<form method="post" enctype="multipart/form-data">
-<input type="hidden" name="import_excel">
-<input type="file" name="excel" accept=".xls,.xlsx" required>
-<button class="btn btn-success mt-2">Import</button>
-</form>
-</div>
-</div>
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8" x-data="{ searchQuery: '' }">
+    <div class="max-w-7xl mx-auto pb-12">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                    <i class="bi bi-people-fill text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">QUẢN LÝ TRẠI SINH</h2>
+                    <p class="text-sm font-medium text-slate-500 mt-1">Quản lý danh sách, import, chỉnh sửa thông tin</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="relative w-full sm:w-64">
+                    <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" x-model="searchQuery" placeholder="Tìm theo mã hoặc tên..." class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-sm transition-all">
+                </div>
+                <a href="api/export_campers_excel.php" class="flex items-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm whitespace-nowrap text-sm">
+                    <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+                </a>
+            </div>
+        </div>
 
-<a href="uploads/DanhsachTraisinhmau.xlsx"
-   class="btn btn-outline-primary btn-sm mb-2"
-   download>
-   <i class="bi bi-download"></i> Tải file Excel mẫu
-</a>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Thêm 1 trại sinh -->
+            <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                    <i class="bi bi-person-plus-fill text-primary-500"></i> Thêm trại sinh
+                </h3>
+                <form method="post" class="space-y-4">
+                    <input type="hidden" name="add_one">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="student_code" placeholder="Mã trại sinh" required>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="full_name" placeholder="Họ tên" required>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="class" placeholder="Lớp">
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="phone" placeholder="Số điện thoại">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="phone_parent" placeholder="SĐT phụ huynh">
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="email" placeholder="Email">
+                    </div>
+                    <div>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="profile_photo" placeholder="Đường dẫn ảnh (tuỳ chọn)">
+                    </div>
+                    <button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-2.5 rounded-lg transition-all shadow-sm flex items-center justify-center gap-2">
+                        <i class="bi bi-plus-circle"></i> Thêm mới
+                    </button>
+                </form>
+            </div>
 
+            <!-- Import Excel -->
+            <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="bi bi-file-earmark-arrow-up-fill text-primary-500"></i> Import Excel
+                        </h3>
+                        <a href="uploads/DanhsachTraisinhmau.xlsx" class="text-xs text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-1" download>
+                            <i class="bi bi-download"></i> Tải file mẫu
+                        </a>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Nhập danh sách trại sinh hàng loạt từ file Excel. File Excel phải có cấu trúc giống file mẫu.</p>
+                </div>
+                
+                <form method="post" enctype="multipart/form-data" class="mt-auto">
+                    <input type="hidden" name="import_excel">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="file" name="excel" accept=".xls,.xlsx" class="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" required>
+                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-bold transition-all shadow-sm whitespace-nowrap">
+                            <i class="bi bi-cloud-upload"></i> Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-<!-- ===== SEARCH ===== -->
-<input type="text" id="search" class="form-control mb-3" placeholder="Tìm theo mã hoặc tên...">
-<a href="api/export_campers_excel.php"
-   class="btn btn-success mb-3">
-   <i class="bi bi-file-earmark-excel"></i>
-   Xuất danh sách trại sinh (Excel)
-</a>
+        <!-- Danh sách -->
+        <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-800">
+                    Danh sách trại sinh
+                </h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="px-5 py-4">Mã</th>
+                            <th class="px-5 py-4">Họ tên / Lớp</th>
+                            <th class="px-5 py-4">Liên hệ</th>
+                            <th class="px-5 py-4">Trạng thái dữ liệu</th>
+                            <th class="px-5 py-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <?php foreach ($campers as $c): ?>
+                        <tr class="hover:bg-slate-50/80 transition-colors" x-show="searchQuery === '' || '<?= strtolower($c['full_name']) ?>'.includes(searchQuery.toLowerCase()) || '<?= strtolower($c['student_code']) ?>'.includes(searchQuery.toLowerCase()) || '<?= strtolower($c['class']) ?>'.includes(searchQuery.toLowerCase())">
+                            <td class="px-5 py-3.5"><span class="font-mono text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded"><?= $c['student_code'] ?></span></td>
+                            <td class="px-5 py-3.5">
+                                <div class="font-bold text-slate-800"><?= $c['full_name'] ?></div>
+                                <div class="text-xs text-slate-500 mt-0.5">Lớp: <?= $c['class'] ?></div>
+                            </td>
+                            <td class="px-5 py-3.5">
+                                <div class="text-xs text-slate-600"><i class="bi bi-telephone text-slate-400"></i> <?= $c['phone'] ?></div>
+                                <div class="text-xs text-slate-500 mt-0.5" title="SĐT Phụ huynh"><i class="bi bi-person-badge text-slate-400"></i> <?= $c['phone_parent'] ?></div>
+                            </td>
+                            <td class="px-5 py-3.5">
+                                <?php if ($c['data_status'] === 'DU'): ?>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i class="bi bi-check-circle-fill mr-1 text-emerald-500"></i> Đủ dữ liệu
+                                    </span>
+                                <?php else: ?>
+                                    <div class="group relative inline-block">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 cursor-help">
+                                            <i class="bi bi-exclamation-triangle-fill mr-1 text-amber-500"></i> Thiếu dữ liệu
+                                        </span>
+                                        <!-- Tooltip -->
+                                        <div class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-slate-800 text-white text-xs px-3 py-1.5 rounded-lg transition-all z-10">
+                                            Thiếu: <?= implode(', ', $c['missing_fields']) ?>
+                                            <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-5 py-3.5">
+                                <?php if ($c['is_active']): ?>
+                                    <div class="flex items-center gap-2">
+                                        <button @click="$dispatch('open-edit-modal', <?= htmlspecialchars(json_encode($c), ENT_QUOTES, 'UTF-8') ?>)" class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-amber-100" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <a href="?disable=<?= $c['student_code'] ?>" onclick="return confirm('Xoá trại sinh này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa tạm">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <?php if ($_SESSION['role'] === 'admin'): ?>
+                                        <a href="?delete_forever=<?= $c['student_code'] ?>" onclick="return confirm('⚠️ XOÁ VĨNH VIỄN trại sinh này?\nDữ liệu điểm danh sẽ bị xoá hết!')" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-800 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-slate-200" title="Xóa vĩnh viễn">
+                                            <i class="bi bi-x-octagon-fill"></i>
+                                        </a>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php else: ?>
+                                    <a href="?restore=<?= $c['student_code'] ?>" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-semibold transition-colors">Khôi phục</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
-<!-- ===== LIST ===== -->
-<div class="card">
-<div class="card-body">
-<h5 class="mb-3">Danh sách trại sinh</h5>
-
-<table class="table table-hover desktop-only">
-<thead>
-<tr>
-  <th>Mã</th>
-  <th>Họ tên</th>
-  <th>Lớp</th>
-  <th>Số điện thoại</th>
-  <th>Trạng thái</th>
-  <th>Thao tác</th>
-</tr>
-</thead>
-
-<tbody id="tableBody">
-<?php foreach ($campers as $c): ?>
-<tr>
-  <td><?= $c['student_code'] ?></td>
-  <td><?= $c['full_name'] ?></td>
-    <td><?= $c['class'] ?></td>
-  <td><?= $c['phone'] ?></td>
-  <td>
-    <?php if ($c['data_status'] === 'DU'): ?>
-        <span class="badge bg-success">
-            Đã đủ dữ liệu
-        </span>
-    <?php else: ?>
-        <span class="badge bg-warning text-dark"
-            title="Thiếu: <?= implode(', ', $c['missing_fields']) ?>">
-            Thiếu dữ liệu
-        </span>
-    <?php endif; ?>
-  </td>
-  <td>
-  <?php if ($c['is_active']): ?>
-    <button class="btn btn-sm btn-warning me-1"
-        onclick='openEdit(<?= json_encode($c, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-        <i class="bi bi-pencil"></i>
-    </button>
-
-    <a href="?disable=<?= $c['student_code'] ?>"
-       onclick="return confirm('Xoá trại sinh này?')"
-       class="btn btn-sm btn-danger">
-       <i class="bi bi-trash"></i>
-    </a>
-    <?php if ($_SESSION['role'] === 'admin'): ?>
-    <a href="?delete_forever=<?= $c['student_code'] ?>"
-       onclick="return confirm('⚠️ XOÁ VĨNH VIỄN trại sinh này?\nDữ liệu điểm danh sẽ bị xoá hết!')"
-       class="btn btn-sm btn-dark mt-1">
-       <i class="bi bi-x-octagon"></i> Xoá vĩnh viễn
-    </a>
-    <?php endif; ?>
-
-  <?php endif; ?>
-  </td>
-</tr>
-<?php endforeach; ?>
-<?php if ($_SESSION['role'] === 'admin'): ?>
-<tr>
-<td colspan="6">
-<form method="post"
-      onsubmit="return confirm(
-        '⚠️ XOÁ TOÀN BỘ TRẠI SINH?\n\n' +
-        '• Xoá tất cả trại sinh\n' +
-        '• Xoá toàn bộ lịch sử CHECK IN / OUT\n' +
-        '• KHÔNG THỂ KHÔI PHỤC\n\n' +
-        'Bạn có chắc chắn không?'
-      );">
-    <button type="submit"
-            name="delete_all"
-            class="btn btn-danger">
-        <i class="bi bi-trash3"></i> Xoá tất cả trại sinh
-    </button>
-</form>
-</td>
-</tr>
-<?php endif; ?>
-
-</tbody>
-</table>
-
-
-<!-- MOBILE -->
-<div class="d-lg-none list-group" id="mobileList">
-  <?php foreach ($campers as $c): ?>
-  <div class="list-group-item camper-row">
-    <div class="d-flex justify-content-between">
-      <div>
-        <span class="fw-bold camper-name"><?= $c['full_name'] ?></span>
-        (<span class="camper-class"><?= $c['class'] ?></span>)
-      </div>
-      <!-- Thay đổi trạng thái như desktop -->
-      <div>
-        <?php if ($c['data_status'] === 'DU'): ?>
-          <span class="badge bg-success">Đủ dữ liệu</span>
-        <?php else: ?>
-          <span class="badge bg-warning text-dark">Thiếu dữ liệu</span>
-        <?php endif; ?>
-      </div>
+            <?php if ($_SESSION['role'] === 'admin'): ?>
+            <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <form method="post" onsubmit="return confirm('⚠️ XOÁ TOÀN BỘ TRẠI SINH?\n\n• Xoá tất cả trại sinh\n• Xoá toàn bộ lịch sử CHECK IN / OUT\n• KHÔNG THỂ KHÔI PHỤC\n\nBạn có chắc chắn không?');">
+                    <button type="submit" name="delete_all" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-sm">
+                        <i class="bi bi-trash3"></i> Xoá tất cả trại sinh
+                    </button>
+                </form>
+            </div>
+            <?php endif; ?>
+        </div>
     </div>
-    <div class="text-muted">SĐT: <?= $c['phone'] ?></div>
-    <div class="text-muted">SĐT phụ huynh: <?= $c['phone_parent'] ?></div>
-    <div class="mt-2">
-      <?php if ($c['is_active']): ?>
-        <button class="btn btn-sm btn-warning me-1 camper-edit"
-                onclick='openEdit(<?= json_encode($c, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-          <i class="bi bi-pencil"></i> Sửa
-        </button>
-        <a href="?disable=<?= $c['student_code'] ?>"
-           onclick="return confirm('Xoá trại sinh này?')"
-           class="btn btn-sm btn-danger">
-           <i class="bi bi-trash"></i> Xoá
-        </a>
-        <?php if ($_SESSION['role'] === 'admin'): ?>
-        <a href="?delete_forever=<?= $c['student_code'] ?>"
-           onclick="return confirm('⚠️ XOÁ VĨNH VIỄN trại sinh?')"
-           class="btn btn-sm btn-dark mt-1">
-           <i class="bi bi-x-octagon"></i> Xoá vĩnh viễn
-        </a>
-        <?php endif; ?>
-      <?php endif; ?>
+</main>
+
+<!-- Alpine.js Edit Modal -->
+<div x-data="{ open: false, data: {} }" 
+     @open-edit-modal.window="open = true; data = $event.detail"
+     x-show="open" 
+     class="fixed inset-0 z-[2000] overflow-y-auto" 
+     aria-labelledby="modal-title" 
+     role="dialog" 
+     aria-modal="true"
+     x-cloak>
+    
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div x-show="open" 
+             x-transition:enter="ease-out duration-300" 
+             x-transition:enter-start="opacity-0" 
+             x-transition:enter-end="opacity-100" 
+             x-transition:leave="ease-in duration-200" 
+             x-transition:leave-start="opacity-100" 
+             x-transition:leave-end="opacity-0" 
+             class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" 
+             @click="open = false"></div>
+
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <div x-show="open" 
+             x-transition:enter="ease-out duration-300" 
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
+             x-transition:leave="ease-in duration-200" 
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+             class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+            
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-lg leading-6 font-bold text-slate-800" id="modal-title">
+                    Sửa thông tin trại sinh
+                </h3>
+                <button @click="open = false" class="text-slate-400 hover:text-slate-500 focus:outline-none">
+                    <i class="bi bi-x-lg text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="editForm" @submit.prevent="
+                const formData = new FormData($event.target);
+                fetch('api/update_camper.php', { method: 'POST', body: formData })
+                .then(r=>r.json())
+                .then(res=>{
+                    if(res.success){
+                        location.reload();
+                    } else {
+                        alert(res.message || 'Lỗi');
+                    }
+                })">
+                <div class="px-4 py-5 sm:p-6 space-y-4">
+                    <input type="hidden" name="student_code" x-bind:value="data.student_code">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Họ tên</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="full_name" x-bind:value="data.full_name" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Lớp</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="class" x-bind:value="data.class">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Số điện thoại</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="phone" x-bind:value="data.phone">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">SĐT Phụ huynh</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="phone_parent" x-bind:value="data.phone_parent">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="email" x-bind:value="data.email">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Ảnh đại diện (Link/Cloudinary)</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="profile_photo" x-bind:value="data.profile_photo">
+                    </div>
+                </div>
+                
+                <div class="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-100">
+                    <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+                        Lưu thay đổi
+                    </button>
+                    <button @click="open = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-lg border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-slate-700 hover:bg-slate-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm transition-colors">
+                        Huỷ
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
-  <?php endforeach; ?>
-</div>
 </div>
 
-</div>
-<div class="modal fade" id="editModal" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content">
-
-<div class="modal-header">
-<h5 class="modal-title">Sửa thông tin trại sinh</h5>
-<button class="btn-close" data-bs-dismiss="modal"></button>
-</div>
-
-<form id="editForm" enctype="multipart/form-data">
-<div class="modal-body">
-
-<input type="hidden" name="student_code" id="e_code">
-
-<div class="mb-2">
-<label>Họ tên</label>
-<input class="form-control" name="full_name" id="e_name" required>
-</div>
-
-<div class="mb-2">
-<label>Lớp</label>
-<input class="form-control" name="class" id="e_class">
-</div>
-
-<div class="mb-2">
-<label>Số điện thoại</label>
-<input class="form-control" name="phone" id="e_phone">
-</div>
-
-<div class="mb-2">
-<label>Số điện thoại phụ huynh</label>
-<input class="form-control" name="phone_parent" id="e_parent">
-</div>
-
-<div class="mb-2">
-<label>Email</label>
-<input class="form-control" name="email" id="e_email">
-</div>
-
-<div class="mb-2">
-  <label>Ảnh đại diện (Cloudinary)</label>
-  <input type="text" name="profile_photo" id="e_avatar" class="form-control" placeholder="Dán link Cloudinary avatar">
-</div>
-
-<div class="modal-footer">
-<button class="btn btn-primary">Lưu</button>
-</div>
-</form>
-
-</div>
-</div>
-</div>
-<?php include __DIR__ . '/../config/footer.php'; ?>
-
-<script>
-const search = document.getElementById('search');
-search.addEventListener('input', () => {
-    const q = search.value.toLowerCase().trim();
-
-    // Tìm kiếm trong bảng Desktop (Table)
-    document.querySelectorAll('#tableBody tr').forEach(tr => {
-        tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
-
-    // Tìm kiếm trong danh sách Mobile
-    document.querySelectorAll('#mobileList .list-group-item').forEach(item => {
-        const name = item.querySelector('.camper-name').textContent.toLowerCase();
-        const cls = item.querySelector('.camper-class').textContent.toLowerCase();
-
-        item.style.display = (name.includes(q) || cls.includes(q)) ? '' : 'none';
-    });
-});
-function openEdit(data) {
-    document.getElementById('e_code').value = data.student_code;
-    document.getElementById('e_name').value = data.full_name || '';
-    document.getElementById('e_class').value = data.class || '';
-    document.getElementById('e_phone').value = data.phone || '';
-    document.getElementById('e_parent').value = data.phone_parent || '';
-    document.getElementById('e_email').value = data.email || '';
-    document.getElementById('e_avatar').value = data.profile_photo || '';
-
-    new bootstrap.Modal(document.getElementById('editModal')).show();
-}
-
-document.getElementById('search').addEventListener('input', function () {
-    const q = this.value.toLowerCase().trim();
-
-    document.querySelectorAll('.camper-row').forEach(row => {
-        const name  = row.querySelector('.camper-name')?.innerText.toLowerCase() || '';
-        const cls   = row.querySelector('.camper-class')?.innerText.toLowerCase() || '';
-
-        row.style.display = (name.includes(q) || cls.includes(q)) ? '' : 'none';
-    });
-});
-
-document.getElementById('editForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const formData = new FormData(this);
-
-    fetch('api/update_camper.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(r=>r.json())
-    .then(res=>{
-        if(res.success){
-            location.reload();
-        } else {
-            alert(res.message || 'Lỗi');
-        }
-    });
-});
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>

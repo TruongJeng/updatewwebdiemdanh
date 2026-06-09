@@ -37,156 +37,75 @@ $pageTitle = "CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt"
 include __DIR__ . '/includes/header.php';
 ?>
 
-<style>
-/* ===== MAIN ===== */
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden; 
-}
-
-
-/* ===== MAIN ===== */
-.main {
-  position: fixed;
-  top: 0;              /* CHIỀU CAO HEADER */
-  left: 0;            /* CHIỀU RỘNG SIDEBAR */
-  right: 0;
-  bottom: 0;
-
-  padding: 28px 36px;
-  overflow-y: auto;       /* CHỈ MAIN ĐƯỢC CUỘN */
-  overflow-x: hidden;
-
-  background: linear-gradient(180deg, #f6faff, #eef5ff);
-  box-shadow:
-    inset 0 0 0 1.5px #cfe0f5,
-    0 6px 24px rgba(49,120,198,0.08);
-}
-
-
-/* Mobile */
-@media (max-width: 900px) {
-  .main {
-    margin-left: 0;
-    padding: 20px;
-    border-radius: 0;
-  }
-}
-
-
-/* ===== INFO BOARD ===== */
-.info-board { padding: 1px 7px;}
-
-
-.info-board h2 {
-  font-weight: 800;
-  margin-bottom: 22px;
-  color: #1f3a5f;
-}
-
-/* Card */
-.info-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 18px 22px;
-  margin-bottom: 18px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.07);
-  border-left: 6px solid transparent;
-  transition: transform .18s ease, box-shadow .18s ease;
-}
-
-.info-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(0,0,0,0.10);
-}
-
-.info-card.small {
-  padding: 14px 20px;
-}
-
-.info-card .title {
-  display: flex;
-  align-items: center;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.info-card .icon {
-  font-size: 1.3em;
-  margin-right: 8px;
-}
-
-.info-card p {
-  margin: 0;
-  line-height: 1.6;
-  color: #333;
-}
-
-/* Màu */
-.card-year {
-  border-left-color: #3178c6;
-  background: linear-gradient(180deg, #fff, #f3f8ff);
-}
-.card-warning {
-  border-left-color: #e72c2c;
-  background: linear-gradient(180deg, #fff, #fff4f4);
-}
-.card-thanks {
-  border-left-color: #2ea44f;
-  background: linear-gradient(180deg, #fff, #f4fff8);
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  .main {
-    margin-left: 0;
-    padding: 20px;
-    border-radius: 0;
-  }
-}
-</style>
-
 <?php include __DIR__ . '/includes/sidebar.php'; ?>
 
-<div class="main">
-  <div class="info-board">
-    <h2>📌 BẢNG THÔNG TIN</h2>
-
-    <div class="info-card small card-year">
-      <div class="title">
-        <span class="icon">📅</span> HIỆN TẠI
-      </div>
-      <p><b>Năm học 2025 – 2026</b></p>
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8">
+  <div class="max-w-5xl mx-auto pb-12">
+    <!-- Header Title -->
+    <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+            <i class="bi bi-pin-angle-fill text-xl"></i>
+        </div>
+        <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">BẢNG THÔNG TIN</h2>
     </div>
 
-    <div class="info-card card-warning">
-      <div class="title">
-        <span class="icon">⚠️</span> THÔNG BÁO QUAN TRỌNG
-      </div>
-      <p>
-        Đây là <b>phiên bản thử nghiệm BETA 01</b>.  
-        CLB Kỹ năng Đoàn – Hội Trường THPT Lý Thường Kiệt đang trong quá trình phát triển,
-        nên có thể vẫn còn một số thiếu sót.  
-        Rất mong quý thầy cô và các bạn đóng góp ý kiến để hệ thống hoàn thiện hơn.
-      </p>
-    </div>
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Card: Hiện tại -->
+        <div class="group bg-white rounded-2xl p-6 shadow-sm border-l-4 border-primary-500 hover:shadow-[0_10px_40px_-10px_rgba(37,99,235,0.15)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-center relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 text-primary-50 opacity-50 group-hover:scale-110 transition-transform duration-500">
+                <i class="bi bi-calendar-event text-8xl"></i>
+            </div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center text-primary-600">
+                        <i class="bi bi-calendar-event text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-700 uppercase tracking-wide text-sm">Hiện tại</h3>
+                </div>
+                <p class="text-slate-600 font-medium">Năm học <span class="font-bold text-primary-700 bg-primary-50 px-2 py-1 rounded-md ml-1">2025 – 2026</span></p>
+            </div>
+        </div>
 
-    <div class="info-card card-thanks">
-      <div class="title">
-        <span class="icon">💚</span> LỜI CẢM ƠN
-      </div>
-      <p>
-        CLB Kỹ năng Đoàn – Hội xin chân thành cảm ơn quý thầy cô và các bạn
-        đã tin tưởng và trải nghiệm hệ thống.
-        <br><br>
-        <i>💡 Mỗi góp ý của bạn là một bước tiến để xây dựng nền tảng tốt hơn.</i>
-      </p>
+        <!-- Card: Warning -->
+        <div class="md:col-span-2 group bg-white rounded-2xl p-6 shadow-sm border-l-4 border-amber-500 hover:shadow-[0_10px_40px_-10px_rgba(245,158,11,0.15)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 text-amber-50 rotate-12 group-hover:rotate-0 transition-transform duration-500">
+                <i class="bi bi-exclamation-triangle-fill text-9xl"></i>
+            </div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                        <i class="bi bi-exclamation-triangle text-lg"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-700 uppercase tracking-wide text-sm">Thông báo quan trọng</h3>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                    Đây là <strong class="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded mx-1">phiên bản thử nghiệm BETA 01</strong>.<br>
+                    CLB Kỹ năng Đoàn – Hội Trường THPT Lý Thường Kiệt đang trong quá trình phát triển, nên có thể vẫn còn một số thiếu sót. Rất mong quý thầy cô và các bạn đóng góp ý kiến để hệ thống hoàn thiện hơn.
+                </p>
+            </div>
+        </div>
+
+        <!-- Card: Thanks -->
+        <div class="md:col-span-2 lg:col-span-3 group bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-emerald-100 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.1)] hover:-translate-y-1 transition-all duration-300 bg-gradient-to-br from-white to-emerald-50/50">
+            <div class="flex items-center gap-4 mb-5">
+                <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner group-hover:scale-110 transition-transform">
+                    <i class="bi bi-suit-heart-fill text-xl text-red-500 animate-pulse"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 text-lg uppercase tracking-wide">Lời Cảm Ơn</h3>
+            </div>
+            <p class="text-slate-600 leading-relaxed mb-6 text-base sm:text-lg">
+                CLB Kỹ năng Đoàn – Hội xin chân thành cảm ơn quý thầy cô và các bạn đã tin tưởng và trải nghiệm hệ thống.
+            </p>
+            <div class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white border border-emerald-100 shadow-sm text-emerald-700 font-medium text-sm">
+                <i class="bi bi-lightbulb-fill text-amber-400 text-lg drop-shadow-sm"></i>
+                Mỗi góp ý của bạn là một bước tiến để xây dựng nền tảng tốt hơn.
+            </div>
+        </div>
+        
     </div>
   </div>
-</div>
+</main>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

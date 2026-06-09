@@ -18,127 +18,74 @@ if (!in_array($_SESSION['role'], ['admin', 'teacher', 'club_leader'])) {
 
 // Lấy phiên điểm danh đang hoạt động
 
-if(isset($_GET['error']) && $_GET['error']=='not_auth'): ?>
-<div class="alert alert-danger text-center">
-  Phiên điểm danh đã hết hạn.<br>
-  Vui lòng nhập lại mã PIN.
-</div>
-<?php endif; ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ĐIỂM DANH CHO BTC</title>
-<link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
-<!-- Bootstrap + Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
-<style>
-:root{
-    --primary:#3178c6;
-    --bg:#f4faff;
-    --card:#ffffff;
-}
-
-body{
-    background:var(--bg);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont;
-}
-
-/* HEADER */
-.header{
-    background:linear-gradient(90deg,#3178c6,#6fa6e3);
-    color:#fff;
-    padding:14px 18px;
-    font-size:18px;
-    font-weight:700;
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-/* CARD */
-.pin-card{
-    background:var(--card);
-    border-radius:16px;
-    padding:22px 20px;
-    box-shadow:0 4px 18px #3178c61a;
-    max-width:360px;
-    margin:auto;
-}
-
-/* INPUT */
-.pin-input{
-    text-align:center;
-    font-size:28px;
-    letter-spacing:8px;
-}
-
-/* FOOTER */
-.footer{
-    text-align:center;
-    font-size:13px;
-    color:#666;
-    margin-top:20px;
-}
-</style>
-</head>
-
-<body>
-
-<?php
 $pageTitle = "Nhập Mã PIN Điểm Danh";
 $full_name = $_SESSION['full_name'] ?? '';
-include __DIR__ . '/../config/header.php';
+include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/sidebar.php';
 ?>
 
-<div class="container py-4">
-    <?php if(isset($_GET['error'])): ?>
-    <div class="alert alert-danger text-center mb-3">
-    <?php
-        if ($_GET['error'] === 'pin_changed') {
-            echo 'PIN đã thay đổi. Vui lòng nhập lại.';
-        } elseif ($_GET['error'] === 'session_closed') {
-            echo 'Phiên điểm danh đã kết thúc.';
-        }
-    ?>
-    </div>
-    <?php endif; ?>
-
-    <div class="pin-card">
-
-        <div class="text-center mb-3 text-muted">
-            Vui lòng nhập mã PIN do BTC cung cấp
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ease-in-out">
+    <div class="w-full max-w-md">
+        
+        <?php if(isset($_GET['error'])): ?>
+        <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm animate-[fadeInDown_0.3s_ease-out]">
+            <div class="flex items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill text-lg"></i>
+                <span class="font-medium">
+                    <?php
+                        if ($_GET['error'] === 'not_auth') {
+                            echo 'Phiên điểm danh đã hết hạn. Vui lòng nhập lại mã PIN.';
+                        } elseif ($_GET['error'] === 'pin_changed') {
+                            echo 'PIN đã thay đổi. Vui lòng nhập lại.';
+                        } elseif ($_GET['error'] === 'session_closed') {
+                            echo 'Phiên điểm danh đã kết thúc.';
+                        } else {
+                            echo 'Đã có lỗi xảy ra.';
+                        }
+                    ?>
+                </span>
+            </div>
         </div>
+        <?php endif; ?>
 
-        <input 
-            type="password"
-            id="pin"
-            class="form-control pin-input mb-3"
-            placeholder="••••••"
-            maxlength="6"
-            inputmode="numeric"
-            autofocus
-        >
+        <div class="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 shadow-[0_30px_60px_-15px_rgba(37,99,235,0.15)] border border-white relative z-10 animate-[fadeInUp_0.4s_ease-out]">
+            
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-primary-600 shadow-inner">
+                    <i class="bi bi-shield-lock-fill text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Nhập mã PIN</h2>
+                <p class="text-sm text-slate-500 mt-2 font-medium">Vui lòng nhập mã PIN gồm 6 số do BTC cung cấp</p>
+            </div>
 
-        <button 
-            class="btn btn-primary w-100 fw-semibold"
-            onclick="submitPin()"
-            id="btnSubmit"
-        >
-            <i class="bi bi-check-circle"></i> Xác nhận
-        </button>
+            <div class="space-y-6">
+                <div>
+                    <input 
+                        type="password"
+                        id="pin"
+                        class="w-full text-center text-3xl tracking-[0.4em] font-black py-4 px-4 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 outline-none transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-medium placeholder:text-base"
+                        placeholder="••••••"
+                        maxlength="6"
+                        inputmode="numeric"
+                        autofocus
+                    >
+                </div>
 
-        <div id="message" class="mt-3"></div>
+                <button 
+                    class="w-full flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-0.5"
+                    onclick="submitPin()"
+                    id="btnSubmit"
+                >
+                    <i class="bi bi-check-circle"></i> Xác nhận
+                </button>
 
+                <div id="message" class="empty:hidden"></div>
+            </div>
+            
+        </div>
     </div>
-
-<?php include __DIR__ . '/../config/footer.php'; ?>
-
-
-</div>
+</main>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
 
 <script>
 function submitPin() {
@@ -155,7 +102,8 @@ function submitPin() {
     }
 
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xác thực';
+    btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> Đang xác thực';
+    btn.classList.add('opacity-75', 'cursor-not-allowed');
 
     fetch('../api/check_pin.php', {
         method: 'POST',
@@ -176,21 +124,20 @@ function submitPin() {
     .finally(() => {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-check-circle"></i> Xác nhận';
+        btn.classList.remove('opacity-75', 'cursor-not-allowed');
     });
 }
 
 function showError(msg){
     document.getElementById('message').innerHTML = `
-        <div class="alert alert-danger py-2 mb-0">
-            <i class="bi bi-exclamation-triangle"></i> ${msg}
+        <div class="mt-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg text-sm font-medium animate-[fadeIn_0.3s_ease-out]">
+            <i class="bi bi-exclamation-triangle-fill mr-1.5"></i> ${msg}
         </div>
     `;
 }
+
 /* ENTER để xác nhận */
 document.getElementById('pin').addEventListener('keypress', e => {
     if (e.key === 'Enter') submitPin();
 });
 </script>
-
-</body>
-</html>

@@ -129,252 +129,277 @@ function sort_link($col, $label, $order_by, $order_dir) {
     return "<a href=\"?sort=$col&dir=$dir\" style=\"text-decoration:none;color:inherit;\">$label $icon</a>";
 }
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <title>CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/assets/logo_CLB.png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body { background: #e8f1fb; }
-        .container-user { max-width: 950px; margin: 40px auto 24px auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 24px #3178c615, 0 1.5px 8px #a8c8f088; padding: 32px 18px 26px 18px;}
-        .btn-main { background: #6fa6e3; color: #fff; font-weight: 600; border-radius: 8px; transition: background 0.2s;}
-        .btn-main:hover { background: #3178c6;}
-        .table thead { background: #a8c8f0; color: #3178c6; }
-        .table tbody tr td { vertical-align: middle; }
-        .back-link { color: #3178c6; text-decoration: none;}
-        .back-link:hover { text-decoration: underline; color: #1757a6;}
-        .logout-link { color: #e72c2c; float:right; text-decoration:none;}
-        .logout-link:hover { text-decoration: underline;}
-        .eye-btn { background: none; border: none; color: #3178c6; font-size: 1.2em; cursor: pointer; }
-        @media (max-width: 600px) {
-            .container-user { padding: 10px 2vw; }
-        }
-    </style>
-</head>
-<body>
 <?php
 $pageTitle = "QUẢN LÝ TÀI KHOẢN";
 $full_name = $_SESSION['full_name'] ?? '';
 include '../includes/header.php';
+include '../includes/sidebar.php';
 ?>
-<div class="container-user shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="../dashboard.php" class="back-link"><i class="bi bi-arrow-left-circle"></i> Về Trang chủ</a>
+
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto pb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <a href="../dashboard.php" class="text-slate-500 hover:text-primary-600 transition-colors flex items-center gap-1.5 text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm hover:shadow">
+                <i class="bi bi-arrow-left"></i> Về Trang chủ
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                <i class="bi bi-person-gear text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">QUẢN LÝ TÀI KHOẢN</h2>
+        </div>
+        
+        <!-- Alerts -->
+        <?php if ($msg): ?>
+            <div class="mb-6 flex items-center justify-between p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($msg) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="mb-6 flex items-center justify-between p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($error) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alpine State for Add Form & Edit Modal -->
+        <div x-data="{ showAddForm: false, showEditModal: false, editUser: {} }">
+            
+            <div class="flex justify-end mb-6">
+                <button x-show="!showAddForm" @click="showAddForm = true" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md text-sm">
+                    <i class="bi bi-person-plus"></i> Thêm tài khoản mới
+                </button>
+            </div>
+
+            <!-- Add User Form -->
+            <div x-show="showAddForm" x-collapse x-cloak class="mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+                    <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <i class="bi bi-person-plus text-primary-500"></i> Tạo tài khoản
+                    </h3>
+                    <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5" x-data="{ showPass: false }">
+                        <div class="xl:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Tên đăng nhập</label>
+                            <input type="text" name="username" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                        </div>
+                        
+                        <div class="xl:col-span-1 md:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Họ tên đầy đủ</label>
+                            <input type="text" name="full_name" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                        </div>
+                        
+                        <div class="xl:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Quyền</label>
+                            <select name="role" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                                <option value="">Chọn quyền...</option>
+                                <option value="admin">Admin</option>
+                                <option value="teacher">Giáo viên</option>
+                                <option value="club_leader">Ban chủ nhiệm</option>
+                                <option value="student">Học sinh</option>
+                            </select>
+                        </div>
+                        
+                        <div class="xl:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Mật khẩu</label>
+                            <div class="relative">
+                                <input :type="showPass ? 'text' : 'password'" name="password" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                                <button type="button" @click="showPass = !showPass" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                    <i class="bi" :class="showPass ? 'bi-eye' : 'bi-eye-slash'"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="xl:col-span-1 lg:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Email</label>
+                            <input type="email" name="email" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                        </div>
+                        
+                        <div class="xl:col-span-5 lg:col-span-4 md:col-span-2 mt-2 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                            <button type="button" @click="showAddForm = false" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Hủy</button>
+                            <button type="submit" name="add_user" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
+                                <i class="bi bi-person-plus"></i> Thêm tài khoản
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+                <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                    <h3 class="text-base font-bold text-slate-800">Danh sách tài khoản</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
+                            <tr>
+                                <th class="px-5 py-4 w-16 text-center"><?= sort_link('id', 'ID', $order_by, $order_dir) ?></th>
+                                <th class="px-5 py-4"><?= sort_link('username', 'Tên đăng nhập', $order_by, $order_dir) ?></th>
+                                <th class="px-5 py-4"><?= sort_link('full_name', 'Họ tên', $order_by, $order_dir) ?></th>
+                                <th class="px-5 py-4"><?= sort_link('role', 'Quyền', $order_by, $order_dir) ?></th>
+                                <th class="px-5 py-4"><?= sort_link('email', 'Email', $order_by, $order_dir) ?></th>
+                                <th class="px-5 py-4 text-center w-32">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                        <?php if (count($users) > 0): ?>
+                            <?php foreach ($users as $u): ?>
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3.5 text-center font-medium text-slate-500"><?= $u['id'] ?></td>
+                                    <td class="px-5 py-3.5 font-bold text-slate-800">
+                                        <?= htmlspecialchars($u['username']) ?>
+                                    </td>
+                                    <td class="px-5 py-3.5">
+                                        <?= htmlspecialchars($u['full_name']) ?>
+                                    </td>
+                                    <td class="px-5 py-3.5">
+                                        <?php
+                                        switch($u['role']) {
+                                            case 'admin': 
+                                                echo '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Quản trị viên</span>';
+                                                break;
+                                            case 'teacher': 
+                                                echo '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Giáo viên</span>';
+                                                break;
+                                            case 'club_leader': 
+                                                echo '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">Ban chủ nhiệm</span>';
+                                                break;
+                                            case 'student': 
+                                                echo '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">Học sinh</span>';
+                                                break;
+                                            default: 
+                                                echo htmlspecialchars($u['role']);
+                                        }
+                                        ?>
+                                    </td>
+                                    <td class="px-5 py-3.5 text-slate-600 truncate max-w-[200px]"><?= htmlspecialchars($u['email']) ?></td>
+                                    <td class="px-5 py-3.5 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <button @click="showEditModal = true; editUser = {
+                                                    id: <?= $u['id'] ?>, 
+                                                    username: '<?= htmlspecialchars(addslashes($u['username'])) ?>',
+                                                    full_name: '<?= htmlspecialchars(addslashes($u['full_name'])) ?>',
+                                                    role: '<?= $u['role'] ?>',
+                                                    email: '<?= htmlspecialchars(addslashes($u['email'])) ?>',
+                                                    field: 'username'
+                                                }" 
+                                                class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <?php if ($u['id'] != $_SESSION['user_id']): ?>
+                                            <a href="users.php?delete_id=<?= $u['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                            <?php else: ?>
+                                            <span class="w-8 h-8 flex items-center justify-center text-slate-300" title="Không thể tự xóa mình">
+                                                <i class="bi bi-person-lock"></i>
+                                            </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="px-5 py-12 text-center text-slate-500 bg-slate-50/50">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <i class="bi bi-inbox text-4xl mb-3 text-slate-300"></i>
+                                        <p>Chưa có tài khoản nào!</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Edit Modal Overlay -->
+            <div x-show="showEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-slate-900/50 backdrop-blur-sm"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
+                
+                <!-- Modal Content -->
+                <div @click.away="showEditModal = false" class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+                    
+                    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-slate-800">Sửa thông tin tài khoản</h3>
+                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    
+                    <form method="post" class="p-6">
+                        <input type="hidden" name="uid" :value="editUser.id">
+                        
+                        <div class="mb-5">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Trường muốn sửa</label>
+                            <select name="field" x-model="editUser.field" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:bg-white focus:ring-2 outline-none transition-colors">
+                                <option value="username">Tên đăng nhập</option>
+                                <option value="full_name">Họ tên</option>
+                                <option value="role">Quyền</option>
+                                <option value="email">Email</option>
+                                <option value="password">Mật khẩu mới</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Giá trị mới</label>
+                            
+                            <!-- Username Input -->
+                            <input x-show="editUser.field === 'username'" type="text" name="value" :value="editUser.field === 'username' ? editUser.username : ''" :required="editUser.field === 'username'" :disabled="editUser.field !== 'username'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                            
+                            <!-- Full Name Input -->
+                            <input x-show="editUser.field === 'full_name'" type="text" name="value" :value="editUser.field === 'full_name' ? editUser.full_name : ''" :required="editUser.field === 'full_name'" :disabled="editUser.field !== 'full_name'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                            
+                            <!-- Email Input -->
+                            <input x-show="editUser.field === 'email'" type="email" name="value" :value="editUser.field === 'email' ? editUser.email : ''" :required="editUser.field === 'email'" :disabled="editUser.field !== 'email'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                            
+                            <!-- Password Input -->
+                            <div x-show="editUser.field === 'password'" class="relative" x-data="{ showModalPass: false }">
+                                <input :type="showModalPass ? 'text' : 'password'" name="value" :required="editUser.field === 'password'" :disabled="editUser.field !== 'password'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                                <button type="button" @click="showModalPass = !showModalPass" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                    <i class="bi" :class="showModalPass ? 'bi-eye' : 'bi-eye-slash'"></i>
+                                </button>
+                            </div>
+
+                            <!-- Role Select -->
+                            <select x-show="editUser.field === 'role'" name="value" :value="editUser.field === 'role' ? editUser.role : ''" :required="editUser.field === 'role'" :disabled="editUser.field !== 'role'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                                <option value="admin">Admin</option>
+                                <option value="teacher">Giáo viên</option>
+                                <option value="club_leader">Ban chủ nhiệm</option>
+                                <option value="student">Học sinh</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                            <button type="button" @click="showEditModal = false" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Hủy</button>
+                            <button type="submit" name="edit_user" class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
+                                <i class="bi bi-save"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <h2 class="mb-4 mt-2" style="color:#3178c6;font-weight:700;"><i class="bi bi-person-gear"></i> Quản lý tài khoản</h2>
-    <?php if ($msg): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= $msg ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
-        </div>
-    <?php endif; ?>
-    <?php if ($error): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($error) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
-        </div>
-    <?php endif; ?>
+</main>
 
-    <h4 class="mt-3 mb-2" style="color:#3178c6;">Thêm tài khoản mới</h4>
-    <form method="post" class="row g-3 mb-4">
-        <div class="col-md-2">
-            <input type="text" name="username" class="form-control" placeholder="Tên đăng nhập" required>
-        </div>
-        <div class="col-md-3">
-            <input type="text" name="full_name" class="form-control" placeholder="Họ tên đầy đủ" required>
-        </div>
-        <div class="col-md-2">
-            <select name="role" class="form-select" required>
-                <option value="">Chọn quyền</option>
-                <option value="admin">Admin</option>
-                <option value="teacher">Giáo viên</option>
-                <option value="club_leader">Ban chủ nhiệm</option>
-                <option value="student">Học sinh</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <input type="email" name="email" class="form-control" placeholder="Email" required>
-        </div>
-        <div class="col-md-2 position-relative">
-            <input type="password" name="password" class="form-control" id="add_pass" placeholder="Mật khẩu" required>
-            <button type="button" class="eye-btn position-absolute top-0 end-0" style="z-index:2;" onclick="toggleAddPass()" tabindex="-1">
-                <i class="bi bi-eye-slash" id="addPassIcon"></i>
-            </button>
-        </div>
-        <div class="col-12">
-            <button type="submit" name="add_user" class="btn btn-main w-100 mt-1"><i class="bi bi-person-plus"></i> Thêm tài khoản</button>
-        </div>
-    </form>
-
-    <h4 class="mb-2" style="color:#3178c6;">Danh sách tài khoản</h4>
-    <div class="table-responsive">
-    <table class="table table-bordered align-middle">
-        <thead>
-            <tr>
-                <th><?= sort_link('id', 'ID', $order_by, $order_dir) ?></th>
-                <th><?= sort_link('username', 'Tên đăng nhập', $order_by, $order_dir) ?></th>
-                <th><?= sort_link('full_name', 'Tên đầy đủ', $order_by, $order_dir) ?></th>
-                <th><?= sort_link('role', 'Quyền', $order_by, $order_dir) ?></th>
-                <th><?= sort_link('email', 'Email', $order_by, $order_dir) ?></th>
-                <th class="text-center">Sửa</th>
-                <th class="text-center">Xóa</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach($users as $u): ?>
-            <tr>
-                <td><?= $u['id'] ?></td>
-                <td><?= htmlspecialchars($u['username']) ?></td>
-                <td><?= htmlspecialchars($u['full_name']) ?></td>
-                <td>
-                <?php
-                switch($u['role']) {
-                    case 'admin': echo 'Quản trị viên'; break;
-                    case 'teacher': echo 'Giáo viên/Giảng viên'; break;
-                    case 'club_leader': echo 'Ban chủ nhiệm'; break;
-                    case 'student': echo 'Học sinh'; break;
-                    default: echo htmlspecialchars($u['role']);
-                }
-                ?>
-                </td>
-                <td><?= htmlspecialchars($u['email']) ?></td>
-                <td class="text-center">
-                    <button class="btn btn-sm btn-primary"
-                        onclick="showEditModal(<?= $u['id'] ?>, '<?= htmlspecialchars(addslashes($u['username'])) ?>', '<?= htmlspecialchars(addslashes($u['full_name'])) ?>', '<?= $u['role'] ?>', '<?= htmlspecialchars(addslashes($u['email'])) ?>')">
-                        <i class="bi bi-pencil-square"></i> Sửa
-                    </button>
-                </td>
-                <td class="text-center">
-                    <?php if ($u['id'] != $_SESSION['user_id']): ?>
-                    <a href="users.php?delete_id=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa tài khoản này?');">
-                        <i class="bi bi-trash"></i> Xóa
-                    </a>
-                    <?php else: ?>
-                    <span class="text-muted"><i class="bi bi-person-lock"></i></span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    </div>
-</div>
-
-<!-- Modal sửa -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="post" class="modal-content" id="editForm">
-      <div class="modal-header">
-        <h5 class="modal-title">Sửa tài khoản</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="uid" id="edit_uid">
-        <div class="mb-3">
-            <label class="form-label">Trường muốn sửa</label>
-            <select name="field" class="form-select" id="fieldSelect" required onchange="updateEditField()">
-                <option value="username">Tên đăng nhập</option>
-                <option value="full_name">Họ tên</option>
-                <option value="role">Quyền</option>
-                <option value="email">Email</option>
-                <option value="password">Mật khẩu</option>
-            </select>
-        </div>
-        <div class="mb-3" id="fieldInputDiv">
-            <label class="form-label" id="valueLabel">Giá trị mới</label>
-            <input type="text" name="value" class="form-control" id="edit_value" required>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" name="edit_user" class="btn btn-main">Lưu</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-      </div>
-    </form>
-  </div>
-  <?php include '../includes/footer.php'; ?>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-function toggleAddPass() {
-    let input = document.getElementById('add_pass');
-    let icon = document.getElementById('addPassIcon');
-    if(input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('bi-eye-slash');
-        icon.classList.add('bi-eye');
-    } else {
-        input.type = 'password';
-        icon.classList.remove('bi-eye');
-        icon.classList.add('bi-eye-slash');
-    }
-}
-
-function showEditModal(id, username, fullname, role, email) {
-    document.getElementById('edit_uid').value = id;
-    document.getElementById('fieldSelect').value = 'username';
-    updateEditField();
-    document.getElementById('edit_value').value = username;
-    var myModal = new bootstrap.Modal(document.getElementById('editModal'));
-    myModal.show();
-
-    // Lưu thêm các giá trị để có thể lấy ra khi chuyển trường sửa
-    window.editUserInfo = {username, fullname, role, email};
-}
-
-function updateEditField() {
-    var field = document.getElementById('fieldSelect').value;
-    var parentDiv = document.getElementById('fieldInputDiv');
-    let value = '';
-    if(window.editUserInfo) {
-        if(field==='username') value = window.editUserInfo.username;
-        if(field==='full_name') value = window.editUserInfo.fullname;
-        if(field==='role') value = window.editUserInfo.role;
-        if(field==='email') value = window.editUserInfo.email;
-    }
-    parentDiv.innerHTML = '';
-    if (field === 'username') {
-        parentDiv.innerHTML = '<label class="form-label">Tên đăng nhập mới</label><input type="text" name="value" class="form-control" id="edit_value" value="'+(value||'')+'" required>';
-    } else if (field === 'full_name') {
-        parentDiv.innerHTML = '<label class="form-label">Họ tên mới</label><input type="text" name="value" class="form-control" id="edit_value" value="'+(value||'')+'" required>';
-    } else if (field === 'role') {
-        parentDiv.innerHTML = `<label class="form-label">Quyền mới</label>
-        <select name="value" class="form-select" id="edit_value" required>
-            <option value="admin"${value==='admin'?' selected':''}>Admin</option>
-            <option value="teacher"${value==='teacher'?' selected':''}>Giáo viên</option>
-            <option value="club_leader"${value==='club_leader'?' selected':''}>Ban chủ nhiệm</option>
-            <option value="student"${value==='student'?' selected':''}>Học sinh</option>
-        </select>`;
-    } else if (field === 'email') {
-        parentDiv.innerHTML = '<label class="form-label">Email mới</label><input type="email" name="value" class="form-control" id="edit_value" value="'+(value||'')+'" required>';
-    } else if (field === 'password') {
-        parentDiv.innerHTML = `<label class="form-label">Mật khẩu mới</label>
-        <div class="position-relative">
-            <input type="password" name="value" class="form-control" id="edit_value" required>
-            <button type="button" class="eye-btn position-absolute top-0 end-0" style="z-index:2;" onclick="toggleEditPass()" tabindex="-1">
-                <i class="bi bi-eye-slash" id="editPassIcon"></i>
-            </button>
-        </div>`;
-    }
-}
-
-function toggleEditPass() {
-    let input = document.getElementById('edit_value');
-    let icon = document.getElementById('editPassIcon');
-    if(input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('bi-eye-slash');
-        icon.classList.add('bi-eye');
-    } else {
-        input.type = 'password';
-        icon.classList.remove('bi-eye');
-        icon.classList.add('bi-eye-slash');
-    }
-}
-</script>
-</body>
-</html>
+<?php include '../includes/footer.php'; ?>

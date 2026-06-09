@@ -131,177 +131,203 @@ $sql = "SELECT e.*, u.full_name AS creator FROM events e LEFT JOIN users u ON e.
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $events = $stmt->fetchAll();
-?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <title>CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
 
-    <!-- Bootstrap 5 & Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body { background: #e8f1fb; }
-        .event-container {
-            background: #fff; 
-            max-width: 900px; 
-            margin: 40px auto 24px auto; 
-            padding: 32px 20px 26px 20px; 
-            border-radius: 14px; 
-            box-shadow: 0 4px 24px #3178c615, 0 1.5px 8px #a8c8f088;
-        }
-        .event-title {
-            color: #3178c6; 
-            font-weight: 700; 
-            text-align: center; 
-            margin-bottom: 14px;
-        }
-        .form-label { color: #3178c6; font-weight: 500; }
-        .btn-main {
-            background: #6fa6e3; 
-            color: #fff; 
-            font-weight: 600; 
-            border-radius: 8px; 
-            transition: background 0.2s;
-        }
-        .btn-main:hover { background: #3178c6;}
-        .table thead { background: #a8c8f0; color: #3178c6; }
-        .table tbody tr td { vertical-align: middle; }
-        .back-link { color: #3178c6; text-decoration: none; }
-        .back-link:hover { text-decoration: underline; color: #1757a6;}
-        .actions a { margin-right: 8px; }
-        @media (max-width: 600px) {
-            .event-container { padding: 14px 6px; }
-            .event-title { font-size: 1.1em; }
-        }
-    </style>
-</head>
-<body>
-<?php
 $pageTitle = "QUẢN LÝ SỰ KIỆN";
 $full_name = $_SESSION['full_name'] ?? '';
 include '../includes/header.php';
+include '../includes/sidebar.php';
 ?>
-<div class="event-container shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="../dashboard.php" class="back-link"><i class="bi bi-arrow-left-circle"></i> Về Trang chủ</a>
-    </div>
-    <h2 class="event-title"><i class="bi bi-calendar-event"></i> Quản lý sự kiện</h2>
 
-    <!-- Form tìm kiếm -->
-    <form method="get" class="row g-3 mb-3">
-        <div class="col-md-10">
-            <input type="text" class="form-control" name="q" value="<?= htmlspecialchars($search) ?>"
-                   placeholder="Tìm tên sự kiện, mã PIN hoặc ngày tháng...">
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto pb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <a href="../dashboard.php" class="text-slate-500 hover:text-primary-600 transition-colors flex items-center gap-1.5 text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm hover:shadow">
+                <i class="bi bi-arrow-left"></i> Về Trang chủ
+            </a>
         </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i> Tìm kiếm</button>
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                    <i class="bi bi-calendar-event text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">QUẢN LÝ SỰ KIỆN</h2>
+            </div>
+            
+            <form method="get" class="relative max-w-sm w-full">
+                <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" name="q" value="<?= htmlspecialchars($search) ?>" placeholder="Tìm tên, mã PIN, ngày..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-sm transition-all">
+            </form>
         </div>
-    </form>
+        
+        <!-- Alerts -->
+        <?php if ($addMsg): ?>
+            <div class="mb-6 flex items-center justify-between p-4 bg-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-50 border-l-4 border-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-500 text-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-<?= $addMsgType == 'success' ? 'check-circle-fill' : 'exclamation-circle-fill' ?> text-lg"></i>
+                    <span class="font-medium"><?= $addMsg ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
 
-    <?php if ($addMsg): ?>
-        <div class="alert alert-<?= $addMsgType ?> alert-dismissible fade show" role="alert">
-            <?= $addMsg ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
-        </div>
-    <?php endif; ?>
-
-    <!-- FORM SỬA SỰ KIỆN -->
-    <?php if ($editEvent): ?>
-    <form method="POST" class="row g-3 mb-4">
-        <h5 class="mb-2" style="color:#3178c6;">Sửa sự kiện</h5>
-        <input type="hidden" name="edit_id" value="<?= $editEvent['id'] ?>">
-        <div class="col-md-4">
-            <label class="form-label" for="title">Tiêu đề sự kiện</label>
-            <input type="text" class="form-control" id="title" name="title" value="<?= htmlspecialchars($editEvent['title']) ?>" required>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label" for="pin">Mã PIN</label>
-            <input type="text" class="form-control" id="pin" name="pin" value="<?= htmlspecialchars($editEvent['pin']) ?>" required maxlength="10">
-        </div>
-        <div class="col-md-3">
-            <label class="form-label" for="event_date">Ngày diễn ra</label>
-            <input type="datetime-local" class="form-control" id="event_date" name="event_date" value="<?= date('Y-m-d\TH:i', strtotime($editEvent['event_date'])) ?>" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label" for="description">Mô tả</label>
-            <input type="text" class="form-control" id="description" name="description" value="<?= htmlspecialchars($editEvent['description']) ?>">
-        </div>
-        <div class="col-12 d-flex justify-content-end">
-            <button type="submit" name="edit_event" class="btn btn-main px-4"><i class="bi bi-save"></i> Lưu thay đổi</button>
-            <a href="events.php" class="btn btn-outline-secondary ms-2">Hủy</a>
-        </div>
-    </form>
-    <?php else: ?>
-    <!-- FORM THÊM SỰ KIỆN (KHÔNG CÓ PIN, PIN RANDOM) -->
-    <form method="POST" class="row g-3 mb-4">
-        <h5 class="mb-2" style="color:#3178c6;">Thêm sự kiện mới</h5>
-        <div class="col-md-5">
-            <label class="form-label" for="title">Tiêu đề sự kiện</label>
-            <input type="text" class="form-control" id="title" name="title" required>
-        </div>
-        <div class="col-md-4">
-            <label class="form-label" for="event_date">Ngày diễn ra</label>
-            <input type="datetime-local" class="form-control" id="event_date" name="event_date" required>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label" for="description">Mô tả</label>
-            <input type="text" class="form-control" id="description" name="description">
-        </div>
-        <div class="col-12 d-flex justify-content-end">
-            <button type="submit" name="add_event" class="btn btn-main px-4"><i class="bi bi-plus-circle"></i> Tạo sự kiện</button>
-        </div>
-    </form>
-    <?php endif; ?>
-
-    <h5 class="mt-4 mb-2" style="color:#3178c6;">Danh sách sự kiện</h5>
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle">
-            <thead>
-                <tr>
-                    <th style="min-width:120px;">Sự kiện</th>
-                    <th style="min-width:80px;">Mã PIN</th>
-                    <th style="min-width:120px;">Mô tả</th>
-                    <th style="min-width:160px;">Ngày diễn ra</th>
-                    <th style="min-width:110px;">Người tạo</th>
-                    <th style="min-width:90px;">Điểm danh</th>
-                    <th style="min-width:90px;">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php if ($events): ?>
-                <?php foreach ($events as $event): ?>
-                <tr>
-                    <td><?= htmlspecialchars($event['title']) ?></td>
-                    <td><?= htmlspecialchars($event['pin'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($event['description']) ?></td>
-                    <td><?= htmlspecialchars($event['event_date']) ?></td>
-                    <td><?= htmlspecialchars($event['creator']) ?></td>
-                    <td class="text-center">
-                        <a href="attendance_event.php?event_id=<?= $event['id'] ?>" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-clipboard-check"></i> Điểm danh
-                        </a>
-                        <a href="attendance_view.php?event_id=<?= $event['id'] ?>" class="btn btn-outline-info btn-sm" title="Xem danh sách điểm danh">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </td>
-                    <td class="actions text-center">
-                        <a href="events.php?edit_id=<?= $event['id'] ?>" class="text-primary" title="Sửa"><i class="bi bi-pencil-square"></i></a>
-                        <a href="events.php?delete_id=<?= $event['id'] ?>" class="text-danger" onclick="return confirm('Xóa sự kiện này?')" title="Xóa"><i class="bi bi-trash"></i></a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr><td colspan="7" class="text-center text-muted">Chưa có sự kiện nào.</td></tr>
+        <!-- Alpine State for Forms -->
+        <div x-data="{ showAddForm: <?= $editEvent ? 'false' : 'false' ?> }">
+            <?php if (!$editEvent): ?>
+                <div class="flex justify-end mb-6">
+                    <button x-show="!showAddForm" @click="showAddForm = true; $nextTick(() => $refs.inputTitle.focus())" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md text-sm">
+                        <i class="bi bi-plus-circle"></i> Thêm sự kiện
+                    </button>
+                </div>
             <?php endif; ?>
-            </tbody>
-        </table>
+
+            <!-- Form Edit Event -->
+            <?php if ($editEvent): ?>
+            <div class="mb-8 bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-primary-100 ring-2 ring-primary-500/20">
+                <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
+                    <i class="bi bi-pencil-square text-primary-500"></i> Sửa sự kiện
+                </h3>
+                <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <input type="hidden" name="edit_id" value="<?= $editEvent['id'] ?>">
+                    
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="title">Tiêu đề sự kiện</label>
+                        <input type="text" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all" id="title" name="title" value="<?= htmlspecialchars($editEvent['title']) ?>" required>
+                    </div>
+                    
+                    <div class="lg:col-span-1">
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="pin">Mã PIN</label>
+                        <input type="text" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all font-mono" id="pin" name="pin" value="<?= htmlspecialchars($editEvent['pin']) ?>" required maxlength="10">
+                    </div>
+                    
+                    <div class="lg:col-span-1">
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="event_date">Ngày diễn ra</label>
+                        <input type="datetime-local" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all" id="event_date" name="event_date" value="<?= date('Y-m-d\TH:i', strtotime($editEvent['event_date'])) ?>" required>
+                    </div>
+                    
+                    <div class="lg:col-span-4">
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="description">Mô tả</label>
+                        <input type="text" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all" id="description" name="description" value="<?= htmlspecialchars($editEvent['description']) ?>">
+                    </div>
+                    
+                    <div class="lg:col-span-4 mt-2 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                        <a href="events.php" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Hủy</a>
+                        <button type="submit" name="edit_event" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
+                            <i class="bi bi-save"></i> Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <?php else: ?>
+            <!-- Form Add Event -->
+            <div x-show="showAddForm" x-collapse x-cloak class="mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+                    <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <i class="bi bi-calendar-plus text-primary-500"></i> Thêm sự kiện mới
+                    </h3>
+                    <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="title">Tiêu đề sự kiện</label>
+                            <input type="text" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all" id="title" name="title" x-ref="inputTitle" required>
+                        </div>
+                        
+                        <div class="lg:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="event_date">Ngày diễn ra</label>
+                            <input type="datetime-local" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all" id="event_date" name="event_date" required>
+                        </div>
+                        
+                        <div class="lg:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="description">Mô tả</label>
+                            <input type="text" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none transition-all" id="description" name="description">
+                        </div>
+                        
+                        <div class="lg:col-span-4 mt-2 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                            <button type="button" @click="showAddForm = false" class="px-5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Hủy</button>
+                            <button type="submit" name="add_event" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
+                                <i class="bi bi-plus-circle"></i> Tạo sự kiện
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="px-5 py-4">Sự kiện</th>
+                            <th class="px-5 py-4 text-center">Mã PIN</th>
+                            <th class="px-5 py-4">Mô tả</th>
+                            <th class="px-5 py-4">Ngày diễn ra</th>
+                            <th class="px-5 py-4">Người tạo</th>
+                            <th class="px-5 py-4 text-center">Điểm danh</th>
+                            <th class="px-5 py-4 text-center w-28">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                    <?php if ($events): ?>
+                        <?php foreach ($events as $event): ?>
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-5 py-3.5 font-bold text-slate-800">
+                                <?= htmlspecialchars($event['title']) ?>
+                            </td>
+                            <td class="px-5 py-3.5 text-center">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 text-xs font-bold font-mono tracking-widest border border-amber-200 shadow-sm">
+                                    <?= htmlspecialchars($event['pin'] ?? '') ?>
+                                </span>
+                            </td>
+                            <td class="px-5 py-3.5 text-slate-600 truncate max-w-[200px]">
+                                <?= htmlspecialchars($event['description']) ?>
+                            </td>
+                            <td class="px-5 py-3.5 text-slate-600 font-medium">
+                                <?= htmlspecialchars(date('d/m/Y H:i', strtotime($event['event_date']))) ?>
+                            </td>
+                            <td class="px-5 py-3.5 text-slate-600">
+                                <?= htmlspecialchars($event['creator']) ?>
+                            </td>
+                            <td class="px-5 py-3.5 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="attendance_event.php?event_id=<?= $event['id'] ?>" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-colors text-xs font-semibold flex items-center gap-1" title="Điểm danh tay">
+                                        <i class="bi bi-clipboard-check"></i>
+                                    </a>
+                                    <a href="attendance_qr.php?event_id=<?= $event['id'] ?>" class="px-3 py-1.5 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white transition-colors text-xs font-semibold flex items-center gap-1" title="Mã QR">
+                                        <i class="bi bi-qr-code"></i>
+                                    </a>
+                                    <a href="attendance_view.php?event_id=<?= $event['id'] ?>" class="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors text-xs font-semibold flex items-center gap-1" title="Xem danh sách">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="px-5 py-3.5 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="events.php?edit_id=<?= $event['id'] ?>" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-slate-200" title="Sửa">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="events.php?delete_id=<?= $event['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa sự kiện này? Toàn bộ dữ liệu điểm danh cũng sẽ bị xóa!')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="px-5 py-12 text-center text-slate-500 bg-slate-50/50">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i class="bi bi-inbox text-4xl mb-3 text-slate-300"></i>
+                                    <p>Chưa có sự kiện nào được tạo.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
+</main>
 <?php include '../includes/footer.php'; ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
