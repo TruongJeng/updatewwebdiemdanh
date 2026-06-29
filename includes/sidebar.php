@@ -17,6 +17,30 @@ function isActive($path, $currentPage) {
             close() { this.open = false }
         })
     })
+
+    // Auto-close sidebar on mobile when clicking any nav link
+    document.addEventListener('click', function(e) {
+        // Find closest <a> tag
+        const link = e.target.closest('aside a[href]');
+        if (!link) return;
+        
+        const href = link.getAttribute('href');
+        // Skip anchors (#), javascript:, and external links
+        if (!href || href === '#' || href.startsWith('javascript:') || link.target === '_blank') return;
+        
+        // Only on mobile (sidebar is toggled via store)
+        if (window.innerWidth >= 1024) return;
+        
+        // Check if sidebar is open
+        if (Alpine.store('sidebar') && Alpine.store('sidebar').open) {
+            e.preventDefault();
+            Alpine.store('sidebar').close();
+            // Navigate after sidebar close animation
+            setTimeout(() => {
+                window.location.href = href;
+            }, 250);
+        }
+    });
 </script>
 
 <!-- Mobile Toggle Button (Floating) -->

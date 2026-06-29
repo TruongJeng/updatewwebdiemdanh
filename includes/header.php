@@ -90,7 +90,7 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
         .mobile-card + .mobile-card { margin-top: 0.75rem; }
     </style>
 </head>
-<body class="text-slate-800 antialiased selection:bg-primary-200 selection:text-primary-900 min-h-screen flex flex-col">
+<body x-data class="text-slate-800 antialiased selection:bg-primary-200 selection:text-primary-900 min-h-screen flex flex-col">
 
 <!-- Topbar -->
 <header class="fixed top-0 left-0 right-0 h-14 sm:h-16 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 shadow-md z-[1200] px-3 sm:px-6 flex items-center justify-between transition-all duration-300">
