@@ -92,119 +92,122 @@ if (
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <title>CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/assets/logo_CLB.png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background:#f8fafc; }
-        .otp-card {
-            max-width: 410px;
-            margin:60px auto 0 auto;
-            border-radius: 14px;
-            box-shadow:0 4px 24px #e7e7e7;
-            border: none;
-        }
-        .otp-logo {
-            width:62px; margin:0 auto 12px auto; display:block;
-        }
-        .otp-form-title {
-            font-weight:700; color:#e74c3c; margin-bottom:8px; text-align:center; font-size:1.45rem;
-        }
-        .otp-info {
-            color:#3178c6; font-size:1.02rem; background:#eaf2fb; border-radius:7px;
-            padding:8px 12px; margin-bottom:18px; text-align:center;
-        }
-        .resend-link {
-            font-size: 0.98rem;
-            color: #0d6efd;
-            padding: 0;
-            background: none;
-            border: none;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 6px;
-            margin-left: 0;
-            display: inline;
-        }
-        .resend-link[disabled] {
-            color: #999;
-            text-decoration: none;
-            pointer-events: none;
-            cursor: not-allowed;
-        }
-        .countdown {
-            font-size: 0.97rem; color: #888; margin-left:8px;
-        }
-    </style>
-</head>
-<body>
+?>
+
 <?php
-$pageTitle = "ĐỔI MẬT KHẨU";
+$pageTitle = "Đổi mật khẩu";
 $full_name = $_SESSION['full_name'] ?? '';
 include '../includes/header.php';
 ?>
-    <div class="container">
-        <div class="card otp-card">
-            <div class="card-body">
-                <img src="/assets/logo_CLB.png" class="otp-logo" alt="CLB Kỹ năng">
-                <div class="otp-form-title">Đổi mật khẩu</div>
-                <?php if($show_otp_section): ?>
-                <div class="otp-info" id="otpInfo">
-                    Mã OTP đã gửi về email của bạn.<br>
-                    <b>Vui lòng kiểm tra cả hộp thư rác nếu không thấy!</b>
+
+<main class="min-h-screen bg-slate-50/50 flex flex-col pt-14 sm:pt-16 pb-12 transition-all duration-300">
+    <div class="flex-grow flex items-center justify-center p-4 sm:p-6 w-full">
+        <div class="w-full max-w-md">
+            
+            <!-- Thông báo Lỗi / Thành công -->
+            <?php if(!empty($error)): ?>
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm animate-[fadeInDown_0.3s_ease-out]">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill text-lg"></i>
+                    <span class="font-medium text-sm"><?=htmlspecialchars($error)?></span>
                 </div>
-                <?php endif; ?>
-                <?php if(!empty($error)): ?>
-                    <div class="alert alert-danger"><?=htmlspecialchars($error)?></div>
-                <?php endif; ?>
-                <?php if(!empty($msg)): ?>
-                    <div class="alert alert-success"><?=htmlspecialchars($msg)?></div>
-                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+            
+            <?php if(!empty($msg)): ?>
+            <div class="mb-6 p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm animate-[fadeInDown_0.3s_ease-out]">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <span class="font-medium text-sm"><?=htmlspecialchars($msg)?></span>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- OTP Card -->
+            <div class="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 shadow-[0_30px_60px_-15px_rgba(37,99,235,0.15)] border border-white relative z-10 animate-[fadeInUp_0.4s_ease-out]">
+                
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-primary-600 shadow-inner">
+                        <img src="/hethongdiemdanh/assets/logo_CLB.png" class="w-10 h-10 object-contain drop-shadow-sm" alt="Logo">
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Đổi mật khẩu</h2>
+                    <p class="text-sm text-slate-500 mt-2 font-medium">Cập nhật mật khẩu bảo mật mới</p>
+                </div>
 
                 <?php if($show_otp_section): ?>
-                <form method="post" autocomplete="off" id="otpForm">
+                
+                <!-- OTP Info Message -->
+                <div class="mb-6 p-3 bg-blue-50/80 border border-blue-100 text-blue-700 rounded-xl text-sm text-center shadow-sm animate-pulse" id="otpInfo">
+                    <i class="bi bi-envelope-check-fill mr-1"></i> Mã OTP đã gửi về email của bạn.<br>
+                    <b class="text-xs">Vui lòng kiểm tra cả hộp thư rác (Spam) nếu không thấy!</b>
+                </div>
+
+                <form method="post" autocomplete="off" id="otpForm" class="space-y-5">
                     <input type="hidden" name="resend_otp" id="resend_otp_field" value="">
-                    <div class="mb-3">
-                        <label class="form-label">Mã OTP</label>
-                        <input type="text" name="otp" class="form-control" maxlength="6" pattern="[0-9]{6}" autofocus>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">Mã OTP</label>
+                        <input type="text" name="otp" class="w-full text-center text-xl tracking-[0.3em] font-black py-3 px-4 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 outline-none transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-medium placeholder:text-sm" maxlength="6" pattern="[0-9]{6}" placeholder="••••••" autofocus required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mật khẩu mới</label>
-                        <input type="password" name="newpass" class="form-control" required minlength="5">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nhập lại mật khẩu mới</label>
-                        <input type="password" name="renewpass" class="form-control" required minlength="5">
-                        <div class="d-flex align-items-center mt-2">
-                            <button type="button" id="resendBtn" value="1" class="resend-link" style="padding-left:0;" onclick="resendOTP()">Gửi lại mã OTP</button>
-                            <span class="countdown" id="countdown"></span>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">Mật khẩu mới</label>
+                        <div class="relative">
+                            <input type="password" name="newpass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 transition-all font-medium text-sm" placeholder="Nhập mật khẩu mới" required minlength="5">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Đổi mật khẩu</button>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">Nhập lại mật khẩu mới</label>
+                        <div class="relative">
+                            <input type="password" name="renewpass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 transition-all font-medium text-sm" placeholder="Nhập lại mật khẩu" required minlength="5">
+                        </div>
+                        
+                        <div class="flex items-center justify-end mt-3 text-sm">
+                            <button type="button" id="resendBtn" value="1" class="font-bold text-primary-600 hover:text-primary-700 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors" onclick="resendOTP()">Gửi lại mã OTP</button>
+                            <span class="text-slate-400 font-medium ml-1" id="countdown"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-0.5 mt-2">
+                        <i class="bi bi-shield-check"></i> Đổi mật khẩu
+                    </button>
                 </form>
                 <?php endif; ?>
 
                 <?php if($show_back_btn): ?>
-                    <a href="/index.php" class="btn btn-secondary w-100 mt-2">Quay lại</a>
+                    <a href="/hethongdiemdanh/index.php" class="flex justify-center items-center gap-2 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3.5 rounded-xl font-bold transition-all border border-slate-200 mt-4">
+                        <i class="bi bi-arrow-left"></i> Quay lại trang chủ
+                    </a>
                 <?php endif; ?>
             </div>
         </div>
-        <?php include '../includes/footer.php'; ?>
     </div>
+    
+    <?php include '../includes/footer.php'; ?>
+</main>
+
+<style>
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeInDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+
 <script>
-    // Ẩn thông báo OTP gửi về email sau 5s
+    // Ẩn thông báo OTP gửi về email sau 8s
     document.addEventListener("DOMContentLoaded", function() {
         var otpInfo = document.getElementById('otpInfo');
         if (otpInfo) {
             setTimeout(function() {
-                otpInfo.style.display = 'none';
-            }, 5000);
+                otpInfo.style.opacity = '0';
+                otpInfo.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => otpInfo.style.display = 'none', 500);
+            }, 8000);
         }
     });
 
@@ -213,10 +216,11 @@ include '../includes/header.php';
     let cooldown = <?= isset($_SESSION['last_otp_time']) ? max(0, $otp_cooldown - (time() - $_SESSION['last_otp_time'])) : 0 ?>;
     const resendBtn = document.getElementById('resendBtn');
     const countdown = document.getElementById('countdown');
+    
     function updateCountdown() {
         if (cooldown > 0) {
             resendBtn.disabled = true;
-            countdown.textContent = `(Gửi lại sau ${cooldown}s)`;
+            countdown.textContent = `(${cooldown}s)`;
             cooldown--;
             setTimeout(updateCountdown, 1000);
         } else {
@@ -226,12 +230,11 @@ include '../includes/header.php';
     }
     if (resendBtn) updateCountdown();
 
-    // Xử lý gửi lại OTP bằng JS, không cần nhập mã OTP
+    // Xử lý gửi lại OTP bằng JS
     function resendOTP() {
+        if(resendBtn.disabled) return;
         document.getElementById('resend_otp_field').value = '1';
         document.getElementById('otpForm').submit();
     }
     <?php endif; ?>
 </script>
-</body>
-</html>
