@@ -97,7 +97,7 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
     
     <!-- Logo Area -->
     <div class="flex items-center">
-        <a href="/hethongdiemdanh/dashboard.php" class="flex items-center gap-3 text-white hover:text-primary-50 transition-colors group focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg pr-2">
+        <a href="/hethongdiemdanh/dashboard" class="flex items-center gap-3 text-white hover:text-primary-50 transition-colors group focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg pr-2">
             <div class="bg-white/10 p-1 rounded-full group-hover:bg-white/20 transition-colors">
                 <img src="/hethongdiemdanh/assets/logo_CLB.png" alt="Logo" class="h-8 w-8 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
             </div>
@@ -135,7 +135,7 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
                     <p class="text-sm font-bold text-slate-800 truncate mt-0.5"><?= htmlspecialchars($full_name) ?></p>
                 </div>
 
-                <a href="/hethongdiemdanh/password/change_password.php" class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 font-medium rounded-lg hover:bg-primary-50 hover:text-primary-700 transition-colors group" role="menuitem">
+                <a href="/hethongdiemdanh/password/change_password" class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 font-medium rounded-lg hover:bg-primary-50 hover:text-primary-700 transition-colors group" role="menuitem">
                     <div class="w-7 h-7 rounded-md bg-slate-100 group-hover:bg-primary-100 text-slate-500 group-hover:text-primary-600 flex items-center justify-center transition-colors">
                         <i class="bi bi-key text-base"></i>
                     </div>

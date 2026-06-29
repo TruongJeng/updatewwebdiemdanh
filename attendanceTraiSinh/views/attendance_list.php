@@ -19,7 +19,69 @@ if (!isset($_SESSION['attendance_session_id'])) {
         $_SESSION['attendance_type']       = $activeSession['type'];
         $_SESSION['scanner_pin']           = $activeSession['pin_code'];
     } else {
-        die('Chưa mở phiên điểm danh');
+        // Hiển thị trang chờ thay vì die()
+        $pageTitle = "Chờ phiên điểm danh";
+        $full_name = $_SESSION['full_name'] ?? '';
+        include __DIR__ . '/../../includes/header.php';
+        include __DIR__ . '/../../includes/sidebar.php';
+        ?>
+        <main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8">
+            <div class="max-w-lg mx-auto pt-6 sm:pt-20 pb-12">
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 text-center relative overflow-hidden">
+                    <!-- Background decoration -->
+                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-primary-500/5 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative z-10">
+                        <!-- Animated icon -->
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-amber-50 border-2 border-amber-100 flex items-center justify-center mx-auto mb-6 relative">
+                            <i class="bi bi-hourglass-split text-3xl sm:text-4xl text-amber-500 animate-pulse"></i>
+                            <div class="absolute inset-0 rounded-full border-2 border-amber-200 animate-ping opacity-20"></div>
+                        </div>
+                        
+                        <h2 class="text-xl sm:text-3xl font-extrabold text-slate-800 tracking-tight mb-3">
+                            Chưa có phiên điểm danh
+                        </h2>
+                        <p class="text-slate-500 font-medium leading-relaxed mb-6 max-w-sm mx-auto text-sm sm:text-base">
+                            Hiện tại chưa có phiên điểm danh nào đang hoạt động. Vui lòng chờ Ban Tổ Chức mở phiên.
+                        </p>
+                        
+                        <!-- Auto refresh indicator -->
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-500 font-medium mb-6">
+                            <svg class="w-4 h-4 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                            <span>Tự động kiểm tra mỗi <span id="countdown" class="font-bold text-primary-600">5</span>s</span>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <a href="create_pin" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-3 sm:py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm w-full sm:w-auto justify-center">
+                                <i class="bi bi-key"></i> Tạo phiên mới
+                            </a>
+                            <button onclick="location.reload()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-5 py-3 sm:py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm border border-slate-200 w-full sm:w-auto justify-center">
+                                <i class="bi bi-arrow-clockwise"></i> Tải lại
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <?php include __DIR__ . '/../../includes/footer.php'; ?>
+        
+        <script>
+            // Auto-refresh every 5 seconds
+            let cd = 5;
+            const cdEl = document.getElementById('countdown');
+            setInterval(() => {
+                cd--;
+                if (cdEl) cdEl.textContent = cd;
+                if (cd <= 0) location.reload();
+            }, 1000);
+        </script>
+        <?php
+        exit();
     }
 }
 
