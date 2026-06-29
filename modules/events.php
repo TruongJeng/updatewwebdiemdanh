@@ -292,7 +292,7 @@ include '../includes/sidebar.php';
                                 <a href="events.php?edit_id=<?= $event['id'] ?>" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200" title="Sửa">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="events.php?delete_id=<?= $event['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa sự kiện này?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border border-red-100" title="Xóa">
+                                <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa sự kiện này?', url: 'events.php?delete_id=<?= $event['id'] ?>', title: 'Xóa sự kiện' })" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border border-red-100" title="Xóa">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -361,7 +361,7 @@ include '../includes/sidebar.php';
                                     <a href="events.php?edit_id=<?= $event['id'] ?>" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-slate-200" title="Sửa">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="events.php?delete_id=<?= $event['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa sự kiện này? Toàn bộ dữ liệu điểm danh cũng sẽ bị xóa!')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa">
+                                    <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa sự kiện này?\nToàn bộ dữ liệu điểm danh cũng sẽ bị xóa!', url: 'events.php?delete_id=<?= $event['id'] ?>', title: 'Xóa sự kiện' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
