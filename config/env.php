@@ -3,7 +3,7 @@
 return [
     'db' => [
         'host' => 'clbkynangdoanhoiltk.io.vn',
-        'dbname' => 'clbkynangdoanhoiltk_',
+        'dbname' => 'bmkavqtl_clbkynang',
         'user' => 'bmkavqtl_truonggiang',
         'pass' => 'Giang15052006@',
     ],
