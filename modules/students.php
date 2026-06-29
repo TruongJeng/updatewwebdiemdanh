@@ -518,8 +518,51 @@ include '../includes/sidebar.php';
             </form>
         </div>
 
-        <!-- Table -->
-        <div class="bg-white rounded-b-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+        <!-- Student List -->
+        <!-- Mobile Cards (visible < lg) -->
+        <div class="lg:hidden space-y-3 mb-6">
+            <?php if (count($students) > 0): ?>
+                <?php foreach ($students as $student): ?>
+                    <div class="mobile-card">
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <div class="font-bold text-slate-800"><?= htmlspecialchars(trim($student['ho'] . ' ' . $student['ten'])) ?></div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold font-mono tracking-wider"><?= htmlspecialchars($student['student_code']) ?></span>
+                                    <span class="text-xs text-slate-500 font-medium"><?= htmlspecialchars($student['class']) ?></span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <a href="students.php?edit_id=<?= $student['id'] ?>" class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <?php if ($student['phone'] || $student['email']): ?>
+                        <div class="pt-2 border-t border-slate-50 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+                            <?php if ($student['phone']): ?>
+                                <span><i class="bi bi-telephone mr-1"></i><?= htmlspecialchars($student['phone']) ?></span>
+                            <?php endif; ?>
+                            <?php if ($student['email']): ?>
+                                <span class="truncate max-w-[200px]"><i class="bi bi-envelope mr-1"></i><?= htmlspecialchars($student['email']) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-center py-12 text-slate-500">
+                    <i class="bi bi-inbox text-4xl mb-3 text-slate-300 block"></i>
+                    <p>Không tìm thấy học sinh nào!</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Desktop Table (hidden < lg) -->
+        <div class="hidden lg:block bg-white rounded-b-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">

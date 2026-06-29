@@ -50,7 +50,7 @@ include __DIR__ . '/includes/header.php';
     </div>
 
     <!-- Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         
         <!-- Card: Hiện tại -->
         <div class="group bg-white rounded-2xl p-6 shadow-sm border-l-4 border-primary-500 hover:shadow-[0_10px_40px_-10px_rgba(37,99,235,0.15)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-center relative overflow-hidden">

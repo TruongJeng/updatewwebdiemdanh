@@ -373,13 +373,56 @@ include __DIR__ . '/../../includes/sidebar.php';
 
         <!-- Danh sách -->
         <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
-            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                <h3 class="text-lg font-bold text-slate-800">
+            <div class="p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                <h3 class="text-base sm:text-lg font-bold text-slate-800">
                     Danh sách trại sinh
                 </h3>
             </div>
             
-            <div class="overflow-x-auto">
+            <!-- Mobile Cards (visible < lg) -->
+            <div class="lg:hidden p-3 space-y-2">
+                <?php foreach ($campers as $c): ?>
+                    <div class="mobile-card border-l-4 <?= $c['is_active'] ? ($c['data_status'] === 'DU' ? 'border-l-emerald-400' : 'border-l-amber-400') : 'border-l-slate-300' ?>" 
+                         x-show="searchQuery === '' || '<?= strtolower($c['full_name']) ?>'.includes(searchQuery.toLowerCase()) || '<?= strtolower($c['student_code']) ?>'.includes(searchQuery.toLowerCase()) || '<?= strtolower($c['class']) ?>'.includes(searchQuery.toLowerCase())">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="min-w-0">
+                                <div class="font-bold text-slate-800"><?= $c['full_name'] ?></div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold font-mono"><?= $c['student_code'] ?></span>
+                                    <span class="text-xs text-slate-500"><?= $c['class'] ?></span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <?php if ($c['is_active']): ?>
+                                    <button @click="$dispatch('open-edit-modal', <?= htmlspecialchars(json_encode($c), ENT_QUOTES, 'UTF-8') ?>)" class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="?disable=<?= $c['student_code'] ?>" onclick="return confirm('Xoá trại sinh này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa tạm">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="?restore=<?= $c['student_code'] ?>" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-semibold transition-colors">Khôi phục</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <?php if ($c['data_status'] === 'DU'): ?>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700"><i class="bi bi-check-circle-fill mr-0.5"></i> Đủ</span>
+                            <?php else: ?>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700" title="Thiếu: <?= implode(', ', $c['missing_fields']) ?>">
+                                    <i class="bi bi-exclamation-triangle-fill mr-0.5"></i> Thiếu <?= $c['missing_count'] ?>
+                                </span>
+                            <?php endif; ?>
+                            <?php if ($c['phone']): ?>
+                                <span class="text-[11px] text-slate-500"><i class="bi bi-telephone mr-0.5"></i><?= $c['phone'] ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Desktop Table (hidden < lg) -->
+            <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
                         <tr>

@@ -294,7 +294,45 @@ include __DIR__ . '/../../includes/sidebar.php';
 
             <!-- Cột phải: Lịch sử -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4 lg:hidden">
+                    <i class="bi bi-clock-history text-primary-500"></i> Lịch sử phiên
+                </h3>
+
+                <!-- Mobile Cards (visible < lg) -->
+                <div class="lg:hidden space-y-3">
+                    <?php foreach ($sessions as $s): ?>
+                        <div class="mobile-card border-l-4 <?= $s['is_active'] ? 'border-l-primary-500' : 'border-l-slate-200' ?>">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-black text-slate-700 tracking-wider font-mono text-lg"><?= $s['pin_code'] ?></span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold <?= $s['type']==='CHECK_IN' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200' ?>">
+                                        <?= $s['type']==='CHECK_IN'?'CHECK IN':'CHECK OUT' ?>
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <?= $s['is_active']
+                                      ? '<span class="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-700 text-[10px] font-bold"><i class="bi bi-circle-fill text-[6px] text-primary-500 mr-1 animate-pulse"></i>Mở</span>'
+                                      : '<span class="inline-flex items-center px-2 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold">Đóng</span>' ?>
+                                    <?php if (!$s['is_active'] && $_SESSION['role']==='admin'): ?>
+                                      <a href="?delete_session=<?= $s['id'] ?>" onclick="return confirm('Xoá vĩnh viễn phiên này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                         <i class="bi bi-trash"></i>
+                                      </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-500">
+                                <i class="bi bi-clock mr-0.5"></i> <?= date('H:i d/m/Y', strtotime($s['start_time'])) ?>
+                                <?php if ($s['end_time']): ?>
+                                    <span class="mx-1">→</span> <?= date('H:i d/m/Y', strtotime($s['end_time'])) ?>
+                                <?php endif; ?>
+                                <span class="ml-2 text-[10px] text-slate-400 uppercase">bởi <?= htmlspecialchars($s['created_by']) ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Desktop Table (hidden < lg) -->
+                <div class="hidden lg:block bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
                     <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                         <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                             <i class="bi bi-clock-history text-primary-500"></i> Lịch sử phiên điểm danh

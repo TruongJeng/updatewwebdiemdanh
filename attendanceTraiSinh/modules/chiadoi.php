@@ -217,10 +217,10 @@ include __DIR__ . '/../../includes/sidebar.php';
             <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl"></div>
             
             <div class="relative z-10">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600 mb-2 tracking-tight">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600 mb-2 tracking-tight">
                     CHIA ĐỘI TRẠI SINH
                 </h2>
-                <p class="text-slate-500 font-medium max-w-xl mx-auto">Tạo các đội ngẫu nhiên, quản lý thành viên và xuất danh sách một cách dễ dàng và vui nhộn!</p>
+                <p class="text-slate-500 font-medium max-w-xl mx-auto text-sm sm:text-base">Tạo các đội ngẫu nhiên, quản lý thành viên và xuất danh sách!</p>
             </div>
         </div>
 
@@ -251,14 +251,27 @@ include __DIR__ . '/../../includes/sidebar.php';
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
                 <!-- Danh sách trại sinh -->
-                <div class="lg:col-span-7 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-[500px]">
-                    <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                        <h5 class="font-bold text-slate-800 flex items-center gap-2">
+                <div class="lg:col-span-7 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-[350px] sm:h-[500px]">
+                    <div class="p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50">
+                        <h5 class="font-bold text-slate-800 flex items-center gap-2 text-sm sm:text-base">
                             <i class="bi bi-list-ol text-primary-500"></i> Danh sách trại sinh
                         </h5>
                     </div>
                     <div class="overflow-y-auto flex-1 p-0">
-                        <table class="w-full text-left text-sm whitespace-nowrap">
+                        <!-- Mobile list (visible < lg) -->
+                        <div class="lg:hidden divide-y divide-slate-50">
+                            <?php foreach($students as $k=>$s): ?>
+                            <div class="flex items-center justify-between px-4 py-2.5">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="text-xs text-slate-400 font-medium w-6 shrink-0"><?= $k+1 ?></span>
+                                    <span class="font-semibold text-slate-700 text-sm truncate"><?= htmlspecialchars($s['full_name']) ?></span>
+                                </div>
+                                <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs font-bold shrink-0"><?= htmlspecialchars($s['class']) ?></span>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <!-- Desktop table (hidden < lg) -->
+                        <table class="hidden lg:table w-full text-left text-sm whitespace-nowrap">
                             <thead class="bg-slate-50 sticky top-0 border-b border-slate-100 text-slate-500 font-semibold text-xs uppercase tracking-wider shadow-sm z-10">
                                 <tr>
                                     <th class="px-5 py-3 w-16 text-center">STT</th>

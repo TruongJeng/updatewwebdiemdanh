@@ -7,7 +7,8 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
 <head>
     <meta charset="utf-8">
     <title><?= htmlspecialchars($pageTitle) ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#2563eb">
     <link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
     
     <!-- Google Fonts: Inter -->
@@ -53,10 +54,16 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
         /* Base styles & Utility overrides */
         body { 
             background-color: #f0f4f8; 
-            padding-top: 64px; 
+            padding-top: 56px; 
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
+        @media (min-width: 640px) {
+            body { padding-top: 64px; }
+        }
+        /* Touch optimization — remove 300ms tap delay */
+        * { touch-action: manipulation; }
+        
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -65,12 +72,28 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
         
         /* Utility class to hide element visually but keep it accessible if needed */
         [x-cloak] { display: none !important; }
+
+        /* Safe area for notched devices (iPhone X+) */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+            .pt-safe { padding-top: env(safe-area-inset-top); }
+        }
+
+        /* Mobile card utility */
+        .mobile-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid #f1f5f9;
+        }
+        .mobile-card + .mobile-card { margin-top: 0.75rem; }
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-primary-200 selection:text-primary-900 min-h-screen flex flex-col">
 
 <!-- Topbar -->
-<header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 shadow-md z-[1200] px-4 sm:px-6 flex items-center justify-between transition-all duration-300">
+<header class="fixed top-0 left-0 right-0 h-14 sm:h-16 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 shadow-md z-[1200] px-3 sm:px-6 flex items-center justify-between transition-all duration-300">
     
     <!-- Logo Area -->
     <div class="flex items-center">

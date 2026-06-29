@@ -173,7 +173,30 @@ include '../includes/header.php';
                     <i class="bi bi-list-ul text-primary-500"></i> Trạng thái điểm danh
                 </h3>
             </div>
-            <div class="overflow-x-auto">
+
+            <!-- Mobile Cards (visible < lg) -->
+            <div class="lg:hidden p-3 space-y-2">
+                <?php foreach ($students as $st): ?>
+                    <div class="flex items-center justify-between p-3 rounded-xl <?= in_array($st['id'], $checked_ids) ? 'bg-emerald-50/50 border border-emerald-100' : 'bg-slate-50 border border-slate-100' ?>">
+                        <div class="min-w-0">
+                            <div class="font-bold text-slate-800 text-sm truncate"><?= htmlspecialchars($st['full_name']) ?></div>
+                            <div class="text-[11px] text-slate-500 mt-0.5"><?= htmlspecialchars($st['class']) ?></div>
+                        </div>
+                        <?php if (in_array($st['id'], $checked_ids)): ?>
+                            <span class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">
+                                <i class="bi bi-check-circle-fill"></i> Có mặt
+                            </span>
+                        <?php else: ?>
+                            <span class="shrink-0 inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold">
+                                Vắng
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Desktop Table (hidden < lg) -->
+            <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
                         <tr>
@@ -216,19 +239,45 @@ include '../includes/header.php';
         <?php else: // Edit Mode ?>
         <form method="POST" id="bulkCheckinForm">
             <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-primary-200 overflow-hidden mb-6 ring-4 ring-primary-500/10">
-                <div class="p-5 border-b border-slate-100 bg-primary-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="p-4 sm:p-5 border-b border-slate-100 bg-primary-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <h3 class="text-lg font-bold text-primary-800 flex items-center gap-2">
+                        <h3 class="text-base sm:text-lg font-bold text-primary-800 flex items-center gap-2">
                             <i class="bi bi-pencil-square text-primary-600"></i> Đang chỉnh sửa điểm danh
                         </h3>
                         <p class="text-sm text-primary-600/80 mt-1">Tích chọn học sinh rồi nhấn "Lưu điểm danh".</p>
                     </div>
-                    <button type="submit" name="save_checkin" class="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm">
+                    <button type="submit" name="save_checkin" class="flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm text-sm w-full sm:w-auto">
                         <i class="bi bi-save"></i> Lưu điểm danh
                     </button>
                 </div>
                 
-                <div class="overflow-x-auto">
+                <!-- Mobile Cards (visible < lg) -->
+                <div class="lg:hidden p-3 space-y-2">
+                    <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 mb-3 cursor-pointer">
+                        <input type="checkbox" id="selectAllMobile" class="w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 cursor-pointer">
+                        <span class="font-bold text-sm text-slate-700">Chọn tất cả</span>
+                    </label>
+                    <?php foreach ($students as $st): ?>
+                        <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors <?= in_array($st['id'], $checked_ids) ? 'bg-emerald-50/50 border border-emerald-100' : 'bg-slate-50 border border-slate-100' ?>" for="mob-cb-<?= $st['id'] ?>">
+                            <input type="checkbox" class="student-checkbox w-5 h-5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 cursor-pointer shrink-0"
+                                id="mob-cb-<?= $st['id'] ?>"
+                                name="checked_students[]"
+                                value="<?= $st['id'] ?>"
+                                data-student="<?= $st['id'] ?>"
+                                <?= in_array($st['id'], $checked_ids) ? 'checked' : '' ?>>
+                            <div class="min-w-0 flex-1">
+                                <div class="font-bold text-slate-800 text-sm truncate"><?= htmlspecialchars($st['full_name']) ?></div>
+                                <div class="text-[11px] text-slate-500"><?= htmlspecialchars($st['class']) ?></div>
+                            </div>
+                            <?php if (in_array($st['id'], $checked_ids)): ?>
+                                <span class="shrink-0 text-[10px] font-bold text-emerald-600"><i class="bi bi-check2"></i></span>
+                            <?php endif; ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Desktop Table (hidden < lg) -->
+                <div class="hidden lg:block overflow-x-auto">
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
                             <tr>
@@ -285,11 +334,19 @@ include '../includes/header.php';
             </div>
         </form>
         <script>
-        // Chọn tất cả / Bỏ chọn tất cả
+        // Chọn tất cả / Bỏ chọn tất cả (Desktop)
         document.getElementById('selectAll').onclick = function() {
             let checkboxes = document.querySelectorAll('.student-checkbox');
             for(const cb of checkboxes) { if(!cb.disabled) cb.checked = this.checked; }
         };
+        // Chọn tất cả (Mobile)
+        const selectAllMob = document.getElementById('selectAllMobile');
+        if (selectAllMob) {
+            selectAllMob.onclick = function() {
+                let checkboxes = document.querySelectorAll('.student-checkbox');
+                for(const cb of checkboxes) { if(!cb.disabled) cb.checked = this.checked; }
+            };
+        }
 
         // ======= Đồng bộ chọn tạm thời giữa các admin ========
         const eventId = <?= (int)$event_id ?>;
@@ -302,15 +359,17 @@ include '../includes/header.php';
                 lockedStudents = new Set(data.map(item => item.student_id));
                 document.querySelectorAll('.student-checkbox').forEach(cb => {
                     let sid = cb.getAttribute('data-student');
-                    let tr = cb.closest('tr');
+                    let container = cb.closest('tr') || cb.closest('label');
                     if (lockedStudents.has(Number(sid))) {
                         cb.disabled = true;
-                        tr.classList.add('bg-amber-50');
-                        tr.classList.add('opacity-75');
+                        if (container) {
+                            container.classList.add('opacity-75');
+                        }
                     } else {
                         cb.disabled = false;
-                        tr.classList.remove('bg-amber-50');
-                        tr.classList.remove('opacity-75');
+                        if (container) {
+                            container.classList.remove('opacity-75');
+                        }
                     }
                 });
               });

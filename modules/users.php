@@ -231,8 +231,61 @@ include '../includes/sidebar.php';
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+            <!-- Users List -->
+            <!-- Mobile Cards (visible < lg) -->
+            <div class="lg:hidden space-y-3 mb-6">
+                <?php if (count($users) > 0): ?>
+                    <?php foreach ($users as $u): ?>
+                        <div class="mobile-card">
+                            <div class="flex items-start justify-between mb-2">
+                                <div>
+                                    <div class="font-bold text-slate-800"><?= htmlspecialchars($u['full_name']) ?></div>
+                                    <div class="text-xs text-slate-500 font-mono mt-0.5">@<?= htmlspecialchars($u['username']) ?></div>
+                                </div>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <button @click="showEditModal = true; editUser = {
+                                            id: <?= $u['id'] ?>, 
+                                            username: '<?= htmlspecialchars(addslashes($u['username'])) ?>',
+                                            full_name: '<?= htmlspecialchars(addslashes($u['full_name'])) ?>',
+                                            role: '<?= $u['role'] ?>',
+                                            email: '<?= htmlspecialchars(addslashes($u['email'])) ?>',
+                                            field: 'username'
+                                        }" 
+                                        class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <?php if ($u['id'] != $_SESSION['user_id']): ?>
+                                    <a href="users.php?delete_id=<?= $u['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <?php
+                                switch($u['role']) {
+                                    case 'admin': echo '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800">Quản trị viên</span>'; break;
+                                    case 'teacher': echo '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">Giáo viên</span>'; break;
+                                    case 'club_leader': echo '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Ban chủ nhiệm</span>'; break;
+                                    default: echo '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-800">Học sinh</span>';
+                                }
+                                ?>
+                                <?php if ($u['email']): ?>
+                                    <span class="text-xs text-slate-500 truncate max-w-[180px]"><i class="bi bi-envelope mr-0.5"></i><?= htmlspecialchars($u['email']) ?></span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-center py-12 text-slate-500">
+                        <i class="bi bi-inbox text-4xl mb-3 text-slate-300 block"></i>
+                        <p>Chưa có tài khoản nào!</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Desktop Table (hidden < lg) -->
+            <div class="hidden lg:block bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                     <h3 class="text-base font-bold text-slate-800">Danh sách tài khoản</h3>
                 </div>

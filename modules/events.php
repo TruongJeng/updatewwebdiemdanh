@@ -253,8 +253,62 @@ include '../includes/sidebar.php';
             <?php endif; ?>
         </div>
 
-        <!-- Table -->
-        <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
+        <!-- Events List -->
+        <!-- Mobile Cards (visible < lg) -->
+        <div class="lg:hidden space-y-3 mb-6">
+            <?php if ($events): ?>
+                <?php foreach ($events as $event): ?>
+                    <div class="mobile-card">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-slate-800 truncate"><?= htmlspecialchars($event['title']) ?></div>
+                                <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[11px] font-bold font-mono tracking-widest border border-amber-200">
+                                        <?= htmlspecialchars($event['pin'] ?? '') ?>
+                                    </span>
+                                    <span class="text-xs text-slate-500 font-medium">
+                                        <i class="bi bi-calendar-event mr-0.5"></i>
+                                        <?= htmlspecialchars(date('d/m/Y H:i', strtotime($event['event_date']))) ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if ($event['description']): ?>
+                            <p class="text-xs text-slate-500 mb-3 line-clamp-2"><?= htmlspecialchars($event['description']) ?></p>
+                        <?php endif; ?>
+                        <div class="pt-2.5 border-t border-slate-50 flex items-center justify-between">
+                            <div class="flex items-center gap-1.5">
+                                <a href="attendance_event.php?event_id=<?= $event['id'] ?>" class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors" title="Điểm danh tay">
+                                    <i class="bi bi-clipboard-check"></i>
+                                </a>
+                                <a href="attendance_qr.php?event_id=<?= $event['id'] ?>" class="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white flex items-center justify-center transition-colors" title="Mã QR">
+                                    <i class="bi bi-qr-code"></i>
+                                </a>
+                                <a href="attendance_view.php?event_id=<?= $event['id'] ?>" class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Xem danh sách">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <a href="events.php?edit_id=<?= $event['id'] ?>" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200" title="Sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="events.php?delete_id=<?= $event['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa sự kiện này?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border border-red-100" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-center py-12 text-slate-500">
+                    <i class="bi bi-inbox text-4xl mb-3 text-slate-300 block"></i>
+                    <p>Chưa có sự kiện nào được tạo.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Desktop Table (hidden < lg) -->
+        <div class="hidden lg:block bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-6">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">

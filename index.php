@@ -181,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="inline-block relative mb-5 group">
                     <div class="absolute inset-[-8px] rounded-full bg-gradient-to-br from-primary-200 to-primary-500 opacity-40 blur-md animate-pulse-slow"></div>
                     <div class="relative z-10 w-24 h-24 rounded-full bg-white p-1.5 shadow-xl transition-transform duration-300 group-hover:scale-105 flex items-center justify-center overflow-hidden">
-                        <img src="/hethongdiemdanh/assets/logo_CLB.png" alt="CLB Kỹ năng Đoàn" class="w-full h-full rounded-full object-cover border-2 border-white">
+                        <img src="assets/logo_CLB.png" alt="CLB Kỹ năng Đoàn" class="w-full h-full rounded-full object-cover border-2 border-white">
                     </div>
                 </div>
                 
