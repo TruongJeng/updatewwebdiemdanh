@@ -242,9 +242,8 @@ include __DIR__ . '/../../includes/sidebar.php';
                     <i class="bi bi-arrow-left"></i> Về Trang chủ
                 </a>
                 
-                <form method="post" id="deleteAllTeamsForm">
-                    <input type="hidden" name="delete_all_teams" value="1">
-                    <button type="button" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa toàn bộ đội và thành viên?', formId: 'deleteAllTeamsForm', title: 'Xóa tất cả đội' })" class="bg-white hover:bg-red-50 text-red-500 hover:text-red-600 border border-red-200 px-4 py-2 rounded-xl font-semibold transition-all shadow-sm flex items-center gap-2 text-sm">
+                <form method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa toàn bộ đội và thành viên?');">
+                    <button name="delete_all_teams" type="submit" class="bg-white hover:bg-red-50 text-red-500 hover:text-red-600 border border-red-200 px-4 py-2 rounded-xl font-semibold transition-all shadow-sm flex items-center gap-2 text-sm">
                         <i class="bi bi-trash3-fill"></i> Xóa tất cả đội
                     </button>
                 </form>
@@ -512,11 +511,10 @@ include __DIR__ . '/../../includes/sidebar.php';
                                         <div class="flex items-center gap-2 shrink-0">
                                             <span class="text-[10px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded"><?= htmlspecialchars($mem['class']) ?></span>
                                             
-                                            <form id="remove-member-<?=$team['id']?>-<?=$mem['student_code']?>" method="post" class="inline">
+                                            <form method="post" class="inline" onsubmit="return confirm('Xóa thành viên khỏi đội?');">
                                                 <input type="hidden" name="team_id" value="<?=$team['id']?>">
                                                 <input type="hidden" name="student_code" value="<?=$mem['student_code']?>">
-                                                <input type="hidden" name="remove_member" value="1">
-                                                <button type="button" @click.prevent="$dispatch('open-confirm', { message: 'Xóa thành viên khỏi đội?', formId: 'remove-member-<?=$team['id']?>-<?=$mem['student_code']?>', title: 'Xóa thành viên' })" class="opacity-0 group-hover/item:opacity-100 w-5 h-5 rounded flex items-center justify-center bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                                                <button name="remove_member" class="opacity-0 group-hover/item:opacity-100 w-5 h-5 rounded flex items-center justify-center bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all">
                                                     <i class="bi bi-x"></i>
                                                 </button>
                                             </form>

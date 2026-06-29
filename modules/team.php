@@ -164,7 +164,7 @@ include '../includes/header.php';
 include '../includes/sidebar.php';
 ?>
 
-<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8" x-data="{ showRandomForm: false, showEffect: <?= isset($_GET['show_effect']) && isset($_SESSION['random_teams_effect']) ? 'true' : 'false' ?> }">
+<main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8" x-data="{ showRandomForm: false, showDeleteAllModal: false, showEffect: <?= isset($_GET['show_effect']) && isset($_SESSION['random_teams_effect']) ? 'true' : 'false' ?> }">
     <div class="max-w-7xl mx-auto pb-12">
         <div class="flex items-center gap-3 mb-6">
             <a href="../dashboard.php" class="text-slate-500 hover:text-primary-600 transition-colors flex items-center gap-1.5 text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm hover:shadow">
@@ -224,7 +224,7 @@ include '../includes/sidebar.php';
                 <?php if (!empty($all_teams)): ?>
                 <form method="post" id="deleteAllForm">
                     <input type="hidden" name="delete_all_teams" value="1">
-                    <button type="button" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa toàn bộ đội và thành viên của hoạt động này?\nHành động này không thể hoàn tác.', formId: 'deleteAllForm', title: 'Xóa tất cả đội', confirmText: 'Xóa tất cả' })" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2.5 rounded-xl font-semibold transition-colors shadow-sm text-sm border border-red-100">
+                    <button type="button" @click="showDeleteAllModal = true" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2.5 rounded-xl font-semibold transition-colors shadow-sm text-sm border border-red-100">
                         <i class="bi bi-trash3"></i> Xóa tất cả đội
                     </button>
                 </form>
@@ -326,11 +326,10 @@ include '../includes/sidebar.php';
                                                     <div class="text-xs text-slate-500 font-medium"><?= htmlspecialchars($mem['class']) ?></div>
                                                 </div>
                                             </div>
-                                            <form id="remove-member-<?=$team['id']?>-<?=$mem['id']?>" method="post" class="opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                            <form method="post" onsubmit="return confirm('Xóa thành viên khỏi đội?');" class="opacity-0 group-hover/item:opacity-100 transition-opacity">
                                                 <input type="hidden" name="team_id" value="<?=$team['id']?>">
                                                 <input type="hidden" name="student_id" value="<?=$mem['id']?>">
-                                                <input type="hidden" name="remove_member" value="1">
-                                                <button type="button" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa thành viên này khỏi đội?', formId: 'remove-member-<?=$team['id']?>-<?=$mem['id']?>', title: 'Xóa thành viên' })" class="w-7 h-7 rounded-md bg-red-50 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa thành viên">
+                                                <button name="remove_member" class="w-7 h-7 rounded-md bg-red-50 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa thành viên">
                                                     <i class="bi bi-x-lg text-xs"></i>
                                                 </button>
                                             </form>
@@ -554,7 +553,45 @@ include '../includes/sidebar.php';
             </style>
         <?php endif; ?>
         
-
+        <!-- Modal Xác nhận Xóa Tất Cả Đội (Alpine.js) -->
+        <div x-show="showDeleteAllModal" x-cloak class="relative z-[2000]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div x-show="showDeleteAllModal" x-transition.opacity class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"></div>
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                    <div x-show="showDeleteAllModal" 
+                         x-transition:enter="ease-out duration-300" 
+                         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
+                         x-transition:leave="ease-in duration-200" 
+                         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+                         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                         @click.away="showDeleteAllModal = false"
+                         class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 w-full max-w-sm sm:max-w-md border border-slate-100">
+                        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <div class="sm:flex sm:items-start">
+                                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10 mb-4 sm:mb-0">
+                                    <i class="bi bi-exclamation-triangle text-red-600 text-lg"></i>
+                                </div>
+                                <div class="text-center sm:ml-4 sm:text-left">
+                                    <h3 class="text-lg font-extrabold leading-6 text-slate-900" id="modal-title">Xóa tất cả đội</h3>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-slate-500 font-medium">Bạn chắc chắn muốn xóa toàn bộ đội và thành viên của hoạt động này? Hành động này <strong class="text-red-500">không thể hoàn tác</strong>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100">
+                            <button type="button" @click="document.getElementById('deleteAllForm').submit()" class="inline-flex w-full justify-center items-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-red-700 active:bg-red-800 sm:ml-3 sm:w-auto transition-all">
+                                <i class="bi bi-trash3 mr-2"></i> Xóa tất cả
+                            </button>
+                            <button type="button" @click="showDeleteAllModal = false" class="mt-3 inline-flex w-full justify-center items-center rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-200 hover:bg-slate-50 hover:text-slate-900 sm:mt-0 sm:w-auto transition-all">
+                                Hủy bỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
     </div>
 </main>

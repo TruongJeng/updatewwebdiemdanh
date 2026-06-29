@@ -311,9 +311,8 @@ include '../includes/sidebar.php';
             <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
                     <!-- Bulk Xoa tat ca form -->
-                    <form method="post" id="deleteAllStudentsForm" class="inline-block">
-                        <input type="hidden" name="delete_all" value="1">
-                        <button type="button" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa TẤT CẢ học sinh?', formId: 'deleteAllStudentsForm', title: 'Xóa tất cả học sinh' })" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg font-semibold transition-colors shadow-sm text-sm">
+                    <form method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa TẤT CẢ học sinh?');" class="inline-block">
+                        <button type="submit" name="delete_all" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg font-semibold transition-colors shadow-sm text-sm">
                             <i class="bi bi-trash3"></i> Xóa tất cả
                         </button>
                     </form>
@@ -537,7 +536,7 @@ include '../includes/sidebar.php';
                                 <a href="students.php?edit_id=<?= $student['id'] ?>" class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa học sinh này?', url: 'students.php?delete_id=<?= $student['id'] ?>', title: 'Xóa học sinh' })" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -598,7 +597,7 @@ include '../includes/sidebar.php';
                                         <a href="students.php?edit_id=<?= $student['id'] ?>" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa học sinh này?', url: 'students.php?delete_id=<?= $student['id'] ?>', title: 'Xóa học sinh' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                        <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </div>

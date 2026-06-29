@@ -255,7 +255,7 @@ include '../includes/sidebar.php';
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <?php if ($u['id'] != $_SESSION['user_id']): ?>
-                                    <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa tài khoản này?', url: 'users.php?delete_id=<?= $u['id'] ?>', title: 'Xóa tài khoản' })" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                    <a href="users.php?delete_id=<?= $u['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                     <?php endif; ?>
@@ -347,7 +347,7 @@ include '../includes/sidebar.php';
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
                                             <?php if ($u['id'] != $_SESSION['user_id']): ?>
-                                            <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Bạn chắc chắn muốn xóa tài khoản này?', url: 'users.php?delete_id=<?= $u['id'] ?>', title: 'Xóa tài khoản' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                            <a href="users.php?delete_id=<?= $u['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                             <?php else: ?>

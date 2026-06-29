@@ -179,73 +179,52 @@ if (all.length) {
 }
 
 function deleteAttendance(id){
-    window.dispatchEvent(new CustomEvent('open-confirm', {
-        detail: {
-            message: 'Bạn có chắc muốn xóa điểm danh này?',
-            title: 'Xóa điểm danh',
-            callback: () => {
-                fetch('delete_attendance.php', {
-                    method:'POST',
-                    headers:{'Content-Type':'application/json'},
-                    body: JSON.stringify({ attendance_id: id, event_id: eventId, csrf: csrfToken })
-                }).then(r=>r.json()).then(j=>{
-                    if (j.success) {
-                        alert('Xóa thành công');
-                        if (markers[id]) map.removeLayer(markers[id]);
-                        location.reload();
-                    } else alert('Lỗi: '+(j.error||'Không thể xóa'));
-                }).catch(e=>alert('Lỗi: '+e));
-            }
-        }
-    }));
+    if (!confirm('Bạn có chắc muốn xóa điểm danh này?')) return;
+    fetch('delete_attendance.php', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ attendance_id: id, event_id: eventId, csrf: csrfToken })
+    }).then(r=>r.json()).then(j=>{
+        if (j.success) {
+            alert('Xóa thành công');
+            if (markers[id]) map.removeLayer(markers[id]);
+            location.reload();
+        } else alert('Lỗi: '+(j.error||'Không thể xóa'));
+    }).catch(e=>alert('Lỗi: '+e));
 }
 
 document.querySelectorAll('.btn-delete').forEach(btn=> btn.addEventListener('click', function(){ deleteAttendance(this.dataset.id); }));
 
 // Xử lý đóng điểm danh
 document.getElementById('confirmBtn')?.addEventListener('click', function() {
-    window.dispatchEvent(new CustomEvent('open-confirm', {
-        detail: {
-            message: 'Sau khi xác nhận, điểm danh sẽ đóng và không thể thay đổi. Bạn đồng ý?',
-            title: 'Kết thúc điểm danh',
-            type: 'danger',
-            callback: () => {
-                fetch('confirm_event.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ event_id: eventId, csrf: csrfToken })
-                }).then(r => r.json()).then(j => {
-                    if (j.success) {
-                        alert('Sự kiện đã được đóng.');
-                        location.reload();
-                    } else alert('Lỗi: ' + (j.error || 'Không thể đóng điểm danh.'));
-                });
-            }
-        }
-    }));
+    if (!confirm('Sau khi xác nhận, điểm danh sẽ đóng và không thể thay đổi. Bạn đồng ý?')) return;
+
+    fetch('confirm_event.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: eventId, csrf: csrfToken })
+    }).then(r => r.json()).then(j => {
+        if (j.success) {
+            alert('Sự kiện đã được đóng.');
+            location.reload();
+        } else alert('Lỗi: ' + (j.error || 'Không thể đóng điểm danh.'));
+    });
 });
 
 // Xử lý mở lại điểm danh
 document.getElementById('reopenBtn')?.addEventListener('click', function() {
-    window.dispatchEvent(new CustomEvent('open-confirm', {
-        detail: {
-            message: 'Bạn có chắc chắn muốn mở lại điểm danh?',
-            title: 'Mở lại điểm danh',
-            type: 'info',
-            callback: () => {
-                fetch('reopen_event.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ event_id: eventId, csrf: csrfToken })
-                }).then(r => r.json()).then(j => {
-                    if (j.success) {
-                        alert('Điểm danh đã được mở lại.');
-                        location.reload();
-                    } else alert('Lỗi: ' + (j.error || 'Không thể mở lại điểm danh.'));
-                });
-            }
-        }
-    }));
+    if (!confirm('Bạn có chắc chắn muốn mở lại điểm danh?')) return;
+
+    fetch('reopen_event.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: eventId, csrf: csrfToken })
+    }).then(r => r.json()).then(j => {
+        if (j.success) {
+            alert('Điểm danh đã được mở lại.');
+            location.reload();
+        } else alert('Lỗi: ' + (j.error || 'Không thể mở lại điểm danh.'));
+    });
 });
 
 function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }

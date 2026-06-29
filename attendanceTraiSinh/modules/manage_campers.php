@@ -397,7 +397,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                                     <button @click="$dispatch('open-edit-modal', <?= htmlspecialchars(json_encode($c), ENT_QUOTES, 'UTF-8') ?>)" class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Xoá trại sinh này?', url: '?disable=<?= $c['student_code'] ?>', title: 'Xóa tạm' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa tạm">
+                                    <a href="?disable=<?= $c['student_code'] ?>" onclick="return confirm('Xoá trại sinh này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa tạm">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 <?php else: ?>
@@ -469,11 +469,11 @@ include __DIR__ . '/../../includes/sidebar.php';
                                         <button @click="$dispatch('open-edit-modal', <?= htmlspecialchars(json_encode($c), ENT_QUOTES, 'UTF-8') ?>)" class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-amber-100" title="Sửa">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-                                        <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Xoá trại sinh này?', url: '?disable=<?= $c['student_code'] ?>', title: 'Xóa tạm' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa tạm">
+                                        <a href="?disable=<?= $c['student_code'] ?>" onclick="return confirm('Xoá trại sinh này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa tạm">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                         <?php if ($_SESSION['role'] === 'admin'): ?>
-                                        <a href="#" @click.prevent="$dispatch('open-confirm', { message: '⚠️ XOÁ VĨNH VIỄN trại sinh này?\nDữ liệu điểm danh sẽ bị xoá hết!', url: '?delete_forever=<?= $c['student_code'] ?>', title: 'Xóa vĩnh viễn' })" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-800 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-slate-200" title="Xóa vĩnh viễn">
+                                        <a href="?delete_forever=<?= $c['student_code'] ?>" onclick="return confirm('⚠️ XOÁ VĨNH VIỄN trại sinh này?\nDữ liệu điểm danh sẽ bị xoá hết!')" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-800 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-slate-200" title="Xóa vĩnh viễn">
                                             <i class="bi bi-x-octagon-fill"></i>
                                         </a>
                                         <?php endif; ?>
@@ -490,9 +490,8 @@ include __DIR__ . '/../../includes/sidebar.php';
 
             <?php if ($_SESSION['role'] === 'admin'): ?>
             <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-end">
-                <form method="post" id="deleteAllCampersForm">
-                    <input type="hidden" name="delete_all" value="1">
-                    <button type="button" @click.prevent="$dispatch('open-confirm', { message: '⚠️ XOÁ TOÀN BỘ TRẠI SINH?\n\n• Xoá tất cả trại sinh\n• Xoá toàn bộ lịch sử CHECK IN / OUT\n• KHÔNG THỂ KHÔI PHỤC\n\nBạn có chắc chắn không?', formId: 'deleteAllCampersForm', title: 'Xóa tất cả trại sinh' })" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-sm">
+                <form method="post" onsubmit="return confirm('⚠️ XOÁ TOÀN BỘ TRẠI SINH?\n\n• Xoá tất cả trại sinh\n• Xoá toàn bộ lịch sử CHECK IN / OUT\n• KHÔNG THỂ KHÔI PHỤC\n\nBạn có chắc chắn không?');">
+                    <button type="submit" name="delete_all" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-sm">
                         <i class="bi bi-trash3"></i> Xoá tất cả trại sinh
                     </button>
                 </form>

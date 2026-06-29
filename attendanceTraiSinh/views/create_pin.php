@@ -276,17 +276,15 @@ include __DIR__ . '/../../includes/sidebar.php';
                 </div>
 
                 <div class="space-y-3">
-                    <form method="post" id="closeSessionForm">
-                        <input type="hidden" name="close_session" value="1">
-                        <button type="button" class="w-full flex justify-center items-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm" @click.prevent="$dispatch('open-confirm', { message: 'Đóng phiên điểm danh hiện tại?', formId: 'closeSessionForm', title: 'Đóng phiên', type: 'info' })">
+                    <form method="post">
+                        <button name="close_session" class="w-full flex justify-center items-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm" onclick="return confirm('Đóng phiên điểm danh hiện tại?')">
                             <i class="bi bi-lock-fill"></i> Đóng phiên hiện tại
                         </button>
                     </form>
 
                     <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <form method="post" id="openLastSessionForm">
-                        <input type="hidden" name="open_last" value="1">
-                        <button type="button" class="w-full flex justify-center items-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm" @click.prevent="$dispatch('open-confirm', { message: 'Mở lại phiên gần nhất?', formId: 'openLastSessionForm', title: 'Mở lại phiên', type: 'info' })">
+                    <form method="post">
+                        <button name="open_last" class="w-full flex justify-center items-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm" onclick="return confirm('Mở lại phiên gần nhất?')">
                             <i class="bi bi-unlock-fill"></i> Mở lại phiên gần nhất
                         </button>
                     </form>
@@ -316,7 +314,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                                       ? '<span class="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-700 text-[10px] font-bold"><i class="bi bi-circle-fill text-[6px] text-primary-500 mr-1 animate-pulse"></i>Mở</span>'
                                       : '<span class="inline-flex items-center px-2 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold">Đóng</span>' ?>
                                     <?php if (!$s['is_active'] && $_SESSION['role']==='admin'): ?>
-                                      <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Xoá vĩnh viễn phiên này?', url: '?delete_session=<?= $s['id'] ?>', title: 'Xóa phiên' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                      <a href="?delete_session=<?= $s['id'] ?>" onclick="return confirm('Xoá vĩnh viễn phiên này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
                                          <i class="bi bi-trash"></i>
                                       </a>
                                     <?php endif; ?>
@@ -378,7 +376,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                                     </td>
                                     <td class="px-5 py-3.5">
                                         <?php if (!$s['is_active'] && $_SESSION['role']==='admin'): ?>
-                                          <a href="#" @click.prevent="$dispatch('open-confirm', { message: 'Xoá vĩnh viễn phiên điểm danh này?', url: '?delete_session=<?= $s['id'] ?>', title: 'Xóa phiên' })" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100 mx-auto" title="Xóa">
+                                          <a href="?delete_session=<?= $s['id'] ?>" onclick="return confirm('Xoá vĩnh viễn phiên điểm danh này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100 mx-auto" title="Xóa">
                                              <i class="bi bi-trash"></i>
                                           </a>
                                         <?php endif; ?>
@@ -392,9 +390,8 @@ include __DIR__ . '/../../includes/sidebar.php';
 
                 <?php if ($_SESSION['role'] === 'admin'): ?>
                 <div class="mt-4 flex justify-end">
-                    <form method="post" id="deleteAllSessionsForm">
-                        <input type="hidden" name="delete_all_sessions" value="1">
-                        <button type="button" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-sm" @click.prevent="$dispatch('open-confirm', { message: 'XÓA TOÀN BỘ phiên và lịch sử điểm danh?\nHành động này không thể khôi phục!', formId: 'deleteAllSessionsForm', title: 'Xóa tất cả phiên' })">
+                    <form method="post">
+                        <button name="delete_all_sessions" class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all shadow-sm text-sm" onclick="return confirm('⚠️ XOÁ TOÀN BỘ phiên + lịch sử điểm danh?\nKhông thể khôi phục!')">
                             <i class="bi bi-trash3"></i> Xóa tất cả phiên
                         </button>
                     </form>
