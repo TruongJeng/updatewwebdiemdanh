@@ -55,17 +55,18 @@ include __DIR__ . '/../../includes/sidebar.php';
 <style>
 /* Reset Html5Qrcode styles */
 #reader { border: none !important; }
-#reader__dashboard_section_csr span { display: none !important; }
 #reader__dashboard_section_csr button {
-    background: #3178c6 !important;
+    background: #1c9665 !important;
     color: white !important;
     border: none !important;
     padding: 10px 20px !important;
     border-radius: 12px !important;
     font-weight: 600 !important;
     margin-top: 10px !important;
-    box-shadow: 0 4px 14px rgba(49, 120, 198, 0.3) !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 4px 14px rgba(28, 150, 101, 0.3) !important;
 }
+#reader a { color: #1c9665 !important; font-weight: 600; text-decoration: none; }
 #reader video {
     border-radius: 1.5rem 1.5rem 0 0 !important;
     object-fit: cover;
@@ -179,7 +180,11 @@ function onScanFailure(){}
 
 const html5QrcodeScanner = new Html5QrcodeScanner(
     "reader",
-    {fps: 10, qrbox: {width: 250, height: 250}},
+    {
+        fps: 10, 
+        qrbox: {width: 250, height: 250},
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA, Html5QrcodeScanType.SCAN_TYPE_FILE]
+    },
     false
 );
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
