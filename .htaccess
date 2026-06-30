@@ -4,8 +4,14 @@ Options -Indexes
 ErrorDocument 403 /hethongdiemdanh/403.php
 ErrorDocument 404 /hethongdiemdanh/404.php
 
-# Clean URLs - hide .php extension
 RewriteEngine On
+
+# Redirect direct directory access to login page
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !^/hethongdiemdanh/?$
+RewriteRule ^(.*)$ /hethongdiemdanh/index [R=302,L]
+
+# Clean URLs - hide .php extension
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.php -f
