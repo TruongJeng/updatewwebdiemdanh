@@ -403,47 +403,48 @@ include __DIR__ . '/../../includes/sidebar.php';
             </div>
         </div>
     </div>
-</main>
-<!-- Global Confirm Modal -->
-<div x-show="confirmModal" x-cloak class="relative z-[2000]" role="dialog" aria-modal="true">
-    <div x-show="confirmModal" x-transition.opacity class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 sm:items-center">
-            <div x-show="confirmModal"
-                 x-transition:enter="ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave="ease-in duration-200"
-                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
-                 @click.away="confirmModal = false"
-                 class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 pt-6 pb-4">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                            <i class="bi bi-exclamation-triangle text-red-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-base font-extrabold text-slate-900">Xác nhận</h3>
-                            <p class="mt-1 text-sm text-slate-500 font-medium" x-text="confirmMsg"></p>
+
+    <!-- Global Confirm Modal -->
+    <div x-show="confirmModal" x-cloak class="relative z-[2000]" role="dialog" aria-modal="true">
+        <div x-show="confirmModal" x-transition.opacity class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 sm:items-center">
+                <div x-show="confirmModal"
+                     x-transition:enter="ease-out duration-300"
+                     x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95"
+                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                     x-transition:leave="ease-in duration-200"
+                     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                     x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
+                     @click.away="confirmModal = false"
+                     class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm border border-slate-100 overflow-hidden">
+                    <div class="px-6 pt-6 pb-4">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                <i class="bi bi-exclamation-triangle text-red-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-slate-900">Xác nhận</h3>
+                                <p class="mt-1 text-sm text-slate-500 font-medium" x-text="confirmMsg"></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="bg-slate-50 px-6 py-3 flex flex-row-reverse gap-2 border-t border-slate-100">
-                    <button type="button"
-                            @click="confirmModal = false; if(confirmFormId) document.getElementById(confirmFormId).submit(); else if(confirmUrl) window.location.href = confirmUrl;"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-700 active:bg-red-800 transition-all shadow-sm">
-                        <i class="bi bi-check-lg"></i> Xác nhận
-                    </button>
-                    <button type="button" @click="confirmModal = false"
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50 transition-all">
-                        Hủy
-                    </button>
+                    <div class="bg-slate-50 px-6 py-3 flex flex-row-reverse gap-2 border-t border-slate-100">
+                        <button type="button"
+                                @click="confirmModal = false; if(confirmFormId) document.getElementById(confirmFormId).submit(); else if(confirmUrl) window.location.href = confirmUrl;"
+                                class="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-700 active:bg-red-800 transition-all shadow-sm">
+                            <i class="bi bi-check-lg"></i> Xác nhận
+                        </button>
+                        <button type="button" @click="confirmModal = false"
+                                class="inline-flex items-center gap-1.5 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50 transition-all">
+                            Hủy
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
 
