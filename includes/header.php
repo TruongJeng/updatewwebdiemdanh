@@ -8,7 +8,7 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
     <meta charset="utf-8">
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#3db88a">
     <link rel="icon" type="image/png" href="/hethongdiemdanh/assets/logo_CLB.png">
     
     <!-- Google Fonts: Inter -->
@@ -30,16 +30,16 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
                     },
                     colors: {
                         primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb', 
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
+                            50:  '#f0fdf8',
+                            100: '#d4f7eb',
+                            200: '#b0eed2',
+                            300: '#7de0b8',
+                            400: '#48ce99',
+                            500: '#27b87e',
+                            600: '#1c9665',
+                            700: '#177850',
+                            800: '#165f40',
+                            900: '#144e35',
                         }
                     }
                 }

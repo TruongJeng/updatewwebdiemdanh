@@ -75,30 +75,58 @@ function isActive($path, $currentPage) {
             <span>Trang chủ</span>
         </a>
 
-        <!-- Events -->
-        <a href="/hethongdiemdanh/modules/events" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('events.php', $currentPage) ?>">
-            <i class="bi bi-calendar-event text-lg"></i>
-            <span>Quản lý sự kiện</span>
+        <!-- Divider + Label: Trại sinh -->
+        <div class="pt-3 pb-1">
+            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Trại sinh</p>
+        </div>
+
+        <!-- Tạo mã PIN -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/views/create_pin" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('create_pin.php', $currentPage) ?>">
+            <i class="bi bi-key text-lg"></i>
+            <span>Tạo mã PIN</span>
         </a>
 
-        <!-- Students -->
-        <a href="/hethongdiemdanh/modules/students" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('students.php', $currentPage) ?>">
-            <i class="bi bi-people text-lg"></i>
-            <span>Quản lý học sinh</span>
-        </a>
-
-        <!-- Attendance -->
-        <a href="/hethongdiemdanh/modules/attendance" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('attendance.php', $currentPage) ?>">
-            <i class="bi bi-clipboard-check text-lg"></i>
+        <!-- Điểm danh trại sinh -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/views/enter_pin" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('enter_pin.php', $currentPage) ?>">
+            <i class="bi bi-person-check text-lg"></i>
             <span>Điểm danh</span>
         </a>
 
-        <!-- Điểm danh trại sinh (Dropdown) -->
+        <!-- Kiểm tra điểm danh -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/views/attendance_list" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('attendance_list.php', $currentPage) ?>">
+            <i class="bi bi-list-check text-lg"></i>
+            <span>Kiểm tra phiên</span>
+        </a>
+
+        <!-- QL Trại sinh -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/modules/manage_campers" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('manage_campers.php', $currentPage) ?>">
+            <i class="bi bi-pencil-square text-lg"></i>
+            <span>Quản lý trại sinh</span>
+        </a>
+
+        <!-- Chia đội trại sinh -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/modules/chiadoi" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('chiadoi.php', $currentPage) ?>">
+            <i class="bi bi-diagram-3 text-lg"></i>
+            <span>Chia đội</span>
+        </a>
+
+        <!-- Thống kê trại sinh -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/views/report_attendance" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('report_attendance.php', $currentPage) ?>">
+            <i class="bi bi-archive-fill text-lg"></i>
+            <span>Thống kê</span>
+        </a>
+
+        <!-- Divider + Label: Quản lý sự kiện -->
+        <div class="pt-3 pb-1">
+            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quản lý sự kiện</p>
+        </div>
+
+        <!-- Sự kiện & Điểm danh (Dropdown) -->
         <div x-data="{ expanded: false }" class="pt-1">
             <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-3 sm:py-2.5 text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
                 <div class="flex items-center gap-3">
-                    <i class="bi bi-grid text-lg"></i>
-                    <span>Trại sinh</span>
+                    <i class="bi bi-calendar-event text-lg"></i>
+                    <span>Sự kiện</span>
                 </div>
                 <i class="bi bi-chevron-down text-xs transition-transform duration-300" :class="expanded ? 'rotate-180' : ''"></i>
             </button>
@@ -112,15 +140,25 @@ function isActive($path, $currentPage) {
                  x-transition:leave-end="opacity-0 scale-y-95"
                  x-cloak>
                 <ul class="pl-11 pr-3 py-2 space-y-0.5 border-l-2 border-slate-100 ml-[18px] mt-1">
-                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/create_pin" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-key mr-2"></i> Tạo mã PIN</a></li>
-                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/enter_pin" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-person-check mr-2"></i> Điểm danh</a></li>
-                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/attendance_list" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-list-check mr-2"></i> Kiểm tra</a></li>
-                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/modules/manage_campers" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-pencil mr-2"></i> QL trại sinh</a></li>
-                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/modules/chiadoi" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-diagram-3 mr-2"></i> Chia đội</a></li>
-                    <li><a href="/hethongdiemdanh/attendanceTraiSinh/views/report_attendance" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-archive-fill mr-2"></i> Thống kê</a></li>
+                    <li><a href="/hethongdiemdanh/modules/events" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-calendar-event mr-2"></i> Sự kiện</a></li>
+                    <li><a href="/hethongdiemdanh/modules/students" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-people mr-2"></i> Học sinh</a></li>
+                    <li><a href="/hethongdiemdanh/modules/attendance" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-clipboard-check mr-2"></i> Điểm danh</a></li>
+                    <li><a href="/hethongdiemdanh/modules/report" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-bar-chart-line mr-2"></i> Thống kê</a></li>
+                    <li><a href="/hethongdiemdanh/modules/team" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-people-fill mr-2"></i> Chia đội</a></li>
                 </ul>
             </div>
         </div>
+
+        <!-- Divider + Label: Hệ thống -->
+        <div class="pt-3 pb-1">
+            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống</p>
+        </div>
+
+        <!-- Users -->
+        <a href="/hethongdiemdanh/modules/users" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('users.php', $currentPage) ?>">
+            <i class="bi bi-person-gear text-lg"></i>
+            <span>Quản lý tài khoản</span>
+        </a>
 
         <!-- Tiện ích (Dropdown) -->
         <div x-data="{ expanded: false }" class="pt-1">
@@ -141,23 +179,11 @@ function isActive($path, $currentPage) {
                  x-transition:leave-end="opacity-0 scale-y-95"
                  x-cloak>
                 <ul class="pl-11 pr-3 py-2 space-y-0.5 border-l-2 border-slate-100 ml-[18px] mt-1">
-                    <li><a href="/hethongdiemdanh/modules/team" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-people-fill mr-2"></i> Đội</a></li>
                     <li><a href="https://www.online-stopwatch.com/" target="_blank" rel="noopener noreferrer" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-stopwatch mr-2"></i> Trò chơi</a></li>
                 </ul>
             </div>
         </div>
 
-        <!-- Report -->
-        <a href="/hethongdiemdanh/modules/report" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('report.php', $currentPage) ?>">
-            <i class="bi bi-bar-chart-line text-lg"></i>
-            <span>Thống kê</span>
-        </a>
-
-        <!-- Users -->
-        <a href="/hethongdiemdanh/modules/users" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('users.php', $currentPage) ?>">
-            <i class="bi bi-person-gear text-lg"></i>
-            <span>Quản lý tài khoản</span>
-        </a>
     </nav>
     
     <!-- Footer / Bottom Links in Sidebar -->

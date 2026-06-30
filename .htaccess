@@ -1,0 +1,16 @@
+Options -Indexes
+
+# Error pages
+ErrorDocument 403 /hethongdiemdanh/403.php
+ErrorDocument 404 /hethongdiemdanh/404.php
+
+# Clean URLs - hide .php extension
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L,QSA]
+
+# Redirect .php URLs to clean URLs (SEO)
+RewriteCond %{THE_REQUEST} \s/(.+?)\.php[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L,NE]

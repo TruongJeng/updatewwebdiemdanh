@@ -5,7 +5,9 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../../config/session.php';
 
 if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin','club_leader','staff'])) {
-    die('Không có quyền');
+    http_response_code(403);
+    include __DIR__ . '/../../403.php';
+    exit;
 }
 
 require_once __DIR__ . '/../config/db.php';

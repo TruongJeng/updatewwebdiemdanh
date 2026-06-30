@@ -79,8 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="icon" type="image/png" sizes="16x16" href="/hethongdiemdanh/assets/favicon/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/hethongdiemdanh/assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/hethongdiemdanh/assets/favicon/site.webmanifest">
-    <meta name="msapplication-TileColor" content="#3178c6">
-    <meta name="theme-color" content="#3178c6">
+    <meta name="msapplication-TileColor" content="#1c9665">
+    <meta name="theme-color" content="#1c9665">
     
     <!-- Preconnect & Preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,9 +123,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         primary: {
-                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe',
-                            300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6',
-                            600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a',
+                            50:  '#f0fdf8',
+                            100: '#d4f7eb',
+                            200: '#b0eed2',
+                            300: '#7de0b8',
+                            400: '#48ce99',
+                            500: '#27b87e',
+                            600: '#1c9665',
+                            700: '#177850',
+                            800: '#165f40',
+                            900: '#144e35',
                         }
                     },
                     animation: {
@@ -161,7 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Schema.org hidden data -->
     <div class="hidden" itemscope itemtype="https://schema.org/WebPage">
-        <meta itemprop="name" content="Đăng nhập CLB Kỹ năng Đoàn">
+        <meta itemprop="name" content="Đăng nhập CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt">
         <meta itemprop="url" content="https://clbkynangdoanhoiltk.io.vn/">
         <link itemprop="sameAs" href="https://www.facebook.com/clbkynangdoan.ltk">
     </div>
@@ -173,132 +180,94 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- Main Container -->
-    <main class="w-full max-w-[480px] relative z-10" x-data="loginForm()">
-        <div class="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 sm:p-10 shadow-[0_30px_60px_-15px_rgba(37,99,235,0.15)] border border-white transition-all duration-300 hover:shadow-[0_40px_80px_-20px_rgba(37,99,235,0.25)] hover:-translate-y-1">
+    <main class="w-full max-w-sm relative z-10" x-data="loginForm()">
+        <div class="bg-white/85 backdrop-blur-xl rounded-2xl p-7 shadow-[0_20px_50px_-15px_rgba(28,150,101,0.18)] border border-white/80 transition-all duration-300">
             
-            <!-- Brand Section -->
-            <div class="text-center mb-8">
-                <div class="inline-block relative mb-5 group">
-                    <div class="absolute inset-[-8px] rounded-full bg-gradient-to-br from-primary-200 to-primary-500 opacity-40 blur-md animate-pulse-slow"></div>
-                    <div class="relative z-10 w-24 h-24 rounded-full bg-white p-1.5 shadow-xl transition-transform duration-300 group-hover:scale-105 flex items-center justify-center overflow-hidden">
-                        <img src="assets/logo_CLB.png" alt="CLB Kỹ năng Đoàn" class="w-full h-full rounded-full object-cover border-2 border-white">
-                    </div>
+            <!-- Brand -->
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-100 mb-4 shadow-inner">
+                    <img src="assets/logo_CLB.png" alt="Logo" class="w-12 h-12 object-contain rounded-xl">
                 </div>
-                
-                <h1 class="text-2xl sm:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-slate-800 to-primary-700 tracking-tight mb-2">Chào mừng trở lại</h1>
-                <p class="text-slate-500 font-medium flex items-center justify-center gap-2 text-sm sm:text-base">
-                    <i class="bi bi-shield-check text-primary-500"></i>
-                    Hệ thống điểm danh thông minh
-                </p>
-                
-                <!-- Social Links -->
-                <div class="flex items-center justify-center gap-4 mt-5">
-                    <a href="https://clbkynangdoanhoiltk.io.vn/" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-slate-600 font-semibold text-xs sm:text-sm hover:bg-white hover:text-primary-600 hover:border-primary-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                        <i class="bi bi-globe2 text-base"></i> <span class="hidden sm:inline">Website</span>
-                    </a>
-                    <a href="https://www.facebook.com/clbkynangdoan.ltk" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-[#1877f2] font-semibold text-xs sm:text-sm hover:bg-white hover:border-[#1877f2]/30 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                        <i class="bi bi-facebook text-base"></i> <span class="hidden sm:inline">Facebook</span>
-                    </a>
-                </div>
+                <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">Chào mừng đồng chí</h1>
+                <p class="text-xs text-slate-400 font-medium mt-1">đến với Hệ thống điểm danh dành cho BTC</p>
             </div>
 
             <!-- Alerts -->
             <?php if(isset($_GET['timeout'])): ?>
-                <div class="flex items-center gap-3 p-4 mb-6 text-amber-800 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg animate-slideIn">
-                    <i class="bi bi-exclamation-triangle-fill text-xl"></i>
-                    <span class="font-medium text-sm">Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.</span>
-                </div>
+            <div class="flex items-center gap-2 p-3 mb-5 text-amber-800 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg text-sm">
+                <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+                <span class="font-medium">Phiên đăng nhập đã hết hạn.</span>
+            </div>
             <?php endif; ?>
 
             <?php if ($error): ?>
-                <div class="flex items-center gap-3 p-4 mb-6 text-red-800 bg-red-50 border-l-4 border-red-500 rounded-r-lg animate-slideIn">
-                    <i class="bi bi-x-circle-fill text-xl"></i>
-                    <span class="font-medium text-sm"><?= htmlspecialchars($error) ?></span>
-                </div>
+            <div class="flex items-center gap-2 p-3 mb-5 text-red-800 bg-red-50 border-l-4 border-red-400 rounded-r-lg text-sm">
+                <i class="bi bi-x-circle-fill flex-shrink-0"></i>
+                <span class="font-medium"><?= htmlspecialchars($error) ?></span>
+            </div>
             <?php endif; ?>
 
             <!-- Login Form -->
-            <form method="post" @submit="isSubmitting = true">
+            <form method="post" @submit="isSubmitting = true" class="space-y-4">
+
                 <!-- Username -->
-                <div class="mb-5 relative group">
-                    <label for="username" class="block text-sm font-semibold text-slate-700 mb-2">
-                        <i class="bi bi-person-circle text-primary-500 mr-1.5"></i> Tên đăng nhập
-                    </label>
-                    <div class="relative">
-                        <i class="bi bi-person absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors group-focus-within:text-primary-500"></i>
-                        <input type="text" id="username" name="username" x-model="username" required
-                               placeholder="Nhập tên đăng nhập" autocomplete="username"
-                               class="w-full h-14 pl-12 pr-4 bg-white/50 border-2 border-slate-200 rounded-xl text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                    </div>
+                <div class="relative group">
+                    <i class="bi bi-person absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base transition-colors group-focus-within:text-primary-500 pointer-events-none"></i>
+                    <input type="text" id="username" name="username" x-model="username" required
+                           placeholder="Tên đăng nhập" autocomplete="username"
+                           class="w-full h-11 pl-10 pr-4 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 text-sm font-medium placeholder:text-slate-400 placeholder:font-normal focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
                 </div>
 
                 <!-- Password -->
-                <div class="mb-5 relative group">
-                    <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">
-                        <i class="bi bi-key text-primary-500 mr-1.5"></i> Mật khẩu
-                    </label>
-                    <div class="relative">
-                        <i class="bi bi-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors group-focus-within:text-primary-500"></i>
-                        <input :type="showPass ? 'text' : 'password'" id="password" name="password" required
-                               placeholder="Nhập mật khẩu" autocomplete="current-password"
-                               class="w-full h-14 pl-12 pr-12 bg-white/50 border-2 border-slate-200 rounded-xl text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
-                        <button type="button" @click="showPass = !showPass" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full text-slate-400 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center transition-colors focus:outline-none">
-                            <i class="bi text-[20px]" :class="showPass ? 'bi-eye' : 'bi-eye-slash'"></i>
-                        </button>
-                    </div>
+                <div class="relative group">
+                    <i class="bi bi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base transition-colors group-focus-within:text-primary-500 pointer-events-none"></i>
+                    <input :type="showPass ? 'text' : 'password'" id="password" name="password" required
+                           placeholder="Mật khẩu" autocomplete="current-password"
+                           class="w-full h-11 pl-10 pr-11 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 text-sm font-medium placeholder:text-slate-400 placeholder:font-normal focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
+                    <button type="button" @click="showPass = !showPass" class="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center transition-colors">
+                        <i class="bi text-base" :class="showPass ? 'bi-eye' : 'bi-eye-slash'"></i>
+                    </button>
                 </div>
 
-                <!-- Options -->
-                <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
-                    <label class="flex items-center gap-2.5 cursor-pointer group">
+                <!-- Options row -->
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer group">
                         <div class="relative flex items-center">
-                            <input type="checkbox" name="remember" id="remember" x-model="remember" @change="saveSettings"
-                                   class="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-md checked:bg-primary-500 checked:border-primary-500 transition-colors focus:ring-4 focus:ring-primary-500/20 outline-none cursor-pointer">
-                            <i class="bi bi-check2 absolute text-white text-lg left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                            <input type="checkbox" name="remember" x-model="remember" @change="saveSettings"
+                                   class="peer appearance-none w-4 h-4 border-2 border-slate-300 rounded checked:bg-primary-500 checked:border-primary-500 transition-colors focus:ring-2 focus:ring-primary-500/20 outline-none cursor-pointer">
+                            <i class="bi bi-check2 absolute text-white text-xs left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
                         </div>
-                        <span class="text-sm font-medium text-slate-600 group-hover:text-slate-800 transition-colors">Ghi nhớ đăng nhập</span>
+                        <span class="text-xs font-medium text-slate-500 group-hover:text-slate-700 transition-colors">Ghi nhớ</span>
                     </label>
-                    
-                    <a href="modules/forgot_password.php" class="text-sm font-semibold text-primary-600 hover:text-primary-700 hover:bg-primary-50 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5">
-                        <i class="bi bi-question-circle"></i> Quên mật khẩu?
+                    <a href="modules/forgot_password.php" class="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+                        Quên mật khẩu?
                     </a>
                 </div>
 
                 <!-- Submit -->
-                <button type="submit" :disabled="isSubmitting" 
-                        class="relative w-full h-14 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-bold text-lg rounded-xl shadow-[0_8px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_10px_25px_rgba(37,99,235,0.4)] active:scale-[0.98] transition-all flex items-center justify-center gap-3 overflow-hidden group disabled:opacity-70 disabled:cursor-not-allowed">
-                    <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
-                    
+                <button type="submit" :disabled="isSubmitting"
+                        class="w-full h-11 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-bold rounded-xl shadow-[0_4px_14px_rgba(28,150,101,0.35)] hover:shadow-[0_6px_20px_rgba(28,150,101,0.45)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
                     <template x-if="!isSubmitting">
                         <div class="flex items-center gap-2">
-                            <i class="bi bi-box-arrow-in-right text-xl"></i>
+                            <i class="bi bi-box-arrow-in-right"></i>
                             <span>Đăng nhập</span>
                         </div>
                     </template>
-                    
                     <template x-if="isSubmitting">
                         <div class="flex items-center gap-2">
-                            <i class="bi bi-arrow-repeat text-xl animate-spin"></i>
+                            <i class="bi bi-arrow-repeat animate-spin"></i>
                             <span>Đang xử lý...</span>
                         </div>
                     </template>
                 </button>
-
-                <!-- Security Badge -->
-                <div class="mt-6 py-3 px-4 bg-slate-50 rounded-full flex items-center justify-center gap-2 text-slate-600 text-xs font-semibold border border-slate-100">
-                    <i class="bi bi-shield-lock-fill text-green-500 text-base"></i>
-                    <span>Hệ thống bảo mật &bull; Dữ liệu an toàn</span>
-                </div>
             </form>
-            
+
             <!-- Footer -->
-            <div class="mt-8 pt-6 border-t border-slate-100 text-center">
-                <p class="text-xs text-slate-400 font-medium mb-3">&copy; <?= date('Y') ?> CLB Kỹ năng Đoàn - THPT Lý Thường Kiệt</p>
-                <div class="flex items-center justify-center gap-4 flex-wrap">
-                    <a href="https://clbkynangdoanhoiltk.io.vn/" class="text-xs font-semibold text-slate-500 hover:text-primary-600 transition-colors">Website</a>
-                    <a href="https://www.facebook.com/clbkynangdoan.ltk" class="text-xs font-semibold text-slate-500 hover:text-primary-600 transition-colors">Facebook</a>
-                    <a href="#" class="text-xs font-semibold text-slate-500 hover:text-primary-600 transition-colors">Điều khoản</a>
-                    <a href="#" class="text-xs font-semibold text-slate-500 hover:text-primary-600 transition-colors">Bảo mật</a>
+            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                <span>&copy;  2023 CLB Kỹ năng Đoàn - THPT Lý Thường Kiệt</span>
+                <div class="flex gap-3">
+                    <a href="https://clbkynangdoanhoiltk.io.vn/" target="_blank" class="hover:text-primary-600 transition-colors">Website</a>
+                    <a href="https://www.facebook.com/clbkynangdoan.ltk" target="_blank" class="hover:text-primary-600 transition-colors">Facebook</a>
                 </div>
             </div>
         </div>
