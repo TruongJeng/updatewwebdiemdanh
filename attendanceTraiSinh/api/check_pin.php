@@ -5,13 +5,12 @@ require_once __DIR__ . '/../../config/session.php';
 require_once __DIR__ . '/../config/db.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
+$pin = $data['pin'] ?? $_POST['pin'] ?? null;
 
-if (!isset($data['pin'])) {
+if (!$pin) {
     echo json_encode(['success'=>false,'message'=>'Thiếu PIN']);
     exit;
 }
-
-$pin = $data['pin'];
 
 $stmt = $pdo->prepare("
     SELECT id, pin_code, type, is_active
