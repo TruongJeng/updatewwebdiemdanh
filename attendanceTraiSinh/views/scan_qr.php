@@ -24,16 +24,6 @@ include __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/sidebar.php';
 ?>
 
-<!-- UNLOCK AUDIO OVERLAY -->
-<div id="unlockAudio" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[9999] flex items-center justify-center text-white cursor-pointer transition-opacity duration-300">
-    <div class="text-center bg-white/10 p-8 rounded-3xl border border-white/20 shadow-2xl backdrop-blur-md animate-[popIn_0.4s_ease-out]">
-        <div class="w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/50 animate-bounce">
-            <i class="bi bi-hand-index-thumb-fill text-4xl"></i>
-        </div>
-        <h3 class="text-2xl font-black tracking-tight mb-2">Chạm để bắt đầu</h3>
-        <p class="text-white/70 font-medium">Kích hoạt âm thanh & rung khi quét</p>
-    </div>
-</div>
 
 <main class="ml-0 lg:ml-64 pt-4 min-h-screen bg-slate-50/50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ease-in-out">
     <div class="w-full max-w-md">
@@ -142,11 +132,15 @@ function unlockAudio(){
     audioCtx.resume();
     if(navigator.vibrate) navigator.vibrate(50);
     audioUnlocked = true;
-    const overlay = document.getElementById('unlockAudio');
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.remove(), 300);
+    
+    // Remove the event listeners once unlocked
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
 }
-document.getElementById('unlockAudio').addEventListener('click', unlockAudio);
+
+// Unlock audio on the very first interaction (like clicking "Request Camera Permissions")
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio, { passive: true });
 
 function canBeep(){
     const now = Date.now();
