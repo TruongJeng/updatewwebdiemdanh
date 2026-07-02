@@ -352,7 +352,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                         <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                             <i class="bi bi-file-earmark-arrow-up-fill text-primary-500"></i> Import Excel
                         </h3>
-                        <a href="uploads/DanhsachTraisinhmau.xlsx" class="text-xs text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-1" download>
+                        <a href="../../uploads/DanhsachTraisinhmau.xlsx" class="text-xs text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-1" download>
                             <i class="bi bi-download"></i> Tải file mẫu
                         </a>
                     </div>
