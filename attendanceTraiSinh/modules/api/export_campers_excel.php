@@ -199,7 +199,7 @@ foreach (range('A','E') as $col) {
 // ==========================
 // 11. XUẤT FILE
 // ==========================
-$filename = 'Danh_sach_trai_sinh_' . date('d-m-Y_H-i') . '.xlsx';
+$filename = 'Danh_sach_hoc_vien_tap_huan' . date('d-m-Y_H-i') . '.xlsx';
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header("Content-Disposition: attachment; filename=\"$filename\"");
