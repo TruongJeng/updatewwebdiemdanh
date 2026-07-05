@@ -49,7 +49,7 @@ $exportTime = date('H:i:s d/m/Y');
 // ==========================
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
-$sheet->setTitle('Danh sách Học viên Lớp Tập huấn CLB Kỹ năng 2026');
+$sheet->setTitle('Danh sách Học viên');
 
 // ==========================
 // 4. LOGO
