@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 require_once __DIR__ . '/../../../config/session.php';
 require_once __DIR__ . '/../../config/db.php';
@@ -48,7 +49,7 @@ $exportTime = date('H:i:s d/m/Y');
 // ==========================
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
-$sheet->setTitle('Danh sách trại sinh');
+$sheet->setTitle('Danh sách Học viên Lớp Tập huấn CLB Kỹ năng 2026');
 
 // ==========================
 // 4. LOGO
@@ -67,7 +68,7 @@ $logo->setWorksheet($sheet);
 // 5. TIÊU ĐỀ CHÍNH (16)
 // ==========================
 $sheet->mergeCells('A3:E3');
-$sheet->setCellValue('A3', 'DANH SÁCH TRẠI SINH');
+$sheet->setCellValue('A3', 'DANH SÁCH HỌC VIÊN');
 $sheet->getStyle('A3')->applyFromArray([
     'font' => [
         'name' => 'Times New Roman',
@@ -85,7 +86,7 @@ $sheet->getRowDimension(3)->setRowHeight(28);
 // 6. TIÊU ĐỀ PHỤ (13)
 // ==========================
 $sheet->mergeCells('A4:E4');
-$sheet->setCellValue('A4', 'TRẠI HUẤN LUYỆN LÝ THƯỜNG KIỆT 2026');
+$sheet->setCellValue('A4', 'LỚP TẬP HUẤN KỸ NĂNG NĂM 2026');
 $sheet->getStyle('A4')->applyFromArray([
     'font' => [
         'name' => 'Times New Roman',
