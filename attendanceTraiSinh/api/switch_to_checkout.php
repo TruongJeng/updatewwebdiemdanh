@@ -18,7 +18,7 @@ $sessionId = $_SESSION['attendance_session_id'];
 
 $stmt = $pdo->prepare("
     UPDATE attendance_sessions
-    SET mode = 'CHECK_OUT'
+    SET type = 'CHECK_OUT'
     WHERE id = ?
 ");
 $stmt->execute([$sessionId]);

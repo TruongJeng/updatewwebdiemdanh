@@ -105,21 +105,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
 
         } else {
 
-            $stmt = $pdo->prepare("
-                UPDATE attendance_sessions
-                SET type = 'CHECK_OUT',
-                    pin_code = ?
-                WHERE is_active = 1
-                ORDER BY start_time DESC
-                LIMIT 1
-            ");
-            $stmt->execute([$pin]);
-
-            // Cập nhật session PHP
+            // Kiểm tra xem có phiên đang active không
             $activeStmt = $pdo->query("SELECT id FROM attendance_sessions WHERE is_active = 1 ORDER BY start_time DESC LIMIT 1");
             $activeSession = $activeStmt->fetch(PDO::FETCH_ASSOC);
+
             if ($activeSession) {
+                // Có phiên đang active → chuyển sang CHECK_OUT
+                $stmt = $pdo->prepare("
+                    UPDATE attendance_sessions
+                    SET type = 'CHECK_OUT',
+                        pin_code = ?
+                    WHERE id = ?
+                ");
+                $stmt->execute([$pin, $activeSession['id']]);
+
                 $_SESSION['attendance_session_id'] = $activeSession['id'];
+                $_SESSION['attendance_type']       = 'CHECK_OUT';
+                $_SESSION['scanner_pin']           = $pin;
+            } else {
+                // Không có phiên active → tạo phiên CHECK_OUT mới
+                $stmt = $pdo->prepare("
+                    INSERT INTO attendance_sessions (pin_code, type, created_by, is_active)
+                    VALUES (?, 'CHECK_OUT', ?, 1)
+                ");
+                $stmt->execute([$pin, $userId]);
+
+                $_SESSION['attendance_session_id'] = $pdo->lastInsertId();
                 $_SESSION['attendance_type']       = 'CHECK_OUT';
                 $_SESSION['scanner_pin']           = $pin;
             }
