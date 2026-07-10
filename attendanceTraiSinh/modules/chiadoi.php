@@ -9,13 +9,64 @@ if (!in_array($_SESSION['role'], ['admin','club_leader'])) {
     die('Không có quyền');
 }
 
-$stmt = $pdo->prepare("
-    SELECT c.student_code, c.full_name, c.class
-    FROM campers c
-    WHERE c.is_active = 1
-    ORDER BY c.full_name
-");
-$stmt->execute();
+// Lấy danh sách phiên điểm danh để hiển thị trong dropdown
+$sessionsList = $pdo->query("
+    SELECT s.id, s.pin_code, s.type, s.start_time,
+           (SELECT COUNT(*) FROM attendance_logs al WHERE al.session_id = s.id) as log_count
+    FROM attendance_sessions s
+    ORDER BY s.start_time DESC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// Xác định filter hiện tại
+$attendance_filter = $_POST['attendance_filter'] ?? ($_GET['filter'] ?? 'all');
+$filter_session_id = $_POST['filter_session_id'] ?? ($_GET['sid'] ?? '');
+
+// Query danh sách trại sinh theo filter
+if ($attendance_filter === 'checkin') {
+    // Chỉ lấy trại sinh đã CHECK_IN (ở BẤT KỲ phiên nào)
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT c.student_code, c.full_name, c.class
+        FROM campers c
+        INNER JOIN attendance_logs al ON al.student_id = c.id
+        INNER JOIN attendance_sessions asess ON al.session_id = asess.id
+        WHERE c.is_active = 1
+          AND al.type = 'CHECK_IN'
+        ORDER BY c.full_name
+    ");
+    $stmt->execute();
+} elseif ($attendance_filter === 'checkout') {
+    // Chỉ lấy trại sinh đã CHECK_OUT (ở BẤT KỲ phiên nào)
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT c.student_code, c.full_name, c.class
+        FROM campers c
+        INNER JOIN attendance_logs al ON al.student_id = c.id
+        INNER JOIN attendance_sessions asess ON al.session_id = asess.id
+        WHERE c.is_active = 1
+          AND al.type = 'CHECK_OUT'
+        ORDER BY c.full_name
+    ");
+    $stmt->execute();
+} elseif ($attendance_filter === 'session' && !empty($filter_session_id)) {
+    // Lấy trại sinh theo 1 phiên cụ thể
+    $stmt = $pdo->prepare("
+        SELECT DISTINCT c.student_code, c.full_name, c.class
+        FROM campers c
+        INNER JOIN attendance_logs al ON al.student_id = c.id
+        WHERE c.is_active = 1
+          AND al.session_id = ?
+        ORDER BY c.full_name
+    ");
+    $stmt->execute([$filter_session_id]);
+} else {
+    // Tất cả trại sinh
+    $stmt = $pdo->prepare("
+        SELECT c.student_code, c.full_name, c.class
+        FROM campers c
+        WHERE c.is_active = 1
+        ORDER BY c.full_name
+    ");
+    $stmt->execute();
+}
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ✏️ Đổi tên đội
@@ -249,15 +300,110 @@ include __DIR__ . '/../../includes/sidebar.php';
                 </form>
             </div>
 
+            <!-- BỘ LỌC NGUỒN TRẠI SINH -->
+            <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-5 mb-8" x-data="{ 
+                filter: '<?= htmlspecialchars($attendance_filter) ?>', 
+                sessionId: '<?= htmlspecialchars($filter_session_id) ?>' 
+            }">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-2 shrink-0">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                            <i class="bi bi-funnel-fill"></i>
+                        </div>
+                        <span class="font-bold text-slate-800 text-sm">Nguồn trại sinh:</span>
+                    </div>
+                    
+                    <form method="get" class="flex flex-wrap items-center gap-3 flex-1" id="filterForm">
+                        <div class="flex flex-wrap gap-2">
+                            <button type="submit" name="filter" value="all" 
+                                class="px-4 py-2 rounded-xl text-sm font-bold transition-all border <?= $attendance_filter === 'all' ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-500/20' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300' ?>">
+                                <i class="bi bi-people-fill mr-1"></i> Tất cả
+                            </button>
+                            <button type="submit" name="filter" value="checkin" 
+                                class="px-4 py-2 rounded-xl text-sm font-bold transition-all border <?= $attendance_filter === 'checkin' ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20' : 'bg-white text-slate-600 border-slate-200 hover:bg-emerald-50 hover:border-emerald-300' ?>">
+                                <i class="bi bi-box-arrow-in-right mr-1"></i> Đã Check-in
+                            </button>
+                            <button type="submit" name="filter" value="checkout" 
+                                class="px-4 py-2 rounded-xl text-sm font-bold transition-all border <?= $attendance_filter === 'checkout' ? 'bg-red-600 text-white border-red-600 shadow-md shadow-red-500/20' : 'bg-white text-slate-600 border-slate-200 hover:bg-red-50 hover:border-red-300' ?>">
+                                <i class="bi bi-box-arrow-right mr-1"></i> Đã Check-out
+                            </button>
+                        </div>
+
+                        <?php if (!empty($sessionsList)): ?>
+                        <div class="flex items-center gap-2 ml-auto">
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:inline">hoặc</span>
+                            <select @change="if($el.value) { window.location.href = 'chiadoi.php?filter=session&sid=' + $el.value; }" 
+                                class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-medium min-w-[200px]">
+                                <option value="">-- Chọn theo phiên --</option>
+                                <?php foreach ($sessionsList as $sess): ?>
+                                    <option value="<?= $sess['id'] ?>" <?= ($attendance_filter === 'session' && $filter_session_id == $sess['id']) ? 'selected' : '' ?>>
+                                        PIN <?= htmlspecialchars($sess['pin_code']) ?> 
+                                        (<?= $sess['type'] === 'CHECK_IN' ? '↘ Vào' : '↗ Ra' ?>)
+                                        — <?= date('H:i d/m', strtotime($sess['start_time'])) ?>
+                                        [<?= $sess['log_count'] ?> TS]
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+                    </form>
+                </div>
+
+                <!-- Hiển thị thông tin filter hiện tại -->
+                <div class="mt-4 flex items-center gap-2 text-sm">
+                    <?php 
+                    $filterLabels = [
+                        'all' => ['Tất cả trại sinh', 'bi-people-fill', 'bg-slate-100 text-slate-600'],
+                        'checkin' => ['Chỉ trại sinh đã CHECK-IN', 'bi-box-arrow-in-right', 'bg-emerald-100 text-emerald-700'],
+                        'checkout' => ['Chỉ trại sinh đã CHECK-OUT', 'bi-box-arrow-right', 'bg-red-100 text-red-700'],
+                        'session' => ['Theo phiên cụ thể', 'bi-key', 'bg-indigo-100 text-indigo-700'],
+                    ];
+                    $fl = $filterLabels[$attendance_filter] ?? $filterLabels['all'];
+                    ?>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold <?= $fl[2] ?>">
+                        <i class="bi <?= $fl[1] ?>"></i> <?= $fl[0] ?>
+                    </span>
+                    <span class="text-slate-400 font-semibold">
+                        — <span class="text-primary-600 font-black"><?= count($students) ?></span> trại sinh
+                    </span>
+                    <?php if ($attendance_filter === 'session' && !empty($filter_session_id)): ?>
+                        <?php 
+                        $selectedSess = null;
+                        foreach ($sessionsList as $ss) { if ($ss['id'] == $filter_session_id) { $selectedSess = $ss; break; } }
+                        if ($selectedSess): ?>
+                        <span class="text-slate-400">|</span>
+                        <span class="inline-flex items-center gap-1 text-xs font-bold <?= $selectedSess['type'] === 'CHECK_IN' ? 'text-emerald-600' : 'text-red-600' ?>">
+                            <i class="bi bi-key-fill"></i>
+                            PIN: <?= htmlspecialchars($selectedSess['pin_code']) ?>
+                            (<?= $selectedSess['type'] === 'CHECK_IN' ? 'Check-in' : 'Check-out' ?>)
+                        </span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
                 <!-- Danh sách trại sinh -->
                 <div class="lg:col-span-7 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-[350px] sm:h-[500px]">
-                    <div class="p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50">
+                    <div class="p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                         <h5 class="font-bold text-slate-800 flex items-center gap-2 text-sm sm:text-base">
                             <i class="bi bi-list-ol text-primary-500"></i> Danh sách trại sinh
+                            <span class="ml-1 px-2 py-0.5 rounded-full bg-primary-100 text-primary-700 text-xs font-black"><?= count($students) ?></span>
                         </h5>
+                        <?php if (empty($students)): ?>
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                                <i class="bi bi-info-circle mr-1"></i>Không có dữ liệu
+                            </span>
+                        <?php endif; ?>
                     </div>
                     <div class="overflow-y-auto flex-1 p-0">
+                        <?php if (empty($students)): ?>
+                            <div class="flex flex-col items-center justify-center h-full text-slate-400 py-12">
+                                <i class="bi bi-inbox text-5xl mb-3 opacity-30"></i>
+                                <p class="font-semibold text-sm">Không tìm thấy trại sinh nào</p>
+                                <p class="text-xs mt-1">Hãy thử chọn bộ lọc khác ở trên</p>
+                            </div>
+                        <?php else: ?>
                         <!-- Mobile list (visible < lg) -->
                         <div class="lg:hidden divide-y divide-slate-50">
                             <?php foreach($students as $k=>$s): ?>
@@ -289,6 +435,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -302,16 +449,34 @@ include __DIR__ . '/../../includes/sidebar.php';
                                 <i class="bi bi-shuffle text-4xl"></i>
                             </div>
                             <h3 class="text-2xl font-black tracking-tight mb-2">CHIA ĐỘI TỰ ĐỘNG</h3>
-                            <p class="text-primary-100 font-medium mb-8 text-sm">Hệ thống sẽ tự động phân bổ đều các thành viên vào các đội.</p>
+                            <p class="text-primary-100 font-medium mb-4 text-sm">Hệ thống sẽ tự động phân bổ đều các thành viên vào các đội.</p>
+
+                            <!-- Hiển thị nguồn đang chọn -->
+                            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 mb-6 border border-white/10">
+                                <span class="text-white/70 text-xs font-semibold">Nguồn: </span>
+                                <span class="text-white font-black text-sm">
+                                    <?php 
+                                    if ($attendance_filter === 'checkin') echo '✅ Đã Check-in';
+                                    elseif ($attendance_filter === 'checkout') echo '🚪 Đã Check-out';
+                                    elseif ($attendance_filter === 'session') echo '🔑 Theo phiên PIN';
+                                    else echo '👥 Tất cả trại sinh';
+                                    ?>
+                                </span>
+                                <span class="text-amber-300 font-black text-sm ml-1">(<?= count($students) ?> người)</span>
+                            </div>
                             
                             <div x-show="!showForm" x-transition>
-                                <button @click="showForm = true" class="bg-white text-primary-600 hover:bg-slate-50 px-8 py-3.5 rounded-xl font-extrabold tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all w-full">
-                                    BẮT ĐẦU CHIA ĐỘI
+                                <button @click="showForm = true" class="bg-white text-primary-600 hover:bg-slate-50 px-8 py-3.5 rounded-xl font-extrabold tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all w-full" <?= empty($students) ? 'disabled' : '' ?>>
+                                    <?= empty($students) ? 'CHƯA CÓ TRẠI SINH' : 'BẮT ĐẦU CHIA ĐỘI' ?>
                                 </button>
                             </div>
 
                             <div x-show="showForm" x-transition.duration.300ms class="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-xl">
                                 <form method="post" class="space-y-4">
+                                    <!-- Truyền filter vào form POST -->
+                                    <input type="hidden" name="attendance_filter" value="<?= htmlspecialchars($attendance_filter) ?>">
+                                    <input type="hidden" name="filter_session_id" value="<?= htmlspecialchars($filter_session_id) ?>">
+                                    
                                     <div>
                                         <label class="block text-sm font-bold text-white/90 mb-2">Nhập số đội cần chia:</label>
                                         <input type="number" name="num_teams" min="1" max="<?= count($students) ?>" class="w-full text-center text-2xl font-black text-slate-800 bg-white border-0 rounded-lg py-3 focus:ring-4 focus:ring-white/30 outline-none transition-all shadow-inner" required placeholder="VD: 5">
