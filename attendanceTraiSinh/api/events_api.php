@@ -148,7 +148,13 @@ try {
                 break;
             }
             $pdo->prepare("UPDATE ts_events SET is_active = ? WHERE id = ?")->execute([$active, $id]);
-            echo json_encode(['success' => true, 'message' => $active ? 'Đã mở lại sự kiện' : 'Đã đóng sự kiện']);
+            
+            // Nếu đóng sự kiện, đóng luôn các phiên điểm danh đang mở của sự kiện đó
+            if ($active == 0) {
+                $pdo->prepare("UPDATE attendance_sessions SET is_active = 0, end_time = NOW() WHERE event_id = ? AND is_active = 1")->execute([$id]);
+            }
+            
+            echo json_encode(['success' => true, 'message' => $active ? 'Đã mở lại sự kiện' : 'Đã đóng sự kiện và các phiên liên quan']);
             break;
 
         default:

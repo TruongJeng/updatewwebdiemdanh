@@ -56,6 +56,9 @@ include __DIR__ . '/../../includes/sidebar.php';
                                 <p class="text-xs text-slate-500 mt-1 line-clamp-2" x-text="event.description || 'Chưa có mô tả'"></p>
                             </div>
                             <div class="flex items-center gap-1 ml-3 shrink-0">
+                                <button @click="toggleActive(event)" :class="event.is_active == 1 ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'" class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors mr-1" :title="event.is_active == 1 ? 'Sự kiện đang mở (Nhấn để đóng)' : 'Sự kiện đã đóng (Nhấn để mở)'">
+                                    <i class="text-sm bi" :class="event.is_active == 1 ? 'bi-unlock-fill' : 'bi-lock-fill'"></i>
+                                </button>
                                 <button @click="openEditModal(event)" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-500 hover:bg-primary-50 hover:text-primary-600 flex items-center justify-center transition-colors" title="Sửa">
                                     <i class="bi bi-pencil-square text-sm"></i>
                                 </button>
@@ -66,14 +69,18 @@ include __DIR__ . '/../../includes/sidebar.php';
                         </div>
 
                         <!-- Meta -->
-                        <div class="flex items-center gap-3 text-xs text-slate-500 mb-4">
+                        <div class="flex items-center gap-2 flex-wrap text-xs text-slate-500 mb-4">
+                            <span :class="event.is_active == 1 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'" class="inline-flex items-center gap-1 px-2 py-1 rounded-md font-bold text-[10px] uppercase tracking-wider">
+                                <i class="bi" :class="event.is_active == 1 ? 'bi-circle-fill text-[6px] animate-pulse text-emerald-500' : 'bi-dash-circle'"></i>
+                                <span x-text="event.is_active == 1 ? 'Đang mở' : 'Đã đóng'"></span>
+                            </span>
                             <template x-if="event.event_date">
                                 <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-50 border border-slate-100">
                                     <i class="bi bi-calendar-event"></i>
                                     <span x-text="formatDate(event.event_date)"></span>
                                 </span>
                             </template>
-                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-primary-50 text-primary-700 border border-primary-100">
                                 <i class="bi bi-people-fill"></i>
                                 <span x-text="event.checkin_count + ' đã điểm danh'"></span>
                             </span>
@@ -81,7 +88,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                     </div>
 
                     <!-- Actions -->
-                    <div class="border-t border-slate-100 bg-slate-50/50 p-3 grid grid-cols-4 gap-2">
+                    <div class="border-t border-slate-100 bg-slate-50/50 p-3 grid grid-cols-4 gap-2 transition-all" :class="event.is_active == 0 ? 'opacity-50 pointer-events-none grayscale' : ''">
                         <a :href="'create_pin.php?event_id=' + event.id" class="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white hover:bg-primary-50 border border-slate-100 hover:border-primary-200 transition-colors group/btn">
                             <div class="w-9 h-9 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center group-hover/btn:scale-110 transition-transform">
                                 <i class="bi bi-qr-code-scan text-lg"></i>
@@ -309,6 +316,29 @@ function eventsApp() {
                 alert('Lỗi kết nối server');
             }
             this.saving = false;
+        },
+
+        async toggleActive(event) {
+            const newActive = event.is_active == 1 ? 0 : 1;
+            const confirmMsg = newActive === 0 ? 'Bạn có chắc chắn muốn ĐÓNG sự kiện này không? Khi đóng, học sinh sẽ không thể điểm danh sự kiện này nữa.' : 'Bạn muốn MỞ LẠI sự kiện này?';
+            if (!confirm(confirmMsg)) return;
+            
+            const fd = new FormData();
+            fd.append('action', 'toggle_active');
+            fd.append('id', event.id);
+            fd.append('active', newActive);
+
+            try {
+                const res = await fetch('../api/events_api.php', { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.success) {
+                    event.is_active = newActive;
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                alert('Lỗi kết nối server');
+            }
         },
 
         formatDate(dt) {

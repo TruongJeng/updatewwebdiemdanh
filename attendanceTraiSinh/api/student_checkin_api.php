@@ -166,34 +166,33 @@ try {
         exit;
     }
 
-    // 3. Tìm hoặc tạo phiên CHECK_IN cho event
-    $stmt = $pdo->prepare("SELECT id FROM attendance_sessions WHERE event_id = ? AND type = 'CHECK_IN' AND is_active = 1 ORDER BY start_time DESC LIMIT 1");
+    // 3. Kiểm tra xem sự kiện có phiên điểm danh nào ĐANG MỞ hay không
+    $stmt = $pdo->prepare("SELECT id, type FROM attendance_sessions WHERE event_id = ? AND is_active = 1 ORDER BY start_time DESC LIMIT 1");
     $stmt->execute([$eventId]);
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$session) {
-        // Tạo phiên tự động, sử dụng ID của người tạo sự kiện
-        $pin = strval(rand(100000, 999999));
-        $stmt = $pdo->prepare("INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active) VALUES (?, ?, 'CHECK_IN', ?, 1)");
-        $stmt->execute([$eventId, $pin, $event['created_by']]);
-        $sessionId = $pdo->lastInsertId();
-    } else {
-        $sessionId = $session['id'];
+        echo json_encode(['success' => false, 'message' => 'Hiện tại chưa có phiên điểm danh nào được mở cho sự kiện này. Bạn hãy đợi BTC mở phiên nhé.']);
+        exit;
     }
 
-    // 4. Kiểm tra đã check-in chưa (trong event này)
+    $sessionId = $session['id'];
+    $sessionType = $session['type']; // 'CHECK_IN' or 'CHECK_OUT'
+
+    // 4. Kiểm tra đã check-in/out chưa (trong event này)
     $stmt = $pdo->prepare("
         SELECT al.id FROM attendance_logs al
         JOIN attendance_sessions s ON al.session_id = s.id
-        WHERE al.student_id = ? AND s.event_id = ? AND al.type = 'CHECK_IN'
+        WHERE al.student_id = ? AND s.event_id = ? AND al.type = ?
         LIMIT 1
     ");
-    $stmt->execute([$camper['id'], $eventId]);
+    $stmt->execute([$camper['id'], $eventId, $sessionType]);
 
     if ($stmt->fetch()) {
+        $typeName = ($sessionType === 'CHECK_IN') ? 'vào' : 'ra';
         echo json_encode([
             'success' => false,
-            'message' => 'Bạn đã điểm danh cho sự kiện này rồi!',
+            'message' => 'Bạn đã điểm danh ' . $typeName . ' cho sự kiện này rồi!',
             'already_checked' => true
         ]);
         exit;
@@ -202,9 +201,9 @@ try {
     // 5. Ghi log (kèm GPS + IP)
     $stmt = $pdo->prepare("
         INSERT INTO attendance_logs (student_id, session_id, type, scan_time, scanned_by, lat, lng, gps_time, gps_source, ip_addr) 
-        VALUES (?, ?, 'CHECK_IN', NOW(), NULL, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, NOW(), NULL, ?, ?, ?, ?, ?)
     ");
-    $stmt->execute([$camper['id'], $sessionId, $lat, $lng, $gps_time, $gps_source, $ip_addr]);
+    $stmt->execute([$camper['id'], $sessionId, $sessionType, $lat, $lng, $gps_time, $gps_source, $ip_addr]);
 
     // 6. Gửi Email thông báo thành công cho học sinh
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);

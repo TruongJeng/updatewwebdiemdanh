@@ -71,6 +71,9 @@ if ($eventId) {
     $eventInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Lấy danh sách tất cả sự kiện ĐANG MỞ để hiển thị trong dropdown
+$allEvents = $pdo->query("SELECT id, title FROM ts_events WHERE is_active = 1 ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+
 /* ===== SINH PIN ===== */
 function generatePin() {
     return strval(rand(100000, 999999));
@@ -87,6 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
 
     if (!in_array($type, ['CHECK_IN', 'CHECK_OUT'])) {
         die('Type không hợp lệ');
+    }
+
+    if ($eventId) {
+        $stmt = $pdo->prepare("SELECT is_active FROM ts_events WHERE id = ?");
+        $stmt->execute([$eventId]);
+        $checkEvt = $stmt->fetch();
+        if (!$checkEvt || $checkEvt['is_active'] == 0) {
+            die('Lỗi: Sự kiện này đã bị đóng hoặc không tồn tại. Vui lòng mở lại sự kiện trước khi tạo PIN.');
+        }
     }
 
     $pin = generatePin();
@@ -210,9 +222,11 @@ $sessions = $pdo->query("
         s.is_active,
         s.start_time,
         s.end_time,
+        e.title AS event_title,
         u.full_name AS created_by
     FROM attendance_sessions s
     JOIN users u ON s.created_by = u.id
+    LEFT JOIN ts_events e ON s.event_id = e.id
     ORDER BY s.start_time DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
@@ -277,7 +291,16 @@ include __DIR__ . '/../../includes/sidebar.php';
                     <?php endif; ?>
 
                     <form method="post" class="relative z-10">
-                        <input type="hidden" name="event_id" value="<?= $eventId ?>">
+                        <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                            <i class="bi bi-calendar-event text-primary-500"></i> Chọn sự kiện
+                        </label>
+                        <select name="event_id" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all mb-5 font-medium" required>
+                            <option value="">-- Chọn sự kiện --</option>
+                            <?php foreach($allEvents as $ev): ?>
+                                <option value="<?= $ev['id'] ?>" <?= $eventId == $ev['id'] ? 'selected' : '' ?>><?= htmlspecialchars($ev['title']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
                         <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
                             <i class="bi bi-toggle-on text-primary-500"></i> Chọn loại điểm danh
                         </label>
@@ -359,7 +382,8 @@ include __DIR__ . '/../../includes/sidebar.php';
                                 <?php if ($s['end_time']): ?>
                                     <span class="mx-1">→</span> <?= date('H:i d/m/Y', strtotime($s['end_time'])) ?>
                                 <?php endif; ?>
-                                <span class="ml-2 text-[10px] text-slate-400 uppercase">bởi <?= htmlspecialchars($s['created_by']) ?></span>
+                                <div class="mt-1 font-medium text-slate-700 text-xs">Sự kiện: <?= htmlspecialchars($s['event_title'] ?? 'Không rõ') ?></div>
+                                <span class="text-[10px] text-slate-400 uppercase">bởi <?= htmlspecialchars($s['created_by']) ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -377,6 +401,7 @@ include __DIR__ . '/../../includes/sidebar.php';
                             <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-xs tracking-wider">
                                 <tr>
                                     <th class="px-5 py-4 text-center">PIN</th>
+                                    <th class="px-5 py-4">Sự kiện</th>
                                     <th class="px-5 py-4">Loại</th>
                                     <th class="px-5 py-4">Trạng thái</th>
                                     <th class="px-5 py-4">Thời gian</th>
@@ -388,6 +413,9 @@ include __DIR__ . '/../../includes/sidebar.php';
                                 <tr class="hover:bg-slate-50/80 transition-colors">
                                     <td class="px-5 py-3.5 text-center font-black text-slate-700 tracking-wider font-mono">
                                         <?= $s['pin_code'] ?>
+                                    </td>
+                                    <td class="px-5 py-3.5 whitespace-normal min-w-[150px]">
+                                        <span class="text-sm font-bold text-slate-800 block leading-tight"><?= htmlspecialchars($s['event_title'] ?? 'Không rõ') ?></span>
                                     </td>
                                     <td class="px-5 py-3.5">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold <?= $s['type']==='CHECK_IN' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200' ?>">

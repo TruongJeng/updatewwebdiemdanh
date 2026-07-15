@@ -12,6 +12,25 @@ if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin','club_lea
 
 require_once __DIR__ . '/../config/db.php';
 
+// Kiểm tra phiên hiện tại trong session PHP có còn đang mở không
+if (isset($_SESSION['attendance_session_id'])) {
+    $checkStmt = $pdo->prepare("
+        SELECT s.is_active, e.is_active as event_active 
+        FROM attendance_sessions s 
+        LEFT JOIN ts_events e ON s.event_id = e.id 
+        WHERE s.id = ?
+    ");
+    $checkStmt->execute([$_SESSION['attendance_session_id']]);
+    $sessData = $checkStmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Nếu phiên không tồn tại, phiên đã đóng, hoặc sự kiện đã đóng -> xoá session PHP
+    if (!$sessData || $sessData['is_active'] == 0 || (isset($sessData['event_active']) && $sessData['event_active'] == 0)) {
+        unset($_SESSION['attendance_session_id']);
+        unset($_SESSION['attendance_type']);
+        unset($_SESSION['scanner_pin']);
+    }
+}
+
 if (!isset($_SESSION['attendance_session_id'])) {
     // Thử tự động phát hiện phiên đang hoạt động từ DB
     $activeStmt = $pdo->query("SELECT id, type, pin_code FROM attendance_sessions WHERE is_active = 1 ORDER BY start_time DESC LIMIT 1");
@@ -291,7 +310,13 @@ function loadAttendance(){
     fetch('../api/get_attendance_list.php')
     .then(r=>r.json())
     .then(res=>{
-        if(!res.success) return;
+        if(!res.success) {
+            // Nếu API báo chưa mở phiên (phiên đã đóng), reload trang để hiện màn hình "Chưa có phiên"
+            if (res.message === 'Chưa mở phiên') {
+                location.reload();
+            }
+            return;
+        }
 
         const cards = document.getElementById('cards');
         const table = document.getElementById('table');
