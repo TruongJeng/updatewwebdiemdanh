@@ -14,6 +14,6 @@ return [
         'port' => 465,
         'secure' => 'ssl',
         'from_email' => 'no-reply@clbkynangdoanhoiltk.io.vn',
-        'from_name' => 'CLB Kỹ năng Đoàn - Hội',
+        'from_name' => 'Hệ thống điểm danh CLB Kỹ năng Đoàn - Hội trường THPT Lý Thường Kiệt',
     ]
 ];
