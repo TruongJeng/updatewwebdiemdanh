@@ -30,3 +30,9 @@ CREATE TABLE team_cam_member (
 
 
 =================================================
+15/07/2026 Gộp hệ thống điểm danh - Tạo bảng ts_events + sửa attendance_sessions + sửa attendance_logs
+Chạy file: migrations/merge_attendance_2026_07_15.sql
+
+-- Tạo bảng ts_events (sự kiện)
+-- Thêm cột event_id vào attendance_sessions
+-- Thêm cột lat, lng, gps_time, gps_source, ip_addr vào attendance_logs

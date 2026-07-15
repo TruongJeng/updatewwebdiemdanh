@@ -62,6 +62,15 @@ if (isset($_POST['open_last']) && $_SESSION['role'] === 'admin') {
 }
 
 
+/* ===== EVENT CONTEXT ===== */
+$eventId = (int)($_GET['event_id'] ?? $_POST['event_id'] ?? 0);
+$eventInfo = null;
+if ($eventId) {
+    $stmt = $pdo->prepare("SELECT id, title, event_date FROM ts_events WHERE id = ?");
+    $stmt->execute([$eventId]);
+    $eventInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 /* ===== SINH PIN ===== */
 function generatePin() {
     return strval(rand(100000, 999999));
@@ -71,6 +80,7 @@ $pin = null;
 $type = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
+    $eventId = (int)($_POST['event_id'] ?? 0);
 
     $type   = $_POST['type'] ?? null;
     $userId = $_SESSION['user_id'];
@@ -93,10 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
             ");
 
             $stmt = $pdo->prepare("
-                INSERT INTO attendance_sessions (pin_code, type, created_by, is_active)
-                VALUES (?, ?, ?, 1)
+                INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active)
+                VALUES (?, ?, ?, ?, 1)
             ");
-            $stmt->execute([$pin, 'CHECK_IN', $userId]);
+            $stmt->execute([$eventId ?: null, $pin, 'CHECK_IN', $userId]);
 
             // Lưu session ID vào PHP session để các trang thống kê có thể truy cập
             $_SESSION['attendance_session_id'] = $pdo->lastInsertId();
@@ -125,10 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
             } else {
                 // Không có phiên active → tạo phiên CHECK_OUT mới
                 $stmt = $pdo->prepare("
-                    INSERT INTO attendance_sessions (pin_code, type, created_by, is_active)
-                    VALUES (?, 'CHECK_OUT', ?, 1)
+                    INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active)
+                    VALUES (?, ?, 'CHECK_OUT', ?, 1)
                 ");
-                $stmt->execute([$pin, $userId]);
+                $stmt->execute([$eventId ?: null, $pin, $userId]);
 
                 $_SESSION['attendance_session_id'] = $pdo->lastInsertId();
                 $_SESSION['attendance_type']       = 'CHECK_OUT';
@@ -256,14 +266,25 @@ include __DIR__ . '/../../includes/sidebar.php';
             <!-- Cột trái: Form tạo PIN -->
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden">
+                    <?php if ($eventInfo): ?>
+                    <div class="mb-5 p-3 bg-primary-50 border border-primary-100 rounded-xl">
+                        <div class="text-[10px] font-bold text-primary-500 uppercase tracking-wider mb-1">Sự kiện</div>
+                        <div class="font-bold text-primary-800 text-sm"><?= htmlspecialchars($eventInfo['title']) ?></div>
+                        <?php if ($eventInfo['event_date']): ?>
+                        <div class="text-xs text-primary-600 mt-0.5"><i class="bi bi-calendar-event mr-1"></i><?= date('d/m/Y H:i', strtotime($eventInfo['event_date'])) ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+
                     <form method="post" class="relative z-10">
+                        <input type="hidden" name="event_id" value="<?= $eventId ?>">
                         <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
                             <i class="bi bi-toggle-on text-primary-500"></i> Chọn loại điểm danh
                         </label>
 
                         <select name="type" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all mb-5 font-medium" required>
-                            <option value="CHECK_IN" <?= $type === 'CHECK_IN' ? 'selected' : '' ?>>CHECK IN (Vào trại)</option>
-                            <option value="CHECK_OUT" <?= $type === 'CHECK_OUT' ? 'selected' : '' ?>>CHECK OUT (Rời trại)</option>
+                            <option value="CHECK_IN" <?= $type === 'CHECK_IN' ? 'selected' : '' ?>>CHECK IN </option>
+                            <option value="CHECK_OUT" <?= $type === 'CHECK_OUT' ? 'selected' : '' ?>>CHECK OUT</option>
                         </select>
 
                         <button type="submit" class="w-full flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-sm">

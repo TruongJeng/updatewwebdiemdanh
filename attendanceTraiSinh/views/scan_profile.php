@@ -1,3 +1,18 @@
+<?php
+// Lấy tên sự kiện từ phiên đang active
+require_once __DIR__ . '/../config/db.php';
+$eventTitle = 'TRẠI HÈ THANH NIÊN 2026'; // default
+try {
+    $stmt = $pdo->query("
+        SELECT e.title FROM ts_events e
+        JOIN attendance_sessions s ON s.event_id = e.id
+        WHERE s.is_active = 1
+        ORDER BY s.start_time DESC LIMIT 1
+    ");
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row && $row['title']) $eventTitle = $row['title'];
+} catch (Exception $ex) {}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -134,7 +149,7 @@ canvas {
         <img src="/hethongdiemdanh/assets/logo_CLB.png" alt="Logo" class="w-32 h-32 object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
     </div>
     <h1 class="text-6xl md:text-8xl font-black tracking-tight title-glow mb-4">WELCOME</h1>
-    <h2 class="text-2xl md:text-4xl font-bold text-blue-200 tracking-wide mb-12">TRẠI HÈ THANH NIÊN 2026</h2>
+    <h2 class="text-2xl md:text-4xl font-bold text-blue-200 tracking-wide mb-12"><?= htmlspecialchars(mb_strtoupper($eventTitle)) ?></h2>
     
     <div class="glass-panel px-8 py-4 rounded-full flex items-center gap-3 animate-bounce shadow-[0_0_30px_rgba(59,130,246,0.3)]">
         <i class="bi bi-qr-code-scan text-2xl text-blue-300"></i>

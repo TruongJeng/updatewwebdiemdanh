@@ -59,7 +59,7 @@ JOIN attendance_logs l
         LIMIT 1
     )
 
-JOIN users u ON l.scanned_by = u.id
+LEFT JOIN users u ON l.scanned_by = u.id
 
 -- LỊCH SỬ
 LEFT JOIN attendance_logs l2 ON l2.student_id = s.id

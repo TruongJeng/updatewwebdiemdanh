@@ -77,8 +77,14 @@ function isActive($path, $currentPage) {
 
         <!-- Divider + Label: Trại sinh -->
         <div class="pt-3 pb-1">
-            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Trại sinh</p>
+            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Điểm danh</p>
         </div>
+
+        <!-- Sự kiện (MỚI - Trung tâm) -->
+        <a href="/hethongdiemdanh/attendanceTraiSinh/views/events" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('events.php', $currentPage) ?>">
+            <i class="bi bi-calendar-event text-lg"></i>
+            <span>Sự kiện</span>
+        </a>
 
         <!-- Tạo mã PIN -->
         <a href="/hethongdiemdanh/attendanceTraiSinh/views/create_pin" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('create_pin.php', $currentPage) ?>">
@@ -89,7 +95,7 @@ function isActive($path, $currentPage) {
         <!-- Điểm danh trại sinh -->
         <a href="/hethongdiemdanh/attendanceTraiSinh/views/enter_pin" @click="$store.sidebar.close()" class="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-l-lg transition-colors <?= isActive('enter_pin.php', $currentPage) ?>">
             <i class="bi bi-person-check text-lg"></i>
-            <span>Điểm danh</span>
+            <span>Quét QR (BTC)</span>
         </a>
 
         <!-- Kiểm tra điểm danh -->

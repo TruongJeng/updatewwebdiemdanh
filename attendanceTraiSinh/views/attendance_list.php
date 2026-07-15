@@ -87,6 +87,19 @@ if (!isset($_SESSION['attendance_session_id'])) {
     }
 }
 
+// Lấy tên sự kiện từ phiên đang active
+$eventName = '';
+try {
+    $evStmt = $pdo->prepare("
+        SELECT e.title FROM ts_events e
+        JOIN attendance_sessions s ON s.event_id = e.id
+        WHERE s.id = ?
+    ");
+    $evStmt->execute([$_SESSION['attendance_session_id']]);
+    $evRow = $evStmt->fetch(PDO::FETCH_ASSOC);
+    if ($evRow) $eventName = $evRow['title'];
+} catch (Exception $ex) {}
+
 $pageTitle = "Kiểm tra điểm danh trại sinh";
 $full_name = $_SESSION['full_name'] ?? '';
 include __DIR__ . '/../../includes/header.php';
@@ -103,7 +116,12 @@ include __DIR__ . '/../../includes/sidebar.php';
                 </div>
                 <div>
                     <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">DANH SÁCH ĐIỂM DANH</h2>
-                    <p class="text-sm font-medium text-slate-500 mt-1">Giám sát quá trình check-in/out theo thời gian thực</p>
+                    <p class="text-sm font-medium text-slate-500 mt-1">
+                        <?php if ($eventName): ?>
+                            <span class="text-primary-600 font-bold"><?= htmlspecialchars($eventName) ?></span> •
+                        <?php endif; ?>
+                        Giám sát quá trình check-in/out theo thời gian thực
+                    </p>
                 </div>
             </div>
             
