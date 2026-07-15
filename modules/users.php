@@ -16,76 +16,70 @@ $order_dir = ($_GET['dir'] ?? 'asc') === 'asc' ? 'asc' : 'desc';
 $msg = '';
 $error = '';
 
+if (isset($_GET['msg'])) {
+    if ($_GET['msg'] === 'delete_error') $error = "Bạn không thể tự xóa chính mình!";
+    if ($_GET['msg'] === 'delete_success') $msg = "Đã xóa tài khoản!";
+    if ($_GET['msg'] === 'edit_error_email') $error = "Email không hợp lệ!";
+    if ($_GET['msg'] === 'edit_error_exists') $error = "Tên đăng nhập đã tồn tại!";
+    if ($_GET['msg'] === 'edit_error_missing') $error = "Vui lòng điền đầy đủ các thông tin bắt buộc!";
+    if ($_GET['msg'] === 'edit_success') $msg = "Đã cập nhật thông tin tài khoản!";
+    if ($_GET['msg'] === 'add_error_email') $error = "Email không hợp lệ!";
+    if ($_GET['msg'] === 'add_error_exists') $error = "Tên đăng nhập đã tồn tại!";
+    if ($_GET['msg'] === 'add_error_missing') $error = "Vui lòng điền đầy đủ thông tin!";
+    if ($_GET['msg'] === 'add_success') $msg = "Đã thêm tài khoản mới! " . htmlspecialchars($_GET['detail'] ?? '');
+}
+
 // Xử lý xóa tài khoản
 if (isset($_GET['delete_id'])) {
     $delete_id = (int)$_GET['delete_id'];
     // Không cho phép xóa chính mình
     if ($delete_id == $_SESSION['user_id']) {
-        $error = "Bạn không thể tự xóa chính mình!";
+        header("Location: users.php?msg=delete_error");
+        exit;
     } else {
         $stmt = $pdo->prepare("DELETE FROM users WHERE id=?");
         $stmt->execute([$delete_id]);
-        $msg = "Đã xóa tài khoản!";
+        header("Location: users.php?msg=delete_success");
+        exit;
     }
 }
 
 // Xử lý sửa tài khoản
 if (isset($_POST['edit_user'])) {
     $uid = (int)$_POST['uid'];
-    $field = $_POST['field'];
-    $value = trim($_POST['value']);
+    $username = trim($_POST['username'] ?? '');
+    $full_name = trim($_POST['full_name'] ?? '');
+    $role = $_POST['role'] ?? '';
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? ''; // optional
 
-    if ($field === 'username') {
-        if ($value) {
+    if ($username && $full_name && $role && $email) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            header("Location: users.php?msg=edit_error_email");
+            exit;
+        } else {
+            // Kiểm tra username trùng
             $stmt = $pdo->prepare("SELECT id FROM users WHERE username=? AND id<>?");
-            $stmt->execute([$value, $uid]);
+            $stmt->execute([$username, $uid]);
             if ($stmt->fetch()) {
-                $error = "Tên đăng nhập đã tồn tại!";
+                header("Location: users.php?msg=edit_error_exists");
+                exit;
             } else {
-                $stmt = $pdo->prepare("UPDATE users SET username=? WHERE id=?");
-                $stmt->execute([$value, $uid]);
-                $msg = "Đã cập nhật tên đăng nhập!";
+                if ($password) {
+                    $hash = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $pdo->prepare("UPDATE users SET username=?, full_name=?, role=?, email=?, password_hash=? WHERE id=?");
+                    $stmt->execute([$username, $full_name, $role, $email, $hash, $uid]);
+                } else {
+                    $stmt = $pdo->prepare("UPDATE users SET username=?, full_name=?, role=?, email=? WHERE id=?");
+                    $stmt->execute([$username, $full_name, $role, $email, $uid]);
+                }
+                header("Location: users.php?msg=edit_success");
+                exit;
             }
-        } else {
-            $error = "Không được để trống tên đăng nhập!";
         }
-    }
-    if ($field === 'full_name') {
-        if ($value) {
-            $stmt = $pdo->prepare("UPDATE users SET full_name=? WHERE id=?");
-            $stmt->execute([$value, $uid]);
-            $msg = "Đã cập nhật họ tên!";
-        } else {
-            $error = "Không được để trống họ tên!";
-        }
-    }
-    if ($field === 'role') {
-        if (in_array($value, ['admin','teacher','club_leader','student'])) {
-            $stmt = $pdo->prepare("UPDATE users SET role=? WHERE id=?");
-            $stmt->execute([$value, $uid]);
-            $msg = "Đã cập nhật quyền!";
-        } else {
-            $error = "Quyền không hợp lệ!";
-        }
-    }
-    if ($field === 'email') {
-        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $stmt = $pdo->prepare("UPDATE users SET email=? WHERE id=?");
-            $stmt->execute([$value, $uid]);
-            $msg = "Đã cập nhật email!";
-        } else {
-            $error = "Email không hợp lệ!";
-        }
-    }
-    if ($field === 'password') {
-        if ($value) {
-            $hash = password_hash($value, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("UPDATE users SET password_hash=? WHERE id=?");
-            $stmt->execute([$hash, $uid]);
-            $msg = "Đã đổi mật khẩu!";
-        } else {
-            $error = "Mật khẩu mới không được để trống!";
-        }
+    } else {
+        header("Location: users.php?msg=edit_error_missing");
+        exit;
     }
 }
 
@@ -98,21 +92,25 @@ if (isset($_POST['add_user'])) {
     $email = trim($_POST['email']);
     if ($username && $full_name && $role && $password && $email) {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = "Email không hợp lệ!";
+            header("Location: users.php?msg=add_error_email");
+            exit;
         } else {
             $stmt = $pdo->prepare("SELECT id FROM users WHERE username=?");
             $stmt->execute([$username]);
             if ($stmt->fetch()) {
-                $error = "Tên đăng nhập đã tồn tại!";
+                header("Location: users.php?msg=add_error_exists");
+                exit;
             } else {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO users (username, full_name, role, password_hash, email) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$username, $full_name, $role, $hash, $email]);
-                $msg = "Đã thêm tài khoản mới! Mật khẩu: <b>$password</b>";
+                header("Location: users.php?msg=add_success&detail=" . urlencode("Mật khẩu: $password"));
+                exit;
             }
         }
     } else {
-        $error = "Vui lòng điền đầy đủ thông tin!";
+        header("Location: users.php?msg=add_error_missing");
+        exit;
     }
 }
 
@@ -248,8 +246,7 @@ include '../includes/sidebar.php';
                                             username: '<?= htmlspecialchars(addslashes($u['username'])) ?>',
                                             full_name: '<?= htmlspecialchars(addslashes($u['full_name'])) ?>',
                                             role: '<?= $u['role'] ?>',
-                                            email: '<?= htmlspecialchars(addslashes($u['email'])) ?>',
-                                            field: 'username'
+                                            email: '<?= htmlspecialchars(addslashes($u['email'])) ?>'
                                         }" 
                                         class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                         <i class="bi bi-pencil-square"></i>
@@ -340,8 +337,7 @@ include '../includes/sidebar.php';
                                                     username: '<?= htmlspecialchars(addslashes($u['username'])) ?>',
                                                     full_name: '<?= htmlspecialchars(addslashes($u['full_name'])) ?>',
                                                     role: '<?= $u['role'] ?>',
-                                                    email: '<?= htmlspecialchars(addslashes($u['email'])) ?>',
-                                                    field: 'username'
+                                                    email: '<?= htmlspecialchars(addslashes($u['email'])) ?>'
                                                 }" 
                                                 class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                                 <i class="bi bi-pencil-square"></i>
@@ -402,44 +398,39 @@ include '../includes/sidebar.php';
                     <form method="post" class="p-6">
                         <input type="hidden" name="uid" :value="editUser.id">
                         
-                        <div class="mb-5">
-                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Trường muốn sửa</label>
-                            <select name="field" x-model="editUser.field" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:bg-white focus:ring-2 outline-none transition-colors">
-                                <option value="username">Tên đăng nhập</option>
-                                <option value="full_name">Họ tên</option>
-                                <option value="role">Quyền</option>
-                                <option value="email">Email</option>
-                                <option value="password">Mật khẩu mới</option>
-                            </select>
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Tên đăng nhập *</label>
+                            <input type="text" name="username" x-model="editUser.username" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
                         </div>
                         
-                        <div class="mb-6">
-                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Giá trị mới</label>
-                            
-                            <!-- Username Input -->
-                            <input x-show="editUser.field === 'username'" type="text" name="value" :value="editUser.field === 'username' ? editUser.username : ''" :required="editUser.field === 'username'" :disabled="editUser.field !== 'username'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
-                            
-                            <!-- Full Name Input -->
-                            <input x-show="editUser.field === 'full_name'" type="text" name="value" :value="editUser.field === 'full_name' ? editUser.full_name : ''" :required="editUser.field === 'full_name'" :disabled="editUser.field !== 'full_name'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
-                            
-                            <!-- Email Input -->
-                            <input x-show="editUser.field === 'email'" type="email" name="value" :value="editUser.field === 'email' ? editUser.email : ''" :required="editUser.field === 'email'" :disabled="editUser.field !== 'email'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
-                            
-                            <!-- Password Input -->
-                            <div x-show="editUser.field === 'password'" class="relative" x-data="{ showModalPass: false }">
-                                <input :type="showModalPass ? 'text' : 'password'" name="value" :required="editUser.field === 'password'" :disabled="editUser.field !== 'password'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
-                                <button type="button" @click="showModalPass = !showModalPass" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                    <i class="bi" :class="showModalPass ? 'bi-eye' : 'bi-eye-slash'"></i>
-                                </button>
-                            </div>
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Họ tên *</label>
+                            <input type="text" name="full_name" x-model="editUser.full_name" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                        </div>
 
-                            <!-- Role Select -->
-                            <select x-show="editUser.field === 'role'" name="value" :value="editUser.field === 'role' ? editUser.role : ''" :required="editUser.field === 'role'" :disabled="editUser.field !== 'role'" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Email *</label>
+                            <input type="email" name="email" x-model="editUser.email" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Quyền *</label>
+                            <select name="role" x-model="editUser.role" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
                                 <option value="admin">Admin</option>
                                 <option value="teacher">Giáo viên</option>
                                 <option value="club_leader">Ban chủ nhiệm</option>
                                 <option value="student">Học sinh</option>
                             </select>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Đổi mật khẩu (Để trống nếu không đổi)</label>
+                            <div class="relative" x-data="{ showModalPass: false }">
+                                <input :type="showModalPass ? 'text' : 'password'" name="password" placeholder="Nhập mật khẩu mới..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
+                                <button type="button" @click="showModalPass = !showModalPass" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                    <i class="bi" :class="showModalPass ? 'bi-eye' : 'bi-eye-slash'"></i>
+                                </button>
+                            </div>
                         </div>
                         
                         <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
@@ -454,5 +445,16 @@ include '../includes/sidebar.php';
         </div>
     </div>
 </main>
+
+<script>
+if (window.history.replaceState) {
+    const url = new URL(window.location);
+    if (url.searchParams.has('msg') || url.searchParams.has('detail')) {
+        url.searchParams.delete('msg');
+        url.searchParams.delete('detail');
+        window.history.replaceState(null, null, url.toString());
+    }
+}
+</script>
 
 <?php include '../includes/footer.php'; ?>

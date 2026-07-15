@@ -19,6 +19,53 @@ $editMsgType = '';
 $deleteMsg = '';
 $deleteMsgType = '';
 
+if (isset($_GET['msg'])) {
+    if ($_GET['msg'] === 'add_success') {
+        $addMsg = "Thêm học sinh thành công!";
+        $addMsgType = "success";
+    }
+    if ($_GET['msg'] === 'add_exists') {
+        $addMsg = "Mã học sinh đã tồn tại!";
+        $addMsgType = "danger";
+    }
+    if ($_GET['msg'] === 'add_missing') {
+        $addMsg = "Vui lòng nhập đầy đủ thông tin!";
+        $addMsgType = "danger";
+    }
+    if ($_GET['msg'] === 'delete_success') {
+        $deleteMsg = "Đã xóa học sinh!";
+        $deleteMsgType = "success";
+    }
+    if ($_GET['msg'] === 'delete_all_success') {
+        $deleteMsg = "Đã xóa tất cả học sinh!";
+        $deleteMsgType = "success";
+    }
+    if ($_GET['msg'] === 'delete_all_campers_success') {
+        $deleteMsg = "✅ Đã xoá TOÀN BỘ trại sinh và lịch sử điểm danh!";
+        $deleteMsgType = "success";
+    }
+    if ($_GET['msg'] === 'delete_all_campers_error') {
+        $deleteMsg = "❌ Lỗi xoá dữ liệu!";
+        $deleteMsgType = "danger";
+    }
+    if ($_GET['msg'] === 'edit_exists') {
+        $editMsg = "Mã học sinh đã tồn tại!";
+        $editMsgType = "danger";
+    }
+    if ($_GET['msg'] === 'edit_success') {
+        $editMsg = "Sửa thông tin thành công!";
+        $editMsgType = "success";
+    }
+    if ($_GET['msg'] === 'import_success') {
+        $addMsg = htmlspecialchars($_GET['detail'] ?? "Import thành công");
+        $addMsgType = "success";
+    }
+    if ($_GET['msg'] === 'import_error') {
+        $addMsg = "Lỗi upload file!";
+        $addMsgType = "danger";
+    }
+}
+
 // Xử lý thêm học sinh (Mã học sinh tự động hoặc import)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
     // Tạo mã học sinh tự động: 2 số cuối năm + 4 số tăng dần
@@ -45,18 +92,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
         $stmt = $pdo->prepare("SELECT id FROM students WHERE student_code = ?");
         $stmt->execute([$student_code]);
         if ($stmt->fetch()) {
-            $addMsg = "Mã học sinh đã tồn tại!";
-            $addMsgType = "danger";
+            header("Location: students.php?msg=add_exists");
+            exit;
         } else {
             $full_name = trim("$ho $ten");
             $stmt = $pdo->prepare("INSERT INTO students (student_code, ho, ten, full_name, class, phone, email, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$student_code, $ho, $ten, $full_name, $class, $phone, $email, $address]);
-            $addMsg = "Thêm học sinh thành công! Mã: $student_code";
-            $addMsgType = "success";
+            header("Location: students.php?msg=add_success");
+            exit;
         }
     } else {
-        $addMsg = "Vui lòng nhập đầy đủ thông tin!";
-        $addMsgType = "danger";
+        header("Location: students.php?msg=add_missing");
+        exit;
     }
 }
 
@@ -67,15 +114,16 @@ if (isset($_GET['delete_id'])) {
     $stmt->execute([$delete_id]);
     $stmt = $pdo->prepare("DELETE FROM students WHERE id=?");
     $stmt->execute([$delete_id]);
-    $deleteMsg = "Đã xóa học sinh!"; $deleteMsgType = "success";
+    header("Location: students.php?msg=delete_success");
+    exit;
 }
 
 // Xử lý xóa tất cả học sinh
 if (isset($_POST['delete_all'])) {
     $pdo->exec("DELETE FROM attendance");
     $pdo->exec("DELETE FROM students");
-    $deleteMsg = "Đã xóa tất cả học sinh!";
-    $deleteMsgType = "success";
+    header("Location: students.php?msg=delete_all_success");
+    exit;
 }
 
 // ==========================
@@ -101,13 +149,13 @@ if (
 
         $pdo->commit();
 
-        $deleteMsg = "✅ Đã xoá TOÀN BỘ trại sinh và lịch sử điểm danh!";
-        $deleteMsgType = "success";
+        header("Location: students.php?msg=delete_all_campers_success");
+        exit;
 
     } catch (Exception $e) {
         $pdo->rollBack();
-        $deleteMsg = "❌ Lỗi xoá dữ liệu: " . $e->getMessage();
-        $deleteMsgType = "danger";
+        header("Location: students.php?msg=delete_all_campers_error");
+        exit;
     }
 }
 
@@ -122,10 +170,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_student'])) {
     $email = trim($_POST['email'] ?? '');
     $address = trim($_POST['address'] ?? '');
     $full_name = trim("$ho $ten");
-    $stmt = $pdo->prepare("UPDATE students SET student_code=?, ho=?, ten=?, full_name=?, class=?, phone=?, email=?, address=? WHERE id=?");
-    $stmt->execute([$student_code, $ho, $ten, $full_name, $class, $phone, $email, $address, $edit_id]);
-    $editMsg = "Sửa thông tin thành công!";
-    $editMsgType = "success";
+    
+    // Kiểm tra trùng mã học sinh
+    $stmt = $pdo->prepare("SELECT id FROM students WHERE student_code = ? AND id != ?");
+    $stmt->execute([$student_code, $edit_id]);
+    
+    if ($stmt->fetch()) {
+        header("Location: students.php?msg=edit_exists");
+        exit;
+    } else {
+        $stmt = $pdo->prepare("UPDATE students SET student_code=?, ho=?, ten=?, full_name=?, class=?, phone=?, email=?, address=? WHERE id=?");
+        $stmt->execute([$student_code, $ho, $ten, $full_name, $class, $phone, $email, $address, $edit_id]);
+        header("Location: students.php?msg=edit_success");
+        exit;
+    }
 }
 
 // Xử lý import CSV (tự sinh mã học sinh nếu thiếu)
@@ -179,11 +237,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['import_csv'])) {
             $row++;
         }
         fclose($handle);
-        $addMsg = "Import thành công: $added dòng mới, $skipped dòng bị bỏ qua (trùng mã hoặc thiếu tên).";
-        $addMsgType = "success";
+        header("Location: students.php?msg=import_success&detail=" . urlencode("Import thành công: $added dòng mới, $skipped dòng bị bỏ qua (trùng mã hoặc thiếu tên)."));
+        exit;
     } else {
-        $addMsg = "Lỗi upload file!";
-        $addMsgType = "danger";
+        header("Location: students.php?msg=import_error");
+        exit;
     }
 }
 
@@ -288,9 +346,9 @@ include '../includes/sidebar.php';
             </div>
         <?php endif; ?>
         <?php if ($editMsg): ?>
-            <div class="mb-4 flex items-center justify-between p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm">
+            <div class="mb-4 flex items-center justify-between p-4 bg-<?= $editMsgType == 'success' ? 'emerald' : 'red' ?>-50 border-l-4 border-<?= $editMsgType == 'success' ? 'emerald' : 'red' ?>-500 text-<?= $editMsgType == 'success' ? 'emerald' : 'red' ?>-700 rounded-r-lg shadow-sm">
                 <div class="flex items-center gap-2">
-                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <i class="bi bi-<?= $editMsgType == 'success' ? 'check-circle-fill' : 'exclamation-circle-fill' ?> text-lg"></i>
                     <span class="font-medium"><?= htmlspecialchars($editMsg) ?></span>
                 </div>
             </div>
@@ -671,4 +729,16 @@ include '../includes/sidebar.php';
         <?php endif; ?>
     </div>
 </main>
+
+<script>
+if (window.history.replaceState) {
+    const url = new URL(window.location);
+    if (url.searchParams.has('msg') || url.searchParams.has('detail')) {
+        url.searchParams.delete('msg');
+        url.searchParams.delete('detail');
+        window.history.replaceState(null, null, url.toString());
+    }
+}
+</script>
+
 <?php include '../includes/footer.php'; ?>

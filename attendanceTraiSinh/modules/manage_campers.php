@@ -8,6 +8,22 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../../PHPSpreadsheet/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+$msg = '';
+$error = '';
+
+if (isset($_GET['msg'])) {
+    if ($_GET['msg'] === 'restored') $msg = "Đã khôi phục trại sinh!";
+    if ($_GET['msg'] === 'deleted') $msg = "Đã xoá vĩnh viễn trại sinh!";
+    if ($_GET['msg'] === 'add_success') $msg = "Đã thêm trại sinh mới thành công!";
+    if ($_GET['msg'] === 'delete_all_success') $msg = "✅ Đã xoá TOÀN BỘ trại sinh và lịch sử điểm danh!";
+    if ($_GET['msg'] === 'import_success') $msg = "Đã import danh sách từ Excel thành công!";
+    if ($_GET['msg'] === 'add_error') $error = htmlspecialchars($_GET['detail'] ?? 'Lỗi khi thêm trại sinh');
+    if ($_GET['msg'] === 'import_error') $error = htmlspecialchars($_GET['detail'] ?? 'Lỗi import Excel');
+    if ($_GET['msg'] === 'edit_error') $error = htmlspecialchars($_GET['detail'] ?? 'Có lỗi xảy ra');
+    if ($_GET['msg'] === 'edit_success') $msg = "Đã lưu thay đổi thông tin trại sinh!";
+}
+
 /* ===== XOÁ MỀM ===== */
 if (isset($_GET['disable'])) {
     $stmt = $pdo->prepare("UPDATE campers SET is_active = 0 WHERE student_code = ?");
@@ -65,11 +81,11 @@ if (isset($_GET['delete_forever']) && $_SESSION['role'] === 'admin') {
         exit;
 
     } catch (Exception $e) {
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        $error = "Lỗi xoá vĩnh viễn: " . $e->getMessage();
     }
-    die("Lỗi xoá vĩnh viễn: " . $e->getMessage());
-}
 }
 
 // ==========================
@@ -92,15 +108,14 @@ if (
         $pdo->exec("ALTER TABLE campers AUTO_INCREMENT = 1");
         $pdo->exec("ALTER TABLE attendance_logs AUTO_INCREMENT = 1");
 
-        $deleteMsg = "✅ Đã xoá TOÀN BỘ trại sinh và lịch sử điểm danh!";
-        $deleteMsgType = "success";
+        header("Location: manage_campers.php?msg=delete_all_success");
+        exit;
 
     } catch (Exception $e) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        die('Lỗi xoá toàn bộ trại sinh: ' . $e->getMessage());
-
+        $error = 'Lỗi xoá toàn bộ trại sinh: ' . $e->getMessage();
     }
 }
 
@@ -118,33 +133,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_one'])) {
 
     // Check dữ liệu bắt buộc
     if (!$student_code || !$full_name) {
-        die("Thiếu mã học sinh hoặc họ tên");
+        $error = "Thiếu mã học sinh hoặc họ tên";
+    } else {
+        // Check trùng student_code
+        $check = $pdo->prepare("SELECT 1 FROM campers WHERE student_code = ?");
+        $check->execute([$student_code]);
+
+        if ($check->fetch()) {
+            $error = "Mã học sinh đã tồn tại";
+        } else {
+            // Insert
+            $stmt = $pdo->prepare("
+                INSERT INTO campers
+                (student_code, full_name, class, phone, phone_parent, email, profile_photo, is_active)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+            ");
+
+            $stmt->execute([
+                $student_code,
+                $full_name,
+                $class,
+                $phone,
+                $phone_parent,
+                $email,
+                $profile_photo
+            ]);
+            header("Location: manage_campers.php?msg=add_success");
+            exit;
+        }
     }
-
-    // Check trùng student_code
-    $check = $pdo->prepare("SELECT 1 FROM campers WHERE student_code = ?");
-    $check->execute([$student_code]);
-
-    if ($check->fetch()) {
-        die("Mã học sinh đã tồn tại");
-    }
-
-    // Insert
-    $stmt = $pdo->prepare("
-        INSERT INTO campers
-        (student_code, full_name, class, phone, phone_parent, email, profile_photo, is_active)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-    ");
-
-    $stmt->execute([
-        $student_code,
-        $full_name,
-        $class,
-        $phone,
-        $phone_parent,
-        $email,
-        $profile_photo
-    ]);
 }
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -195,10 +212,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_excel'])) {
             }
 
             $pdo->commit();
+            header("Location: manage_campers.php?msg=import_success");
+            exit;
 
         } catch (Exception $e) {
             $pdo->rollBack();
-            die('Lỗi import Excel: ' . $e->getMessage());
+            header("Location: manage_campers.php?msg=import_error&detail=" . urlencode($e->getMessage()));
+            exit;
         }
     }
 }
@@ -315,6 +335,24 @@ include __DIR__ . '/../../includes/sidebar.php';
                 </a>
             </div>
         </div>
+
+        <!-- Alerts -->
+        <?php if ($msg): ?>
+            <div class="mb-6 flex items-center justify-between p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($msg) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="mb-6 flex items-center justify-between p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-lg"></i>
+                    <span class="font-medium"><?= htmlspecialchars($error) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Thêm 1 trại sinh -->
@@ -548,14 +586,19 @@ include __DIR__ . '/../../includes/sidebar.php';
                 .then(r=>r.json())
                 .then(res=>{
                     if(res.success){
-                        location.reload();
+                        location.href = 'manage_campers.php?msg=edit_success';
                     } else {
-                        alert(res.message || 'Lỗi');
+                        location.href = 'manage_campers.php?msg=edit_error&detail=' + encodeURIComponent(res.message || 'Lỗi không xác định');
                     }
                 })">
                 <div class="px-4 py-5 sm:p-6 space-y-4">
-                    <input type="hidden" name="student_code" x-bind:value="data.student_code">
+                    <input type="hidden" name="old_student_code" x-bind:value="data.student_code">
                     
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Mã trại sinh</label>
+                        <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="student_code" x-bind:value="data.student_code" required>
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Họ tên</label>
                         <input class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none" name="full_name" x-bind:value="data.full_name" required>
@@ -599,5 +642,17 @@ include __DIR__ . '/../../includes/sidebar.php';
         </div>
     </div>
 </div>
+
+<script>
+// Xóa parameters khỏi URL sau khi hiển thị để tránh refresh trang bị lặp lại thông báo
+if (window.history.replaceState) {
+    const url = new URL(window.location);
+    if (url.searchParams.has('msg') || url.searchParams.has('detail')) {
+        url.searchParams.delete('msg');
+        url.searchParams.delete('detail');
+        window.history.replaceState(null, null, url.toString());
+    }
+}
+</script>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
