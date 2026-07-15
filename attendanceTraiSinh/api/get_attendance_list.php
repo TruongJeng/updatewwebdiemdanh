@@ -50,7 +50,7 @@ SELECT
     -- TRẠNG THÁI HIỆN TẠI (LẦN QUÉT MỚI NHẤT)
     l.type        AS type,
     l.scan_time   AS scan_time,
-    u.full_name   AS scanned_by,
+    COALESCE(u.full_name, 'Tự điểm danh') AS scanned_by,
 
     -- TOÀN BỘ LỊCH SỬ
     GROUP_CONCAT(
@@ -58,7 +58,7 @@ SELECT
             l2.type, '|',
             DATE_FORMAT(l2.scan_time,'%H:%i:%s %d/%m/%Y'), '|',
             asess.pin_code, '|',
-            u2.full_name
+            COALESCE(u2.full_name, 'Tự điểm danh')
         )
         ORDER BY l2.scan_time ASC
         SEPARATOR ';;'

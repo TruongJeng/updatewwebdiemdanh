@@ -113,38 +113,61 @@ if ($isAdmin) {
             <?php else: ?>
 
                 <?php if ($isAdmin): ?>
-                    <!-- ============================================== -->
-                    <!-- BẢN DÀNH CHO ADMIN: HIỂN THỊ MÃ QR TỰ ĐỔI 15S  -->
-                    <!-- ============================================== -->
-                    <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
-                        <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <h3 class="text-lg font-bold text-slate-700 mb-6 text-center z-10 flex items-center gap-2">
-                            <i class="bi bi-phone"></i> Quét mã QR này để điểm danh
-                        </h3>
-                        
-                        <!-- Lớp overlay loading -->
-                        <div id="loadingOverlay" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-20 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
-                            <i class="bi bi-arrow-repeat text-4xl text-primary-600 animate-spin"></i>
-                        </div>
+                    <?php
+                    // Kiểm tra xem có phiên nào đang mở không
+                    $stmt = $pdo->prepare("SELECT id FROM attendance_sessions WHERE event_id = ? AND is_active = 1 LIMIT 1");
+                    $stmt->execute([$eventId]);
+                    $activeSessionExists = $stmt->fetch();
+                    ?>
 
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 z-10 mb-8 transition-transform duration-500 hover:scale-105 hover:shadow-md relative">
-                            <div id="qrcode" class="flex justify-center items-center"></div>
-                        </div>
-                        
-                        <div class="text-center z-10 w-full max-w-sm">
-                            <div class="w-full h-1 bg-slate-200 rounded-full mb-4 overflow-hidden relative">
-                                <div id="progressFill" class="absolute top-0 left-0 h-full bg-primary-500 origin-left"></div>
+                    <?php if (!$activeSessionExists): ?>
+                        <!-- THÔNG BÁO CHO ADMIN KHI CHƯA TẠO PHIÊN -->
+                        <div class="bg-amber-50 rounded-3xl p-8 border border-amber-200 text-center">
+                            <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <i class="bi bi-exclamation-triangle text-3xl"></i>
                             </div>
-                            <p class="text-sm font-medium text-slate-500 mb-3">Hoặc truy cập link trực tiếp (tự động đổi sau 15s):</p>
-                            <div class="bg-white px-4 py-3.5 rounded-xl border border-slate-200 text-xs font-mono text-primary-600 shadow-sm flex items-center justify-between relative group/link cursor-pointer hover:border-primary-400 hover:ring-2 hover:ring-primary-500/20 transition-all overflow-hidden" onclick="copyLink()">
-                                <span id="qr-link" class="truncate pr-4 mr-2 text-slate-400">Đang tạo...</span>
-                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 group-hover/link:bg-primary-50 group-hover/link:border-primary-200 transition-colors shrink-0">
-                                    <i class="bi bi-clipboard text-slate-400 group-hover/link:text-primary-600 transition-colors"></i>
+                            <h3 class="text-lg font-bold text-amber-800 mb-2">Chưa mở phiên điểm danh</h3>
+                            <p class="text-amber-700/80 text-sm mb-6 max-w-sm mx-auto leading-relaxed">
+                                Sự kiện này hiện chưa có phiên điểm danh (Check-in/Check-out) nào được mở. Vui lòng tạo phiên trước khi chia sẻ mã QR cho học sinh.
+                            </p>
+                            <a href="create_pin.php?event_id=<?= $eventId ?>" class="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md text-sm">
+                                <i class="bi bi-plus-circle"></i> Đi đến Tạo Phiên ngay
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <!-- ============================================== -->
+                        <!-- BẢN DÀNH CHO ADMIN: HIỂN THỊ MÃ QR TỰ ĐỔI 15S  -->
+                        <!-- ============================================== -->
+                        <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            
+                            <h3 class="text-lg font-bold text-slate-700 mb-6 text-center z-10 flex items-center gap-2">
+                                <i class="bi bi-phone"></i> Quét mã QR này để điểm danh
+                            </h3>
+                            
+                            <!-- Lớp overlay loading -->
+                            <div id="loadingOverlay" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-20 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
+                                <i class="bi bi-arrow-repeat text-4xl text-primary-600 animate-spin"></i>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 z-10 mb-8 transition-transform duration-500 hover:scale-105 hover:shadow-md relative">
+                                <div id="qrcode" class="flex justify-center items-center"></div>
+                            </div>
+                            
+                            <div class="text-center z-10 w-full max-w-sm">
+                                <div class="w-full h-1 bg-slate-200 rounded-full mb-4 overflow-hidden relative">
+                                    <div id="progressFill" class="absolute top-0 left-0 h-full bg-primary-500 origin-left"></div>
+                                </div>
+                                <p class="text-sm font-medium text-slate-500 mb-3">Hoặc truy cập link trực tiếp (tự động đổi sau 15s):</p>
+                                <div class="bg-white px-4 py-3.5 rounded-xl border border-slate-200 text-xs font-mono text-primary-600 shadow-sm flex items-center justify-between relative group/link cursor-pointer hover:border-primary-400 hover:ring-2 hover:ring-primary-500/20 transition-all overflow-hidden" onclick="copyLink()">
+                                    <span id="qr-link" class="truncate pr-4 mr-2 text-slate-400">Đang tạo...</span>
+                                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 group-hover/link:bg-primary-50 group-hover/link:border-primary-200 transition-colors shrink-0">
+                                        <i class="bi bi-clipboard text-slate-400 group-hover/link:text-primary-600 transition-colors"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
 
                     <div class="mt-8 flex justify-center gap-3">
                         <a href="ts_admin_map.php?event_id=<?= $eventId ?>" class="inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md">
