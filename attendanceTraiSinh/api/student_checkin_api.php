@@ -219,21 +219,168 @@ try {
         $mail->setFrom($env['mail']['from_email'], $env['mail']['from_name']);
         $mail->addAddress($email, $fullName);
 
-        $logo_path = __DIR__ . '/../../assets/Logo_CLB.png';
-        if (file_exists($logo_path)) {
-            $mail->AddEmbeddedImage($logo_path, 'clb_logo');
-            $body_html = '<div style="text-align:center;margin-bottom:18px;"><img src="cid:clb_logo" style="max-height:70px;"></div>';
-        } else {
-            $body_html = '';
-        }
+        $currentDate = date('d/m/Y');
+        $body_html = <<<HTML
+<!DOCTYPE html>
+<html>
 
-        $body_html .= "<div style='font-family:Arial,sans-serif;'>
-            <h2 style='color:#3178c6;'>XÁC NHẬN ĐIỂM DANH THÀNH CÔNG</h2>
-            <p>Kính chào <b>$fullName</b>,</p>
-            <p>Ban Chủ nhiệm trân trọng thông báo: bạn đã điểm danh thành công cho sự kiện <b style='color:#6f42c1;'>{$event['title']}</b> vào ngày <b>" . date('d/m/Y') . "</b>.</p>
-            <p>Mã số thẻ của bạn là: <b>{$camper['student_code']}</b>. Bạn có thể sử dụng mã này để điểm danh nhanh vào lần sau!</p>
-            <hr><small>Trân trọng,<br><b>Ban Chủ nhiệm CLB</b></small>
-            </div>";
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận Điểm danh Thành công</title>
+    <style>
+        @media screen and (max-width: 600px) {
+            .outer-wrapper {
+                padding: 15px 10px !important;
+            }
+
+            .main-container {
+                width: 100% !important;
+                border-radius: 12px !important;
+            }
+
+            .header-cell {
+                padding: 25px 15px 15px 15px !important;
+            }
+
+            .content-cell {
+                padding: 0 15px 20px 15px !important;
+            }
+
+            .title-h2 {
+                font-size: 18px !important;
+            }
+
+            .body-text,
+            .body-text p {
+                font-size: 14px !important;
+            }
+
+            .alert-box {
+                padding: 15px !important;
+            }
+
+            .note-cell {
+                padding: 0 15px 20px 15px !important;
+            }
+
+            .footer-cell {
+                padding: 20px 15px !important;
+                font-size: 11px !important;
+            }
+        }
+    </style>
+</head>
+
+<body
+    style="margin:0;padding:0;background-color:#f0fdf4;font-family:Arial, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#f0fdf4;">
+        <tr>
+            <td align="center" class="outer-wrapper" style="padding:30px 10px;">
+                <!-- MAIN CONTAINER -->
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="main-container"
+                    style="max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);border-top: 8px solid #22c55e;">
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" class="header-cell" style="padding:30px 20px 20px 20px;">
+                            <img src="https://res.cloudinary.com/df4ux0inj/image/upload/v1769186523/logo_CLB_1_tpyenv.png"
+                                alt="Logo" width="80" style="display:block;margin-bottom:12px;">
+                            <h3
+                                style="margin:4px 0;color:#166534;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:normal;">
+                                Đoàn trường THPT Lý Thường Kiệt
+                            </h3>
+                            <h3
+                                style="margin:4px 0;color:#166534;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:normal;">
+                                CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt
+                            </h3>
+                            <h2 class="title-h2"
+                                style="margin:10px 0;color:#15803d;font-size:22px;font-weight:bold;line-height:1.3;text-transform:uppercase;">
+                                {$event['title']}
+                            </h2>
+                        </td>
+                    </tr>
+
+                    <!-- BODY CONTENT -->
+                    <tr>
+                        <td class="content-cell body-text"
+                            style="padding:0 35px 20px 35px;line-height:1.7;color:#334155;font-size:15px;">
+                            <p style="font-size:16px;color:#1e293b;">Kính chào <b>{$fullName}</b>,</p>
+
+                            <div class="alert-box"
+                                style="text-align:center;margin:25px 0;padding:22px;background-color:#dcfce7;border-radius:12px;border:2px solid #22c55e;">
+                                <h3
+                                    style="margin:0;color:#15803d;font-size:16px;line-height:1.5;text-transform:uppercase;">
+                                    XÁC NHẬN ĐIỂM DANH THÀNH CÔNG!
+                                </h3>
+                                <p style="margin:10px 0 0 0;font-size:14px;color:#166534;">
+                                    Mã số thẻ: <b>{$camper['student_code']}</b>
+                                </p>
+                            </div>
+
+                            <p>
+                                Ban Chủ nhiệm trân trọng thông báo: bạn đã điểm danh thành công cho sự kiện <b
+                                    style="color:#15803d;">{$event['title']}</b> vào ngày <b>{$currentDate}</b>.
+                            </p>
+                            <p>
+                                Bạn có thể sử dụng mã số thẻ này để điểm danh nhanh vào lần sau!
+                            </p>
+                            <p>
+                                Chúc bạn có một trải nghiệm thật năng lượng, bổ ích và tạo ra những kỷ niệm tuyệt vời
+                                cùng CLB!
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- NOTE -->
+                    <tr>
+                        <td class="note-cell" style="padding:0 35px 30px 35px;border-top:1px solid #e2e8f0;">
+                            <p style="font-weight:bold;color:#1e293b;margin:25px 0 10px 0;">📌 LƯU Ý KHI THAM GIA:</p>
+                            <ul style="padding-left:20px;margin:0;color:#475569;font-size:14px;line-height:1.6;">
+                                <li style="margin-bottom:5px;">Tuân thủ tuyệt đối sự điều phối của Ban Chủ nhiệm / Ban
+                                    Tổ chức trong suốt quá trình diễn ra sự kiện.</li>
+                                <li style="margin-bottom:5px;">Tham gia đầy đủ và tích cực các hoạt động để có những
+                                    trải nghiệm trọn vẹn nhất.</li>
+                                <li>Giữ gìn vệ sinh chung tại khu vực sinh hoạt.</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" class="footer-cell"
+                            style="padding:30px;background-color:#fcfcfc;color:#64748b;font-size:12px;line-height:1.6;border-top:1px solid #e2e8f0;">
+                            <p style="margin-bottom:10px;">Trân trọng./.</p>
+                            <p style="margin:0;font-weight:bold;color:#334155;text-transform:uppercase;">
+                                Đoàn trường THPT Lý Thường Kiệt
+                            </p>
+                            <p style="margin:0;font-weight:bold;color:#475569;text-transform:uppercase;">
+                                CLB Kỹ năng Đoàn - Hội Trường THPT Lý Thường Kiệt
+                            </p>
+                            <p style="margin:4px 0;color:#15803d;font-weight:bold;">
+                                Ban Chủ nhiệm CLB
+                            </p>
+                            <div style="margin-top:15px;padding-top:15px;border-top:1px solid #e2e8f0;">
+                                <p style="margin:0;">📞 +84 352 006 062 (Đỗ Huy Hoàng | Nhân sự) | 📧
+                                    clbkynangdoan.ltk@gmail.com</p>
+                                <p style="margin:2px 0;">Văn phòng Đoàn trường THPT Lý Thường Kiệt</p>
+                                <p style="margin:0;">609 Thống Nhất, Phường La Gi, tỉnh Lâm Đồng</p>
+                            </div>
+                            <div
+                                style="margin-top:15px;padding-top:15px;border-top:1px dashed #cbd5e1;font-size:11px;color:#94a3b8;font-style:italic;">
+                                Đây là email tự động từ hệ thống quản lý của Ban Chủ nhiệm CLB nên vui lòng không reply.
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
+HTML;
 
         $mail->isHTML(true);
         $mail->Subject = "[TB] XÁC NHẬN ĐIỂM DANH SỰ KIỆN " . mb_strtoupper($event['title'], 'UTF-8');
