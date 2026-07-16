@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/session.php';
 require __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['user_id'])) {
@@ -68,6 +69,7 @@ if (isset($_GET['msg'])) {
 
 // Xử lý thêm học sinh (Mã học sinh tự động hoặc import)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
+    verify_csrf();
     // Tạo mã học sinh tự động: 2 số cuối năm + 4 số tăng dần
     $year = date('y');
     $stmt = $pdo->prepare("SELECT student_code FROM students WHERE LEFT(student_code,2)=? ORDER BY student_code DESC LIMIT 1");
@@ -107,9 +109,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
     }
 }
 
-// Xử lý xóa học sinh
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
+// Xử lý xóa học sinh (POST + CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_student'])) {
+    verify_csrf();
+    $delete_id = (int)$_POST['delete_id'];
     $stmt = $pdo->prepare("DELETE FROM attendance WHERE student_id=?");
     $stmt->execute([$delete_id]);
     $stmt = $pdo->prepare("DELETE FROM students WHERE id=?");
@@ -118,8 +121,9 @@ if (isset($_GET['delete_id'])) {
     exit;
 }
 
-// Xử lý xóa tất cả học sinh
-if (isset($_POST['delete_all'])) {
+// Xử lý xóa tất cả học sinh (POST + CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_all']) && !isset($_POST['delete_student'])) {
+    verify_csrf();
     $pdo->exec("DELETE FROM attendance");
     $pdo->exec("DELETE FROM students");
     header("Location: students.php?msg=delete_all_success");
@@ -130,10 +134,12 @@ if (isset($_POST['delete_all'])) {
 // XOÁ TẤT CẢ TRẠI SINH (ADMIN)
 // ==========================
 if (
-    isset($_POST['delete_all']) &&
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['delete_all_campers']) &&
     isset($_SESSION['role']) &&
     $_SESSION['role'] === 'admin'
 ) {
+    verify_csrf();
     try {
         $pdo->beginTransaction();
 
@@ -161,7 +167,8 @@ if (
 
 // Xử lý sửa học sinh
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_student'])) {
-    $edit_id = $_POST['edit_id'];
+    verify_csrf();
+    $edit_id = (int)$_POST['edit_id'];
     $student_code = trim($_POST['student_code'] ?? '');
     $ho = trim($_POST['ho'] ?? '');
     $ten = trim($_POST['ten'] ?? '');
@@ -188,6 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_student'])) {
 
 // Xử lý import CSV (tự sinh mã học sinh nếu thiếu)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['import_csv'])) {
+    verify_csrf();
     if (is_uploaded_file($_FILES['csv_file']['tmp_name'])) {
         $handle = fopen($_FILES['csv_file']['tmp_name'], "r");
         $row = 0;
@@ -369,7 +377,8 @@ include '../includes/sidebar.php';
             <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
                     <!-- Bulk Xoa tat ca form -->
-                    <form method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa TẤT CẢ học sinh?');" class="inline-block">
+                    <form method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa TẤT CẢ học sinh?');" class="inline-block">
+                        <?= csrf_field() ?>
                         <button type="submit" name="delete_all" class="flex items-center gap-2 bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg font-semibold transition-colors shadow-sm text-sm">
                             <i class="bi bi-trash3"></i> Xóa tất cả
                         </button>
@@ -395,6 +404,7 @@ include '../includes/sidebar.php';
                         <i class="bi bi-person-plus text-primary-500"></i> Thêm học sinh mới
                     </h3>
                     <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5" x-data="{ ho: '', ten: '' }">
+                        <?= csrf_field() ?>
                         <!-- Code -->
                         <div class="lg:col-span-1">
                             <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Mã HS</label>
@@ -474,6 +484,7 @@ include '../includes/sidebar.php';
                 <i class="bi bi-pencil-square text-primary-500"></i> Sửa thông tin học sinh
             </h3>
             <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5">
+                <?= csrf_field() ?>
                 <input type="hidden" name="edit_id" value="<?= $editStudent['id'] ?>">
                 
                 <div class="lg:col-span-1">
@@ -525,6 +536,7 @@ include '../includes/sidebar.php';
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white rounded-2xl p-5 shadow-[0_2px_10px_rgb(0,0,0,0.02)] border border-slate-100 mb-6">
             <div class="md:col-span-6 lg:col-span-5">
                 <form method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+                    <?= csrf_field() ?>
                     <div class="w-full flex-1">
                         <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Import từ CSV</label>
                         <input type="file" name="csv_file" accept=".csv" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all border border-slate-200 rounded-lg cursor-pointer bg-slate-50">
@@ -594,9 +606,13 @@ include '../includes/sidebar.php';
                                 <a href="students.php?edit_id=<?= $student['id'] ?>" class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <form method="POST" class="inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="delete_id" value="<?= $student['id'] ?>">
+                                    <button type="submit" name="delete_student" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <?php if ($student['phone'] || $student['email']): ?>
@@ -655,9 +671,13 @@ include '../includes/sidebar.php';
                                         <a href="students.php?edit_id=<?= $student['id'] ?>" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <a href="students.php?delete_id=<?= $student['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <form method="POST" class="inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')">
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="delete_id" value="<?= $student['id'] ?>">
+                                            <button type="submit" name="delete_student" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

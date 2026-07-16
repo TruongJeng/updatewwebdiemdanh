@@ -2,7 +2,9 @@
 session_set_cookie_params([
     'path' => '/hethongdiemdanh/',
     'httponly' => true,
-    'samesite' => 'Lax'
+    'secure' => true,
+    'samesite' => 'Strict'
 ]);
 
 session_start();
+

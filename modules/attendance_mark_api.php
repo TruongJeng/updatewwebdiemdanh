@@ -1,5 +1,14 @@
 <?php
+require_once __DIR__ . '/../config/session.php';
 require_once __DIR__ . '/../includes/db.php';
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user_id'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code(401);
+    echo json_encode(['success'=>0,'msg'=>'Chưa đăng nhập']);
+    exit;
+}
 
 $event_id = $_POST['event_id'] ?? '';
 $student_code = trim($_POST['student_code'] ?? '');

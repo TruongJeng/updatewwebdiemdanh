@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/session.php';
 require __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 // Hàm sinh mã PIN random, không trùng
 function generateUniquePin($pdo, $length = 6) {
@@ -29,6 +30,7 @@ if (!in_array($_SESSION['role'], ['admin', 'teacher', 'club_leader'])) {
 $addMsg = '';
 $addMsgType = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_event'])) {
+    verify_csrf();
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $event_date = $_POST['event_date'] ?? '';
@@ -37,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_event'])) {
         $pin = generateUniquePin($pdo, 6); // Sinh mã PIN 6 số
         $stmt = $pdo->prepare("INSERT INTO events (title, pin, description, event_date, created_by) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$title, $pin, $description, $event_date, $_SESSION['user_id']]);
-        $addMsg = "Tạo sự kiện thành công! Mã PIN: <b>$pin</b>";
+        $addMsg = "Tạo sự kiện thành công! Mã PIN: " . htmlspecialchars($pin);
         $addMsgType = "success";
     } else {
         $addMsg = "Vui lòng nhập đủ tiêu đề và ngày diễn ra!";
@@ -70,15 +72,25 @@ if (isset($_GET['format']) && $_GET['format'] === 'json') {
     }
     exit;
 }
-// Xử lý xóa sự kiện
-if (isset($_GET['delete_id'])) {
-    $delete_id = (int)$_GET['delete_id'];
+// Xử lý xóa sự kiện (POST + CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event'])) {
+    verify_csrf();
+    $delete_id = (int)$_POST['delete_id'];
     $stmt = $pdo->prepare("DELETE FROM attendance WHERE event_id = ?");
     $stmt->execute([$delete_id]);
     $stmt = $pdo->prepare("DELETE FROM events WHERE id = ?");
     $stmt->execute([$delete_id]);
-    $addMsg = "Đã xóa sự kiện!";
-    $addMsgType = "success";
+    header("Location: events.php?msg=delete_success");
+    exit;
+}
+
+$addMsg = '';
+$addMsgType = '';
+if (isset($_GET['msg'])) {
+    if ($_GET['msg'] === 'delete_success') {
+        $addMsg = 'Đã xóa sự kiện!';
+        $addMsgType = 'success';
+    }
 }
 
 // Xử lý sửa sự kiện
@@ -90,6 +102,7 @@ if (isset($_GET['edit_id'])) {
     $editEvent = $stmt->fetch();
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_event'])) {
+    verify_csrf();
     $edit_id = (int)$_POST['edit_id'];
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
@@ -165,7 +178,7 @@ include '../includes/sidebar.php';
             <div class="mb-6 flex items-center justify-between p-4 bg-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-50 border-l-4 border-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-500 text-<?= $addMsgType == 'success' ? 'emerald' : 'red' ?>-700 rounded-r-lg shadow-sm">
                 <div class="flex items-center gap-2">
                     <i class="bi bi-<?= $addMsgType == 'success' ? 'check-circle-fill' : 'exclamation-circle-fill' ?> text-lg"></i>
-                    <span class="font-medium"><?= $addMsg ?></span>
+                    <span class="font-medium"><?= htmlspecialchars($addMsg) ?></span>
                 </div>
             </div>
         <?php endif; ?>
@@ -187,6 +200,7 @@ include '../includes/sidebar.php';
                     <i class="bi bi-pencil-square text-primary-500"></i> Sửa sự kiện
                 </h3>
                 <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="edit_id" value="<?= $editEvent['id'] ?>">
                     
                     <div class="lg:col-span-2">
@@ -225,6 +239,7 @@ include '../includes/sidebar.php';
                         <i class="bi bi-calendar-plus text-primary-500"></i> Thêm sự kiện mới
                     </h3>
                     <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <?= csrf_field() ?>
                         
                         <div class="lg:col-span-2">
                             <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2" for="title">Tiêu đề sự kiện</label>
@@ -292,9 +307,13 @@ include '../includes/sidebar.php';
                                 <a href="events.php?edit_id=<?= $event['id'] ?>" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200" title="Sửa">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="events.php?delete_id=<?= $event['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa sự kiện này?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border border-red-100" title="Xóa">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <form method="POST" class="inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa sự kiện này?')">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="delete_id" value="<?= $event['id'] ?>">
+                                    <button type="submit" name="delete_event" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors border border-red-100" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -361,9 +380,13 @@ include '../includes/sidebar.php';
                                     <a href="events.php?edit_id=<?= $event['id'] ?>" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-slate-200" title="Sửa">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="events.php?delete_id=<?= $event['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa sự kiện này? Toàn bộ dữ liệu điểm danh cũng sẽ bị xóa!')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <form method="POST" class="inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa sự kiện này? Toàn bộ dữ liệu điểm danh cũng sẽ bị xóa!')">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="delete_id" value="<?= $event['id'] ?>">
+                                        <button type="submit" name="delete_event" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors shadow-sm border border-red-100" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

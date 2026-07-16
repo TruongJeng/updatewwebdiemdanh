@@ -1,10 +1,11 @@
 <?php
-session_start();
+require_once __DIR__ . '/../config/session.php';
 require __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 // Chỉ cho admin vào
-if ($_SESSION['role'] !== 'admin') {
-    header('Location: /dashboard.php');
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: /hethongdiemdanh/dashboard.php');
     exit();
 }
 
@@ -26,12 +27,18 @@ if (isset($_GET['msg'])) {
     if ($_GET['msg'] === 'add_error_email') $error = "Email không hợp lệ!";
     if ($_GET['msg'] === 'add_error_exists') $error = "Tên đăng nhập đã tồn tại!";
     if ($_GET['msg'] === 'add_error_missing') $error = "Vui lòng điền đầy đủ thông tin!";
-    if ($_GET['msg'] === 'add_success') $msg = "Đã thêm tài khoản mới! " . htmlspecialchars($_GET['detail'] ?? '');
+    if ($_GET['msg'] === 'add_success') $msg = "Đã thêm tài khoản mới!";
+}
+// Session flash message (dùng để truyền mật khẩu thay vì URL)
+if (isset($_SESSION['flash_msg'])) {
+    $msg = $_SESSION['flash_msg'];
+    unset($_SESSION['flash_msg']);
 }
 
-// Xử lý xóa tài khoản
-if (isset($_GET['delete_id'])) {
-    $delete_id = (int)$_GET['delete_id'];
+// Xử lý xóa tài khoản (POST + CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
+    verify_csrf();
+    $delete_id = (int)$_POST['delete_id'];
     // Không cho phép xóa chính mình
     if ($delete_id == $_SESSION['user_id']) {
         header("Location: users.php?msg=delete_error");
@@ -46,6 +53,7 @@ if (isset($_GET['delete_id'])) {
 
 // Xử lý sửa tài khoản
 if (isset($_POST['edit_user'])) {
+    verify_csrf();
     $uid = (int)$_POST['uid'];
     $username = trim($_POST['username'] ?? '');
     $full_name = trim($_POST['full_name'] ?? '');
@@ -85,6 +93,7 @@ if (isset($_POST['edit_user'])) {
 
 // Thêm tài khoản mới
 if (isset($_POST['add_user'])) {
+    verify_csrf();
     $username = trim($_POST['username']);
     $full_name = trim($_POST['full_name']);
     $role = $_POST['role'];
@@ -104,7 +113,8 @@ if (isset($_POST['add_user'])) {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO users (username, full_name, role, password_hash, email) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$username, $full_name, $role, $hash, $email]);
-                header("Location: users.php?msg=add_success&detail=" . urlencode("Mật khẩu: $password"));
+                $_SESSION['flash_msg'] = "Đã thêm tài khoản mới! Mật khẩu: " . htmlspecialchars($password);
+                header("Location: users.php?msg=add_success");
                 exit;
             }
         }
@@ -183,6 +193,7 @@ include '../includes/sidebar.php';
                         <i class="bi bi-person-plus text-primary-500"></i> Tạo tài khoản
                     </h3>
                     <form method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5" x-data="{ showPass: false }">
+                        <?= csrf_field() ?>
                         <div class="xl:col-span-1">
                             <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Tên đăng nhập</label>
                             <input type="text" name="username" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm focus:border-primary-500 focus:ring-2 outline-none">
@@ -252,9 +263,13 @@ include '../includes/sidebar.php';
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <?php if ($u['id'] != $_SESSION['user_id']): ?>
-                                    <a href="users.php?delete_id=<?= $u['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <form method="POST" class="inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="delete_id" value="<?= $u['id'] ?>">
+                                        <button type="submit" name="delete_user" class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -343,9 +358,13 @@ include '../includes/sidebar.php';
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
                                             <?php if ($u['id'] != $_SESSION['user_id']): ?>
-                                            <a href="users.php?delete_id=<?= $u['id'] ?>" onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
+                                            <form method="POST" class="inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')">
+                                                <?= csrf_field() ?>
+                                                <input type="hidden" name="delete_id" value="<?= $u['id'] ?>">
+                                                <button type="submit" name="delete_user" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
                                             <?php else: ?>
                                             <span class="w-8 h-8 flex items-center justify-center text-slate-300" title="Không thể tự xóa mình">
                                                 <i class="bi bi-person-lock"></i>
@@ -396,6 +415,7 @@ include '../includes/sidebar.php';
                     </div>
                     
                     <form method="post" class="p-6">
+                        <?= csrf_field() ?>
                         <input type="hidden" name="uid" :value="editUser.id">
                         
                         <div class="mb-4">

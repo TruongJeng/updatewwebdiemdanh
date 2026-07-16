@@ -9,26 +9,51 @@ require 'includes/db.php';
 
 $error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST["username"] ?? '';
-    $password = $_POST["password"] ?? '';
+    // Rate limiting: tối đa 5 lần thử trong 5 phút
+    $max_attempts = 5;
+    $lockout_time = 300; // 5 phút
+    if (!isset($_SESSION['login_attempts'])) $_SESSION['login_attempts'] = 0;
+    if (!isset($_SESSION['login_lockout'])) $_SESSION['login_lockout'] = 0;
 
-    $user = check_login($username, $password);
-
-    if ($user) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role'];
-        $_SESSION['full_name'] = $user['full_name'];
-        $_SESSION['first_login'] = $user['first_login'];
-
-        if ($user['first_login']) {
-            header("Location: password/new_password.php");
-            exit();
-        } else {
-            header("Location: dashboard.php");
-            exit();
-        }
+    if ($_SESSION['login_attempts'] >= $max_attempts && (time() - $_SESSION['login_lockout']) < $lockout_time) {
+        $remaining = $lockout_time - (time() - $_SESSION['login_lockout']);
+        $error = "Quá nhiều lần thử đăng nhập. Vui lòng đợi " . ceil($remaining / 60) . " phút.";
     } else {
-        $error = "Sai tên đăng nhập hoặc mật khẩu!";
+        if ($_SESSION['login_attempts'] >= $max_attempts) {
+            // Reset sau khi hết thời gian lockout
+            $_SESSION['login_attempts'] = 0;
+        }
+
+        $username = $_POST["username"] ?? '';
+        $password = $_POST["password"] ?? '';
+
+        $user = check_login($username, $password);
+
+        if ($user) {
+            // Reset login attempts
+            $_SESSION['login_attempts'] = 0;
+            unset($_SESSION['login_lockout']);
+
+            // Chống session fixation
+            session_regenerate_id(true);
+
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['first_login'] = $user['first_login'];
+
+            if ($user['first_login']) {
+                header("Location: password/new_password.php");
+                exit();
+            } else {
+                header("Location: dashboard.php");
+                exit();
+            }
+        } else {
+            $_SESSION['login_attempts']++;
+            $_SESSION['login_lockout'] = time();
+            $error = "Sai tên đăng nhập hoặc mật khẩu!";
+        }
     }
 }
 ?>

@@ -1,7 +1,16 @@
 <?php
 ob_clean();
 header('Content-Type: application/json; charset=utf-8');
+
+require_once __DIR__ . '/../../config/session.php';
 require_once __DIR__ . '/../config/db.php';
+
+// Kiểm tra xác thực: cần đăng nhập hoặc có phiên scanner (đã nhập PIN)
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['attendance_session_id'])) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Chưa xác thực']);
+    exit;
+}
 
 /* ===== 1. READ JSON INPUT ===== */
 $raw = file_get_contents('php://input');

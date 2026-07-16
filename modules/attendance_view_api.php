@@ -1,6 +1,15 @@
 <?php
+require_once __DIR__ . '/../config/session.php';
 require_once __DIR__ . '/../includes/db.php';
 header('Content-Type: application/json');
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Chưa đăng nhập']);
+    exit;
+}
+
 $event_id = $_GET['event_id'] ?? '';
 if (!$event_id) { echo '[]'; exit(); }
 

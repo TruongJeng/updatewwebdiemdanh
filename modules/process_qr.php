@@ -1,5 +1,6 @@
 <?php
 // Kết nối cơ sở dữ liệu (db.php chứa cấu hình PDO)
+require_once __DIR__ . '/../config/session.php';
 require __DIR__.'/../includes/db.php';
 require __DIR__ . '/PHPMailer/PHPMailer.php';
 require __DIR__ . '/PHPMailer/SMTP.php';
@@ -8,10 +9,19 @@ require __DIR__ . '/PHPMailer/Exception.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Debug lỗi trong môi trường phát triển (tắt khi deploy)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// Tắt hiển thị lỗi trên production, ghi log thay vì hiển thị
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+ini_set('log_errors', 1);
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user_id'])) {
+    header('Content-Type: application/json; charset=UTF-8');
+    http_response_code(401);
+    echo json_encode(['success' => false, 'error' => 'Chưa đăng nhập']);
+    exit;
+}
 
 // Đáp ứng chuẩn JSON
 header('Content-Type: application/json; charset=UTF-8');
