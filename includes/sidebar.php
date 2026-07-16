@@ -4,7 +4,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 // Helper function to check active state
 function isActive($path, $currentPage) {
-    return $currentPage === $path ? 'bg-primary-50 text-primary-700 font-semibold border-r-4 border-primary-600' : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium border-r-4 border-transparent';
+    return $currentPage === $path ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-semibold border-r-4 border-primary-600 dark:border-primary-500' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 dark:hover:text-primary-400 font-medium border-r-4 border-transparent';
 }
 ?>
 
@@ -60,12 +60,12 @@ function isActive($path, $currentPage) {
      x-transition:leave="transition-opacity ease-linear duration-300"
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1080] lg:hidden" 
+     class="fixed inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm z-[1080] lg:hidden" 
      x-cloak></div>
 
 <!-- Sidebar -->
 <aside :class="$store.sidebar.open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-       class="fixed top-14 sm:top-16 left-0 z-[1090] w-64 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] bg-white border-r border-slate-200 shadow-sm transition-transform duration-300 ease-in-out overflow-y-auto overscroll-contain flex flex-col pb-20 lg:pb-0">
+       class="fixed top-14 sm:top-16 left-0 z-[1090] w-64 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shadow-sm transition-transform duration-300 ease-in-out overflow-y-auto overscroll-contain flex flex-col pb-20 lg:pb-0">
     
     <nav class="flex-1 px-3 sm:px-4 py-4 sm:py-6 space-y-1">
         
@@ -77,7 +77,7 @@ function isActive($path, $currentPage) {
 
         <!-- Divider + Label: Trại sinh -->
         <div class="pt-3 pb-1">
-            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Điểm danh</p>
+            <p class="px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Điểm danh</p>
         </div>
 
         <!-- Sự kiện (MỚI - Trung tâm) -->
@@ -129,7 +129,7 @@ function isActive($path, $currentPage) {
 
         <!-- Sự kiện & Điểm danh (Dropdown) -->
         <div x-data="{ expanded: false }" class="pt-1">
-            <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-3 sm:py-2.5 text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
+            <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-3 sm:py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 dark:hover:text-primary-400 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
                 <div class="flex items-center gap-3">
                     <i class="bi bi-calendar-event text-lg"></i>
                     <span>Sự kiện</span>
@@ -145,19 +145,19 @@ function isActive($path, $currentPage) {
                  x-transition:leave-start="opacity-100 scale-y-100"
                  x-transition:leave-end="opacity-0 scale-y-95"
                  x-cloak>
-                <ul class="pl-11 pr-3 py-2 space-y-0.5 border-l-2 border-slate-100 ml-[18px] mt-1">
-                    <li><a href="/hethongdiemdanh/modules/events" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-calendar-event mr-2"></i> Sự kiện</a></li>
-                    <li><a href="/hethongdiemdanh/modules/students" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-people mr-2"></i> Học sinh</a></li>
-                    <li><a href="/hethongdiemdanh/modules/attendance" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-clipboard-check mr-2"></i> Điểm danh</a></li>
-                    <li><a href="/hethongdiemdanh/modules/report" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-bar-chart-line mr-2"></i> Thống kê</a></li>
-                    <li><a href="/hethongdiemdanh/modules/team" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-people-fill mr-2"></i> Chia đội</a></li>
+                <ul class="pl-11 pr-3 py-2 space-y-0.5 border-l-2 border-slate-100 dark:border-slate-800 ml-[18px] mt-1">
+                    <li><a href="/hethongdiemdanh/modules/events" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50/50 dark:hover:bg-slate-800 rounded-md transition-colors"><i class="bi bi-calendar-event mr-2"></i> Sự kiện</a></li>
+                    <li><a href="/hethongdiemdanh/modules/students" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50/50 dark:hover:bg-slate-800 rounded-md transition-colors"><i class="bi bi-people mr-2"></i> Học sinh</a></li>
+                    <li><a href="/hethongdiemdanh/modules/attendance" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50/50 dark:hover:bg-slate-800 rounded-md transition-colors"><i class="bi bi-clipboard-check mr-2"></i> Điểm danh</a></li>
+                    <li><a href="/hethongdiemdanh/modules/report" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50/50 dark:hover:bg-slate-800 rounded-md transition-colors"><i class="bi bi-bar-chart-line mr-2"></i> Thống kê</a></li>
+                    <li><a href="/hethongdiemdanh/modules/team" @click="$store.sidebar.close()" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50/50 dark:hover:bg-slate-800 rounded-md transition-colors"><i class="bi bi-people-fill mr-2"></i> Chia đội</a></li>
                 </ul>
             </div>
         </div>
 
         <!-- Divider + Label: Hệ thống -->
         <div class="pt-3 pb-1">
-            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hệ thống</p>
+            <p class="px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Hệ thống</p>
         </div>
 
         <!-- Users -->
@@ -168,7 +168,7 @@ function isActive($path, $currentPage) {
 
         <!-- Tiện ích (Dropdown) -->
         <div x-data="{ expanded: false }" class="pt-1">
-            <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-3 sm:py-2.5 text-slate-600 hover:bg-slate-50 hover:text-primary-600 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
+            <button @click="expanded = !expanded" class="w-full flex items-center justify-between px-3 py-3 sm:py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 dark:hover:text-primary-400 font-medium rounded-l-lg border-r-4 border-transparent transition-colors focus:outline-none">
                 <div class="flex items-center gap-3">
                     <i class="bi bi-tools text-lg"></i>
                     <span>Tiện ích</span>
@@ -184,8 +184,8 @@ function isActive($path, $currentPage) {
                  x-transition:leave-start="opacity-100 scale-y-100"
                  x-transition:leave-end="opacity-0 scale-y-95"
                  x-cloak>
-                <ul class="pl-11 pr-3 py-2 space-y-0.5 border-l-2 border-slate-100 ml-[18px] mt-1">
-                    <li><a href="https://www.online-stopwatch.com/" target="_blank" rel="noopener noreferrer" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 hover:text-primary-600 hover:bg-primary-50/50 rounded-md transition-colors"><i class="bi bi-stopwatch mr-2"></i> Trò chơi</a></li>
+                <ul class="pl-11 pr-3 py-2 space-y-0.5 border-l-2 border-slate-100 dark:border-slate-800 ml-[18px] mt-1">
+                    <li><a href="https://www.online-stopwatch.com/" target="_blank" rel="noopener noreferrer" class="block px-2 py-2.5 sm:py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50/50 dark:hover:bg-slate-800 rounded-md transition-colors"><i class="bi bi-stopwatch mr-2"></i> Trò chơi</a></li>
                 </ul>
             </div>
         </div>
@@ -193,13 +193,13 @@ function isActive($path, $currentPage) {
     </nav>
     
     <!-- Footer / Bottom Links in Sidebar -->
-    <div class="px-4 py-4 border-t border-slate-100 mt-auto bg-slate-50/50">
+    <div class="px-4 py-4 border-t border-slate-100 dark:border-slate-800 mt-auto bg-slate-50/50 dark:bg-slate-900/50">
         <!-- Info Modal Trigger -->
-        <a href="#" data-bs-toggle="modal" data-bs-target="#softInfoModal" class="flex items-center gap-3 px-3 py-2.5 mb-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 text-sm font-medium rounded-lg transition-colors">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#softInfoModal" class="flex items-center gap-3 px-3 py-2.5 mb-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200 text-sm font-medium rounded-lg transition-colors">
             <i class="bi bi-info-circle text-lg"></i>
             <span>Thông tin phần mềm</span>
         </a>
-        <a href="/hethongdiemdanh/logout" class="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
+        <a href="/hethongdiemdanh/logout" class="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-lg transition-colors">
             <i class="bi bi-box-arrow-right text-lg"></i>
             <span>Đăng xuất</span>
         </a>

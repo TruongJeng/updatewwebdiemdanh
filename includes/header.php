@@ -22,7 +22,15 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Setup initial theme to prevent FOUC (Flash of Unstyled Content)
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -53,7 +61,6 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
     <style>
         /* Base styles & Utility overrides */
         body { 
-            background-color: #f0f4f8; 
             padding-top: 56px; 
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -81,19 +88,17 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
 
         /* Mobile card utility */
         .mobile-card {
-            background: white;
             border-radius: 1rem;
             padding: 1rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-            border: 1px solid #f1f5f9;
         }
         .mobile-card + .mobile-card { margin-top: 0.75rem; }
     </style>
 </head>
-<body x-data class="text-slate-800 antialiased selection:bg-primary-200 selection:text-primary-900 min-h-screen flex flex-col">
+<body x-data class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 antialiased selection:bg-primary-200 selection:text-primary-900 min-h-screen flex flex-col transition-colors duration-300">
 
 <!-- Topbar -->
-<header class="fixed top-0 left-0 right-0 h-14 sm:h-16 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 shadow-md z-[1200] px-3 sm:px-6 flex items-center justify-between transition-all duration-300">
+<header class="fixed top-0 left-0 right-0 h-14 sm:h-16 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 dark:from-slate-800 dark:via-slate-800 dark:to-slate-900 shadow-md dark:shadow-black/50 z-[1200] px-3 sm:px-6 flex items-center justify-between transition-all duration-300">
     
     <!-- Logo Area -->
     <div class="flex items-center">
@@ -106,8 +111,17 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
         </a>
     </div>
 
-    <!-- User Menu (Alpine.js) -->
-    <div class="relative" x-data="{ open: false }" @click.away="open = false" @close.stop="open = false">
+    <!-- Actions Area (Theme + User Menu) -->
+    <div class="flex items-center gap-1 sm:gap-3">
+        
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-white/50" aria-label="Toggle Dark Mode">
+            <i class="bi bi-moon-stars-fill text-sm dark:hidden"></i>
+            <i class="bi bi-sun-fill text-sm hidden dark:block text-amber-300"></i>
+        </button>
+
+        <!-- User Menu (Alpine.js) -->
+        <div class="relative" x-data="{ open: false }" @click.away="open = false" @close.stop="open = false">
         <button @click="open = !open" class="flex items-center gap-2 text-white hover:bg-white/10 px-2 sm:px-3 py-1.5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white/50" :aria-expanded="open">
             <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center border border-white/30 overflow-hidden shadow-sm">
                 <i class="bi bi-person-fill text-lg"></i>
@@ -154,4 +168,18 @@ if (!isset($full_name)) $full_name = $_SESSION['full_name'] ?? 'Người dùng';
         </div>
     </div>
 </header>
+
+<!-- Theme Toggle Script -->
+<script>
+document.getElementById('themeToggleBtn').addEventListener('click', () => {
+    if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+    } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+    }
+});
+</script>
+
 <!-- Nội dung trang bắt đầu -->
