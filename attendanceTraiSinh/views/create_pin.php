@@ -4,7 +4,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../../config/session.php';
-require_once  __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../../includes/audit.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../index.php");
@@ -24,6 +25,8 @@ if (isset($_POST['close_session'])) {
         WHERE is_active = 1
     ");
     $stmt->execute();
+    
+    log_admin_action($pdo, $_SESSION['user_id'], 'CLOSE_SESSION', "Đóng phiên điểm danh hiện tại");
 
     // Xóa session PHP khi đóng phiên
     unset($_SESSION['attendance_session_id']);
@@ -84,6 +87,9 @@ $type = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
     $eventId = (int)($_POST['event_id'] ?? 0);
+    $lat = $_POST['lat'] ?? null;
+    $lng = $_POST['lng'] ?? null;
+    $radius = isset($_POST['radius']) ? (int)$_POST['radius'] : 50;
 
     $type   = $_POST['type'] ?? null;
     $userId = $_SESSION['user_id'];
@@ -115,15 +121,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
             ");
 
             $stmt = $pdo->prepare("
-                INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active)
-                VALUES (?, ?, ?, ?, 1)
+                INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active, lat, lng, radius)
+                VALUES (?, ?, ?, ?, 1, ?, ?, ?)
             ");
-            $stmt->execute([$eventId ?: null, $pin, 'CHECK_IN', $userId]);
+            $stmt->execute([$eventId ?: null, $pin, 'CHECK_IN', $userId, $lat, $lng, $radius]);
 
             // Lưu session ID vào PHP session để các trang thống kê có thể truy cập
             $_SESSION['attendance_session_id'] = $pdo->lastInsertId();
             $_SESSION['attendance_type']       = 'CHECK_IN';
             $_SESSION['scanner_pin']           = $pin;
+            
+            log_admin_action($pdo, $userId, 'CREATE_SESSION', "Tạo mã PIN $pin (CHECK IN) cho sự kiện ID: " . ($eventId ?: 'None'));
 
         } else {
 
@@ -147,15 +155,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'])) {
             } else {
                 // Không có phiên active → tạo phiên CHECK_OUT mới
                 $stmt = $pdo->prepare("
-                    INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active)
-                    VALUES (?, ?, 'CHECK_OUT', ?, 1)
+                    INSERT INTO attendance_sessions (event_id, pin_code, type, created_by, is_active, lat, lng, radius)
+                    VALUES (?, ?, 'CHECK_OUT', ?, 1, ?, ?, ?)
                 ");
-                $stmt->execute([$eventId ?: null, $pin, $userId]);
+                $stmt->execute([$eventId ?: null, $pin, $userId, $lat, $lng, $radius]);
 
                 $_SESSION['attendance_session_id'] = $pdo->lastInsertId();
                 $_SESSION['attendance_type']       = 'CHECK_OUT';
                 $_SESSION['scanner_pin']           = $pin;
             }
+            
+            log_admin_action($pdo, $userId, 'CREATE_SESSION', "Tạo mã PIN $pin (CHECK OUT) cho sự kiện ID: " . ($eventId ?: 'None'));
         }
 
         $pdo->commit();
@@ -205,6 +215,8 @@ if (isset($_GET['delete_session']) && $_SESSION['role'] === 'admin') {
         ");
         $stmt->execute([$sessionId]);
 
+        log_admin_action($pdo, $_SESSION['user_id'], 'DELETE_SESSION', "Xoá phiên điểm danh ID: $sessionId");
+
         $pdo->commit();
         header("Location: ".$_SERVER['PHP_SELF']."?deleted=1");
         exit;
@@ -242,6 +254,8 @@ if (isset($_POST['delete_all_sessions']) && $_SESSION['role'] === 'admin') {
 
     // xoá session
     $pdo->exec("DELETE FROM attendance_sessions");
+    
+    log_admin_action($pdo, $_SESSION['user_id'], 'DELETE_ALL_SESSIONS', "Xoá toàn bộ phiên và lịch sử điểm danh");
 
     header("Location: ".$_SERVER['PHP_SELF']."?deleted_all=1");
     exit;
@@ -310,10 +324,35 @@ include __DIR__ . '/../../includes/sidebar.php';
                             <option value="CHECK_OUT" <?= $type === 'CHECK_OUT' ? 'selected' : '' ?>>CHECK OUT</option>
                         </select>
 
-                        <button type="submit" class="w-full flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-sm">
+                        <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2 mt-5">
+                            <i class="bi bi-geo-alt-fill text-primary-500"></i> Bán kính cho phép (Mét)
+                        </label>
+                        <input type="number" name="radius" value="50" min="10" max="5000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all mb-5 font-medium" required>
+                        <p class="text-xs text-slate-500 mb-5 -mt-3"><i class="bi bi-info-circle"></i> Trại sinh phải đứng trong bán kính này tính từ vị trí của bạn để điểm danh.</p>
+
+                        <!-- Hidden GPS Fields -->
+                        <input type="hidden" name="lat" id="gps_lat">
+                        <input type="hidden" name="lng" id="gps_lng">
+
+                        <button type="submit" id="btnCreatePin" class="w-full flex justify-center items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-sm relative">
                             <i class="bi bi-plus-circle"></i> Tạo PIN mới
                         </button>
                     </form>
+
+                    <script>
+                        // Capture GPS Location
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const btnCreatePin = document.getElementById('btnCreatePin');
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition((position) => {
+                                    document.getElementById('gps_lat').value = position.coords.latitude;
+                                    document.getElementById('gps_lng').value = position.coords.longitude;
+                                }, (error) => {
+                                    console.warn("Không lấy được GPS. Geofencing sẽ bị tắt cho phiên này.", error);
+                                }, { enableHighAccuracy: true });
+                            }
+                        });
+                    </script>
                     
                     <?php if ($pin): ?>
                         <div class="mt-6 pt-6 border-t border-slate-100 text-center animate-[fadeIn_0.5s_ease-out]">

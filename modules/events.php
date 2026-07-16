@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/session.php';
 require __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/csrf.php';
+require_once __DIR__ . '/../includes/audit.php';
 
 // Hàm sinh mã PIN random, không trùng
 function generateUniquePin($pdo, $length = 6) {
@@ -39,6 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_event'])) {
         $pin = generateUniquePin($pdo, 6); // Sinh mã PIN 6 số
         $stmt = $pdo->prepare("INSERT INTO events (title, pin, description, event_date, created_by) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$title, $pin, $description, $event_date, $_SESSION['user_id']]);
+        
+        log_admin_action($pdo, $_SESSION['user_id'], 'CREATE_EVENT', "Tạo sự kiện: $title (PIN: $pin)");
+        
         $addMsg = "Tạo sự kiện thành công! Mã PIN: " . htmlspecialchars($pin);
         $addMsgType = "success";
     } else {
@@ -80,6 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event'])) {
     $stmt->execute([$delete_id]);
     $stmt = $pdo->prepare("DELETE FROM events WHERE id = ?");
     $stmt->execute([$delete_id]);
+    
+    log_admin_action($pdo, $_SESSION['user_id'], 'DELETE_EVENT', "Xóa sự kiện ID: $delete_id");
+    
     header("Location: events.php?msg=delete_success");
     exit;
 }
@@ -119,6 +126,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_event'])) {
         } else {
             $stmt = $pdo->prepare("UPDATE events SET title=?, pin=?, description=?, event_date=? WHERE id=?");
             $stmt->execute([$title, $pin, $description, $event_date, $edit_id]);
+            
+            log_admin_action($pdo, $_SESSION['user_id'], 'UPDATE_EVENT', "Cập nhật sự kiện ID: $edit_id");
+            
             $addMsg = "Cập nhật sự kiện thành công!";
             $addMsgType = "success";
             $editEvent = null; // Ẩn form sửa sau khi cập nhật

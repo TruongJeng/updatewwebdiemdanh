@@ -5,6 +5,7 @@ if (!in_array($_SESSION['role'], ['admin','club_leader'])) {
 }
 
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../../includes/audit.php';
 require_once __DIR__ . '/../../PHPSpreadsheet/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -28,6 +29,7 @@ if (isset($_GET['msg'])) {
 if (isset($_GET['disable'])) {
     $stmt = $pdo->prepare("UPDATE campers SET is_active = 0 WHERE student_code = ?");
     $stmt->execute([$_GET['disable']]);
+    log_admin_action($pdo, $_SESSION['user_id'], 'DISABLE_CAMPER', "Vô hiệu hóa trại sinh mã: " . $_GET['disable']);
     header("Location: manage_campers.php");
     exit;
 }
@@ -40,6 +42,8 @@ if (isset($_GET['restore'])) {
         WHERE student_code = ?
     ");
     $stmt->execute([$student_code]);
+    
+    log_admin_action($pdo, $_SESSION['user_id'], 'RESTORE_CAMPER', "Khôi phục trại sinh mã: $student_code");
 
     header("Location: manage_campers.php?msg=restored");
     exit;
@@ -74,6 +78,7 @@ if (isset($_GET['delete_forever']) && $_SESSION['role'] === 'admin') {
                 WHERE id = ?
             ");
             $stmt->execute([$student_id]);
+            log_admin_action($pdo, $_SESSION['user_id'], 'DELETE_CAMPER_FOREVER', "Xóa vĩnh viễn trại sinh mã: $student_code");
         }
 
         $pdo->commit();
@@ -101,6 +106,8 @@ if (
 
         $pdo->exec("DELETE FROM attendance_logs");
         $pdo->exec("DELETE FROM campers");
+        
+        log_admin_action($pdo, $_SESSION['user_id'], 'DELETE_ALL_CAMPERS', "Xóa toàn bộ dữ liệu trại sinh và lịch sử điểm danh");
 
         $pdo->commit();
 
@@ -158,6 +165,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_one'])) {
                 $email,
                 $profile_photo
             ]);
+            
+            log_admin_action($pdo, $_SESSION['user_id'], 'ADD_CAMPER', "Thêm trại sinh mới mã: $student_code");
+            
             header("Location: manage_campers.php?msg=add_success");
             exit;
         }
@@ -210,6 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_excel'])) {
                     $profile_photo
                 ]);
             }
+
+            log_admin_action($pdo, $_SESSION['user_id'], 'IMPORT_CAMPERS', "Import danh sách trại sinh từ Excel");
 
             $pdo->commit();
             header("Location: manage_campers.php?msg=import_success");

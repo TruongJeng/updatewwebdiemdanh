@@ -167,7 +167,7 @@ try {
     }
 
     // 3. Kiểm tra xem sự kiện có phiên điểm danh nào ĐANG MỞ hay không
-    $stmt = $pdo->prepare("SELECT id, type FROM attendance_sessions WHERE event_id = ? AND is_active = 1 ORDER BY start_time DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT id, type, lat, lng, radius FROM attendance_sessions WHERE event_id = ? AND is_active = 1 ORDER BY start_time DESC LIMIT 1");
     $stmt->execute([$eventId]);
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -178,6 +178,30 @@ try {
 
     $sessionId = $session['id'];
     $sessionType = $session['type']; // 'CHECK_IN' or 'CHECK_OUT'
+
+    // 3.5 Geofencing Check
+    if (!empty($session['lat']) && !empty($session['lng']) && !empty($session['radius'])) {
+        if (empty($lat) || empty($lng)) {
+            echo json_encode(['success' => false, 'message' => 'Bạn chưa cấp quyền vị trí GPS. Vui lòng cho phép truy cập vị trí để điểm danh.']);
+            exit;
+        }
+
+        // Haversine formula
+        $earth_radius = 6371000; // in meters
+        $dLat = deg2rad($lat - $session['lat']);
+        $dLon = deg2rad($lng - $session['lng']);
+        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($session['lat'])) * cos(deg2rad($lat)) * sin($dLon/2) * sin($dLon/2);
+        $c = 2 * asin(sqrt($a));
+        $distance = round($earth_radius * $c);
+
+        if ($distance > $session['radius']) {
+            echo json_encode([
+                'success' => false, 
+                'message' => "Bạn đang ở quá xa vị trí điểm danh (Cách {$distance}m). Yêu cầu phải đứng trong bán kính {$session['radius']}m."
+            ]);
+            exit;
+        }
+    }
 
     // 4. Kiểm tra đã check-in/out chưa (trong event này)
     $stmt = $pdo->prepare("
