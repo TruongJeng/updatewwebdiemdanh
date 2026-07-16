@@ -161,6 +161,7 @@ try {
             echo json_encode(['success' => false, 'message' => 'Action không hợp lệ']);
     }
 } catch (Exception $e) {
+    error_log('Events API Error: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Lỗi server: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.']);
 }

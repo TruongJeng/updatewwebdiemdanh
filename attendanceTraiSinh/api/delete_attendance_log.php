@@ -7,11 +7,14 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../config/session.php';
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../../includes/csrf.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Chưa đăng nhập']);
     exit;
 }
+
+verify_csrf_json();
 
 $data = json_decode(file_get_contents('php://input'), true);
 $logId = (int)($data['log_id'] ?? 0);

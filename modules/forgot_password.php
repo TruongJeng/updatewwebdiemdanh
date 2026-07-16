@@ -1,11 +1,30 @@
 <?php
+require_once __DIR__ . '/../config/session.php';
+require_once __DIR__ . '/../includes/csrf.php';
+
 $admin_email = 'admin@yourdomain.com';
 
 $success = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $full_name = trim($_POST['full_name'] ?? '');
+    verify_csrf();
+
+    // Rate limiting: tối đa 3 lần gửi trong 10 phút
+    $max_attempts = 3;
+    $lockout_time = 600; // 10 phút
+    if (!isset($_SESSION['forgot_pwd_attempts'])) $_SESSION['forgot_pwd_attempts'] = 0;
+    if (!isset($_SESSION['forgot_pwd_lockout'])) $_SESSION['forgot_pwd_lockout'] = 0;
+
+    if ($_SESSION['forgot_pwd_attempts'] >= $max_attempts && (time() - $_SESSION['forgot_pwd_lockout']) < $lockout_time) {
+        $remaining = $lockout_time - (time() - $_SESSION['forgot_pwd_lockout']);
+        $error = "Quá nhiều lần gửi yêu cầu. Vui lòng đợi " . ceil($remaining / 60) . " phút.";
+    } else {
+        if ($_SESSION['forgot_pwd_attempts'] >= $max_attempts) {
+            $_SESSION['forgot_pwd_attempts'] = 0;
+        }
+
+        $full_name = trim($_POST['full_name'] ?? '');
     $username  = trim($_POST['username'] ?? '');
     $role      = $_POST['role'] ?? '';
 
@@ -26,13 +45,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $headers = "From: no-reply@yourdomain.com\r\n";
 
         if (mail($admin_email, $subject, $body, $headers)) {
+            $_SESSION['forgot_pwd_attempts']++;
+            $_SESSION['forgot_pwd_lockout'] = time();
             $success = "Đã gửi yêu cầu thành công! Vui lòng chờ quản trị viên liên hệ lại.";
         } else {
+            $_SESSION['forgot_pwd_attempts']++;
+            $_SESSION['forgot_pwd_lockout'] = time();
             $success = "Yêu cầu đã được ghi nhận!<br><small class='text-slate-500'>Nội dung: " . nl2br(htmlspecialchars($body)) . "</small>";
         }
     } else {
         $error = "Vui lòng điền đầy đủ thông tin!";
     }
+}
 }
 ?>
 <!DOCTYPE html>
@@ -129,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Form -->
             <?php if (!$success): ?>
             <form method="post" autocomplete="off" class="space-y-4">
+                <?= csrf_field() ?>
 
                 <div class="relative group">
                     <i class="bi bi-person absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base transition-colors group-focus-within:text-primary-500 pointer-events-none"></i>

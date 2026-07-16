@@ -82,8 +82,8 @@ if (
         $error = "Vui lòng nhập đầy đủ thông tin!";
     } elseif ($newpass !== $renewpass) {
         $error = "Mật khẩu nhập lại không khớp!";
-    } elseif (strlen($newpass) < 5) {
-        $error = "Mật khẩu phải từ 5 ký tự!";
+    } elseif (strlen($newpass) < 8) {
+        $error = "Mật khẩu phải từ 8 ký tự!";
     } else {
         $hash = password_hash($newpass, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("UPDATE users SET password_hash=?, first_login=0 WHERE id=?");
@@ -154,12 +154,12 @@ include '../includes/header.php';
 
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-1.5">Mật khẩu mới</label>
-                        <input type="password" name="newpass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 transition-all font-medium text-sm" placeholder="Nhập mật khẩu mới" required minlength="5">
+                        <input type="password" name="newpass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 transition-all font-medium text-sm" placeholder="Nhập mật khẩu mới" required minlength="8">
                     </div>
 
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-1.5">Nhập lại mật khẩu mới</label>
-                        <input type="password" name="renewpass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 transition-all font-medium text-sm" placeholder="Nhập lại mật khẩu" required minlength="5">
+                        <input type="password" name="renewpass" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 transition-all font-medium text-sm" placeholder="Nhập lại mật khẩu" required minlength="8">
                         
                         <div class="flex items-center justify-end mt-3 text-sm">
                             <button type="button" id="resendBtn" class="font-bold text-primary-600 hover:text-primary-700 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors" onclick="resendOTP()">Gửi lại mã OTP</button>

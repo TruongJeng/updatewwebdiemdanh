@@ -1,8 +1,16 @@
 <?php
-// require_once __DIR__ . '/../config/session.php';
-// Kiểm tra quyền nếu cần
+require_once __DIR__ . '/../config/session.php';
+require_once __DIR__ . '/../includes/csrf.php';
+
+// Kiểm tra quyền
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'teacher', 'club_leader', 'staff'])) {
+    header("Location: ../dashboard.php");
+    exit;
+}
+
 $msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['timetable_file'])) {
+    verify_csrf();
     $file = $_FILES['timetable_file'];
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     // Chỉ cho phép Excel
@@ -74,6 +82,7 @@ include '../includes/header.php';
             <?= $msg ?>
 
             <form method="post" enctype="multipart/form-data" class="space-y-6" x-data="{ fileName: '' }">
+                <?= csrf_field() ?>
                 
                 <div class="relative group cursor-pointer">
                     <input type="file" name="timetable_file" id="timetable_file" accept=".xlsx,.xls" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" required @change="fileName = $event.target.files[0]?.name || ''">

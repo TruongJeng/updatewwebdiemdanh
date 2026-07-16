@@ -1,6 +1,8 @@
 <?php
-session_start();
-require '../includes/db.php';
+require_once __DIR__ . '/../config/session.php';
+require __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/csrf.php';
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../index.php"); exit();
 }
@@ -8,14 +10,15 @@ if (!isset($_SESSION['user_id'])) {
 $error = '';
 $msg = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    verify_csrf();
     $newpass = $_POST['newpass'] ?? '';
     $renewpass = $_POST['renewpass'] ?? '';
     if (!$newpass || !$renewpass) {
         $error = "Vui lòng nhập đầy đủ thông tin!";
     } elseif ($newpass !== $renewpass) {
         $error = "Mật khẩu nhập lại không khớp!";
-    } elseif (strlen($newpass) < 5) {
-        $error = "Mật khẩu phải từ 5 ký tự!";
+    } elseif (strlen($newpass) < 8) {
+        $error = "Mật khẩu phải từ 8 ký tự!";
     } else {
         $hash = password_hash($newpass, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("UPDATE users SET password_hash=? WHERE id=?");
@@ -84,12 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php if(!$msg): ?>
         <form method="post" class="space-y-5">
+            <?= csrf_field() ?>
             <!-- New Password -->
             <div class="relative group">
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Mật khẩu mới</label>
                 <div class="relative">
                     <i class="bi bi-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors group-focus-within:text-primary-500"></i>
-                    <input :type="showPass1 ? 'text' : 'password'" name="newpass" required minlength="5"
+                    <input :type="showPass1 ? 'text' : 'password'" name="newpass" required minlength="8"
                            class="w-full h-12 pl-12 pr-12 bg-white/50 border-2 border-slate-200 rounded-xl text-slate-800 font-medium focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
                     <button type="button" @click="showPass1 = !showPass1" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-slate-400 hover:text-primary-600 focus:outline-none">
                         <i class="bi text-lg" :class="showPass1 ? 'bi-eye' : 'bi-eye-slash'"></i>
@@ -102,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Nhập lại mật khẩu mới</label>
                 <div class="relative">
                     <i class="bi bi-key-fill absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors group-focus-within:text-primary-500"></i>
-                    <input :type="showPass2 ? 'text' : 'password'" name="renewpass" required minlength="5"
+                    <input :type="showPass2 ? 'text' : 'password'" name="renewpass" required minlength="8"
                            class="w-full h-12 pl-12 pr-12 bg-white/50 border-2 border-slate-200 rounded-xl text-slate-800 font-medium focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all">
                     <button type="button" @click="showPass2 = !showPass2" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-slate-400 hover:text-primary-600 focus:outline-none">
                         <i class="bi text-lg" :class="showPass2 ? 'bi-eye' : 'bi-eye-slash'"></i>

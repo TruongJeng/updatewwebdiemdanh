@@ -19,7 +19,8 @@ if (!$eventId) {
 
 $time = time();
 $payload = $eventId . '|' . $time;
-$secret = 'clbkynang_qr_secret_2026'; // Khóa bí mật
+$env = require __DIR__ . '/../../config/env.php';
+$secret = $env['qr_secret'] ?? 'clbkynang_qr_secret_2026'; // Khóa bí mật
 $hash = hash_hmac('sha256', $payload, $secret);
 $token = base64_encode($payload . '|' . $hash);
 

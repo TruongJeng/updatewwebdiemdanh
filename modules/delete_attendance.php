@@ -38,5 +38,6 @@ try {
     $stmt->execute([$attendance_id]);
     echo json_encode(['success'=>true]);
 } catch (Exception $e) {
-    echo json_encode(['success'=>false,'error'=>$e->getMessage()]);
+    error_log('Delete Attendance Error: ' . $e->getMessage());
+    echo json_encode(['success'=>false,'error'=>'Đã xảy ra lỗi hệ thống.']);
 }
